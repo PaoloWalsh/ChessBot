@@ -4,13 +4,11 @@ const rows = 8;
 const cols = 8;
 
 function build () {
-    console.log("hello world!")
     buildBoard();
 }
 
 
 function buildBoard() {
-    console.log("hello world!")
     const board = document.getElementById("board");
     let count = 63;
     for(let i = rows-1; i >= 0; i--) {
@@ -29,30 +27,50 @@ function buildBoard() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("hello world!")
-    build();
-});
 
+const allSquares = document.querySelectorAll("#board .square");
+console.log(allSquares);
 /*
-function buildBoard() {
-    console.log("hello world!")
-    const board = document.getElementById("board");
-    for(let i = rows-1; i >= 0; i--) {
-        const row = document.createElement("div");
-        row.setAttribute("id", "row: " + i);
-        row.classList.add("rows");
-        board.appendChild(row);
-        for(let j = cols-1; j >= 0; j--){
-            const square = document.createElement("input");
-            square.setAttribute("id", "row, col: "+ i + " " + j);
-            if(!(i+j)%2)
-                square.classList.add("light-square");
-            else
-                square.classList.add("dark-square");
-            row.appendChild(square);
-        }
-    }
+allSquares.forEach(square => {
+    square.addEventListener('dragstart', dragStart)
+    
+    square.addEventListener('dragover', dragOver)
+    square.addEventListener('drop', dragDrop)
+});
+*/
+
+
+let startPositionId;
+let draggedElement;
+
+function dragStart (e) {
+    //startPositionId = e.target.parentNode.getAttribute('id');   //square id
+    //draggedElement = e.target;
+    console.log(e);
 }
 
+/*
+
+function dragOver (e) {
+    e.preventDefault();
+}
+
+function dragDrop (e) {
+    e.stopPropagarion();
+    if(e.target.parentNode()) {
+        let square = e.target.parentNode();
+        square.remove();
+        square.append(draggedElement);
+    }
+    e.target.append(draggedElement);
+
+}
+
+
 */
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+    build();
+});

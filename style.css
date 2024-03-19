@@ -21,6 +21,20 @@ h1 {
 .square {
     width: 60px;
     height: 60px;
+    position: relative;
+}
+
+.square img {
+    height: 57px;
+    width: 57px;
+    margin: 3px;
+    position: relative;
+    z-index: -9;
+}
+
+.piece {
+    position: relative;
+    z-index: 9;
 }
 
 .dark {
@@ -30,10 +44,4 @@ h1 {
 .light {
     background-color: rgb(240, 218, 181);
     
-}
-
-.square img {
-    height: 57px;
-    width: 57px;
-    margin: 3px;
 }
