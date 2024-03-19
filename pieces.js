@@ -13,12 +13,12 @@ const b_queen = "<div class='piece' id='black_queen' draggable='true'><img src='
 const b_rook = "<div class='piece' id='black_rook' draggable='true'><img src='pictures/png/black-rook.png' alt='b_rook' id='b_rook'></div>";
 
 const pieces = [
-    w_rook, w_king, w_bishop, w_queen, w_king, w_bishop, w_knight, w_rook,
+    w_rook, w_knight, w_bishop, w_king, w_queen, w_bishop, w_knight, w_rook,
     w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, 
     '', '', '', '', '', '', '', '', 
     '', '', '', '', '', '', '', '', 
     '', '', '', '', '', '', '', '', 
     '', '', '', '', '', '', '', '', 
     b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, 
-    b_rook, b_king, b_bishop, b_queen, b_king, b_bishop, b_knight, b_rook
+    b_rook, b_knight, b_bishop, b_king, b_queen, b_bishop, b_knight, b_rook
 ];
