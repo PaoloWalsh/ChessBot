@@ -11,16 +11,16 @@ h1 {
 }
 
 #board {
-    width: 320px;
-    height: 320px;
+    width: 480px;
+    height: 480px;
     display: flex;
     flex-wrap: wrap;
     border-collapse: collapse;
 }
 
 .square {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
 }
 
 .dark {
@@ -30,4 +30,10 @@ h1 {
 .light {
     background-color: rgb(240, 218, 181);
     
+}
+
+.square img {
+    height: 57px;
+    width: 57px;
+    margin: 3px;
 }

@@ -16,6 +16,7 @@ function buildBoard() {
     for(let i = rows-1; i >= 0; i--) {
         for(let j = cols-1; j >= 0; j--){
             const square = document.createElement("div");
+            square.innerHTML = pieces[count];
             square.setAttribute("id", count--);
             //square.setAttribute("readonly", "readonly");
             square.classList.add("square");
