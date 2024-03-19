@@ -1,15 +1,15 @@
 "use strict";
 
-
-
 const rows = 8;
 const cols = 8;
+
+let white_turn = true;
+let balck_turn = false;
 
 function build () {
     buildBoard();
     init_drag();
 }
-
 
 function buildBoard() {
     const board = document.getElementById("board");
@@ -29,6 +29,7 @@ function buildBoard() {
         }
     }
 }
+
 let allSquares;
 document.addEventListener("DOMContentLoaded", function() {
     build();
@@ -47,9 +48,9 @@ let startPositionId;
 let draggedElement;
 
 function dragStart (e) {
-    startPositionId = e.target.parentNode.getAttribute('id');   //square id
-    draggedElement = e.target;
-    console.log(draggedElement);
+        startPositionId = e.target.parentNode.getAttribute('id');   //square id
+        draggedElement = e.target;
+        //console.log(draggedElement);
 }
 
 function dragOver (e) {
@@ -58,19 +59,26 @@ function dragOver (e) {
 
 function dragDrop (e) {
     e.stopPropagation();
-    //e.target.parentNode.append(draggedElement);
-    //e.target.remove();
-    //e.target.append(draggedElement);
-    /*
-    if(e.target.parentNode) {
-        let square = e.target.parentNode();
-        square.remove();
-        square.append(draggedElement);
+    if((white_turn && draggedElement.id.includes("white"))
+        || (balck_turn && draggedElement.id.includes("black"))){
+        if(e.target.classList.contains("square"))
+        {
+            e.target.append(draggedElement);
+        }
+        else    
+        {
+            e.target.parentNode.append(draggedElement);
+            e.target.remove();
+        }
+        if(white_turn){
+            white_turn = false;
+            balck_turn = true
+        }
+        else{
+            balck_turn = false;
+            white_turn = true;
+        }
     }
-    e.target.append(draggedElement);
-    */
+    //console.log(e.target);
+    //console.log(e.target.parentNode);
 }
-
-
-
-
