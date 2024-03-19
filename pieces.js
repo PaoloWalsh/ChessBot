@@ -20,5 +20,5 @@ const pieces = [
     '', '', '', '', '', '', '', '', 
     '', '', '', '', '', '', '', '', 
     b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, 
-    b_rook, b_king, b_bishop, b_queen, b_king, b_bishop, b_knight, b_rook,
+    b_rook, b_king, b_bishop, b_queen, b_king, b_bishop, b_knight, b_rook
 ];
