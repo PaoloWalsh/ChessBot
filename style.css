@@ -7,4 +7,27 @@
 
 h1 {
     text-align: center;
+    color: black;
+}
+
+#board {
+    width: 320px;
+    height: 320px;
+    display: flex;
+    flex-wrap: wrap;
+    border-collapse: collapse;
+}
+
+.square {
+    width: 40px;
+    height: 40px;
+}
+
+.dark {
+    background-color: rgb(182, 135, 99);
+}
+
+.light {
+    background-color: rgb(240, 218, 181);
+    
 }
