@@ -1,10 +1,13 @@
 "use strict";
 
+
+
 const rows = 8;
 const cols = 8;
 
 function build () {
     buildBoard();
+    init_drag();
 }
 
 
@@ -26,51 +29,48 @@ function buildBoard() {
         }
     }
 }
-
-
-const allSquares = document.querySelectorAll("#board .square");
-console.log(allSquares);
-/*
-allSquares.forEach(square => {
-    square.addEventListener('dragstart', dragStart)
-    
-    square.addEventListener('dragover', dragOver)
-    square.addEventListener('drop', dragDrop)
+let allSquares;
+document.addEventListener("DOMContentLoaded", function() {
+    build();
 });
-*/
 
+function init_drag() {
+    allSquares = document.querySelectorAll("#board .square");
+    allSquares.forEach(square => {
+        square.addEventListener('dragstart', dragStart)
+        square.addEventListener('dragover', dragOver)
+        square.addEventListener('drop', dragDrop)
+    });
+}
 
 let startPositionId;
 let draggedElement;
 
 function dragStart (e) {
-    //startPositionId = e.target.parentNode.getAttribute('id');   //square id
-    //draggedElement = e.target;
-    console.log(e);
+    startPositionId = e.target.parentNode.getAttribute('id');   //square id
+    draggedElement = e.target;
+    console.log(draggedElement);
 }
-
-/*
 
 function dragOver (e) {
     e.preventDefault();
 }
 
 function dragDrop (e) {
-    e.stopPropagarion();
-    if(e.target.parentNode()) {
+    e.stopPropagation();
+    //e.target.parentNode.append(draggedElement);
+    //e.target.remove();
+    //e.target.append(draggedElement);
+    /*
+    if(e.target.parentNode) {
         let square = e.target.parentNode();
         square.remove();
         square.append(draggedElement);
     }
     e.target.append(draggedElement);
-
+    */
 }
 
 
-*/
 
 
-document.addEventListener("DOMContentLoaded", function() {
-    
-    build();
-});
