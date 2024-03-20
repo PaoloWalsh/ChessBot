@@ -1,0 +1,22 @@
+Finish piece move rooles:
+	bishop
+	rook
+	queen
+	fix pawn
+	en passant
+
+Add css style to piece possibile destinations
+
+Add captured attribute to class piece
+
+add check logic
+
+add check mate 
+
+add piece respawn
+
+transpose gameboard for player 2 to play the move
+
+
+
+
