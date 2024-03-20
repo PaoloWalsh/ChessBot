@@ -59,17 +59,22 @@ function dragOver (e) {
 
 function dragDrop (e) {
     e.stopPropagation();
+    console.log(e.target);
     if((white_turn && draggedElement.id.includes("white"))
         || (balck_turn && draggedElement.id.includes("black"))){
         if(e.target.classList.contains("square"))
         {
             e.target.append(draggedElement);
         }
-        else    
+        else if ((white_turn && e.target.id.includes("black"))
+            || (balck_turn && e.target.id.includes("white")))
         {
             e.target.parentNode.append(draggedElement);
             e.target.remove();
         }
+        else
+            return;
+            
         if(white_turn){
             white_turn = false;
             balck_turn = true
