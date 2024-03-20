@@ -43,5 +43,8 @@ h1 {
 
 .light {
     background-color: rgb(240, 218, 181);
-    
+}
+
+.selected {
+    background-color: rgb(96, 81, 57);
 }

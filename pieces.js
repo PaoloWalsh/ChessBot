@@ -1,3 +1,78 @@
+class piece {
+    constructor(type) {
+        switch (type) {
+            case "w_bishop":
+                this.div = "<div class='piece' id='white_bishop' draggable='true'><img src='pictures/png/white-bishop.png' alt='w_bishop' id='w_bishop'></div>";
+                break;
+            case "w_king":
+                this.div = "<div class='piece' id='white_king' draggable='true'><img src='pictures/png/white-king.png' alt='w_king' id='w_king'></div>";
+                break;
+            case "w_knight":
+                this.div = "<div class='piece' id='white_knight' draggable='true'><img src='pictures/png/white-knight.png' alt='w_knight' id='w_knight'></div>";
+                break;
+            case "w_pawn":
+                this.div = "<div class='piece' id='white_pawn' draggable='true'><img src='pictures/png/white-pawn.png' alt='w_pawn' id='w_pawn'></div>";
+                break;
+            case "w_queen":
+                this.div = "<div class='piece' id='white_queen' draggable='true'><img src='pictures/png/white-queen.png' alt='w_queen' id='w_queen'></div>";
+                break;
+            case "w_rook":
+                this.div = "<div class='piece' id='white_rook' draggable='true'><img src='pictures/png/white-rook.png' alt='w_rook' id='w_rook'></div>";
+                break;
+            case "b_bishop":
+                this.div = "<div class='piece' id='black_bishop' draggable='true'><img src='pictures/png/black-bishop.png' alt='b_bishop' id='b_bishop'></div>";
+                break;
+            case "b_king":
+                this.div = "<div class='piece' id='black_king' draggable='true'><img src='pictures/png/black-king.png' alt='b_king' id='b_king'></div>";
+                break;
+            case "b_knight":
+                this.div = "<div class='piece' id='black_knight' draggable='true'><img src='pictures/png/black-knight.png' alt='b_knight' id='b_knight'></div>";
+                break;
+            case "b_pawn":
+                this.div = "<div class='piece' id='black_pawn' draggable='true'><img src='pictures/png/black-pawn.png' alt='b_pawn' id='b_pawn'></div>";
+                break;
+            case "b_queen":
+                this.div = "<div class='piece' id='black_queen' draggable='true'><img src='pictures/png/black-queen.png' alt='b_queen' id='b_queen'></div>";
+                break;
+            case "b_rook":
+                this.div = "<div class='piece' id='black_rook' draggable='true'><img src='pictures/png/black-rook.png' alt='b_rook' id='b_rook'></div>";   
+                break;
+
+        }
+        this.firstMove = true;
+        this.captured = false;
+        this.row;
+        this.col;
+         
+    }
+}
+
+let white_bishop = new piece("w_bishop");
+let white_king = new piece("w_king");
+let white_knight = new piece("w_knight");
+let white_pawn = new piece("w_pawn");
+let white_queen = new piece("w_queen");
+let white_rook = new piece("w_rook");
+
+let black_bishop = new piece("b_bishop");
+let black_king = new piece("b_king");
+let black_knight = new piece("b_knight");
+let black_pawn = new piece("b_pawn");
+let black_queen = new piece("b_queen");
+let black_rook = new piece("b_rook");
+
+const pieces = [
+    white_rook.div, white_knight.div, white_bishop.div, white_king.div, white_queen.div, white_bishop.div, white_knight.div, white_rook.div,
+    white_pawn.div, white_pawn.div, white_pawn.div, white_pawn.div, white_pawn.div, white_pawn.div, white_pawn.div, white_pawn.div, 
+    '', '', '', '', '', '', '', '', 
+    '', '', '', '', '', '', '', '', 
+    '', '', '', '', '', '', '', '', 
+    '', '', '', '', '', '', '', '', 
+    black_pawn.div, black_pawn.div, black_pawn.div, black_pawn.div, black_pawn.div, black_pawn.div, black_pawn.div, black_pawn.div, 
+    black_rook.div, black_knight.div, black_bishop.div, black_king.div, black_queen.div, black_bishop.div, black_knight.div, black_rook.div
+];
+
+/*
 const w_bishop = "<div class='piece' id='white_bishop' draggable='true'><img src='pictures/png/white-bishop.png' alt='w_bishop' id='w_bishop'></div>";
 const w_king = "<div class='piece' id='white_king' draggable='true'><img src='pictures/png/white-king.png' alt='w_king' id='w_king'></div>";
 const w_knight = "<div class='piece' id='white_knight' draggable='true'><img src='pictures/png/white-knight.png' alt='w_knight' id='w_knight'></div>";
@@ -11,14 +86,4 @@ const b_knight = "<div class='piece' id='black_knight' draggable='true'><img src
 const b_pawn = "<div class='piece' id='black_pawn' draggable='true'><img src='pictures/png/black-pawn.png' alt='b_pawn' id='b_pawn'></div>";
 const b_queen = "<div class='piece' id='black_queen' draggable='true'><img src='pictures/png/black-queen.png' alt='b_queen' id='b_queen'></div>";
 const b_rook = "<div class='piece' id='black_rook' draggable='true'><img src='pictures/png/black-rook.png' alt='b_rook' id='b_rook'></div>";
-
-const pieces = [
-    w_rook, w_knight, w_bishop, w_king, w_queen, w_bishop, w_knight, w_rook,
-    w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, w_pawn, 
-    '', '', '', '', '', '', '', '', 
-    '', '', '', '', '', '', '', '', 
-    '', '', '', '', '', '', '', '', 
-    '', '', '', '', '', '', '', '', 
-    b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, b_pawn, 
-    b_rook, b_knight, b_bishop, b_king, b_queen, b_bishop, b_knight, b_rook
-];
+*/
