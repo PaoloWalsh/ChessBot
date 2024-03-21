@@ -244,16 +244,19 @@ function dragOver (e) {
 
 //makes the move
 function dragDrop (e) {
+    let moveMade;
     e.stopPropagation();
     if((white_turn && draggedElement.id.includes("white"))
         || (balck_turn && draggedElement.id.includes("black"))){
         // if true -> the target square is empty
         if(e.target.classList.contains("square"))
         {
-            if(validate_move(e.target, false)){
+            moveMade = validate_move(e.target, false);
+            if(moveMade){
                 e.target.append(draggedElement);
                 move_sound.play();
                 updateBoard();
+                switchTurn();
             }
             else 
                 return;
@@ -263,17 +266,19 @@ function dragDrop (e) {
             || (balck_turn && e.target.id.includes("white")))
         {
             //if true -> the target square has a different color piece
+            moveMade = validate_move(e.target, true);
             if(validate_move(e.target.parentNode, true)) {
                 e.target.parentNode.append(draggedElement);
                 e.target.remove();
                 capture_sound.play();
                 updateBoard();
+                switchTurn();
             }
         }
         else
             return;
-        
-        switchTurn();
+        // if(moveMade)
+        //     switchTurn();
        
     }
  
