@@ -6,6 +6,9 @@ const cols = 8;
 let white_turn = true;
 let balck_turn = false;
 
+const capture_sound = new Audio('audio/capture.mp3');
+const move_sound = new Audio('audio/move-self.mp3');
+
 class piece {
     constructor(type, i) {
         switch (type) {
@@ -52,6 +55,8 @@ class piece {
         this.captured = false;
         this.row;
         this.col;
+        this.old_row;
+        this.old_col;
          
     }
 }
@@ -85,36 +90,85 @@ let black_queen = new piece("b_queen");
 //creating white pieces
 for(let i = 0; i < 8; i++){
     white_pawns[i] = new piece("w_pawn", i);
+    white_pawns[i].row = white_pawns[i].old_row = 1;
+    white_pawns[i].col = white_pawns[i].old_col = i;
 }
 
 for(let i = 0; i < 2; i++){
     white_bishops[i] = new piece("w_bishop", i);
-}
+    white_bishops[i].row = white_bishops[i].old_row = 0;
+    if(i == 0)
+        white_bishops[i].col = white_bishops[i].old_col = 2;
+    else 
+        white_bishops[i].col = white_bishops[i].old_col = 5;
+}  
 
 for(let i = 0; i < 2; i++){
     white_knights[i] = new piece("w_knight", i);
+    white_knights[i].row = white_knights[i].old_row = 0;
+    if(i == 0)
+        white_knights[i].col = white_knights[i].old_col = 1;
+    else 
+        white_knights[i].col = white_knights[i].old_col = 6;
 }
 
 for(let i = 0; i < 2; i++){
     white_rooks[i] = new piece("w_rook", i);
+    white_rooks[i].row = white_rooks[i].old_row = 0;
+    if(i == 0)
+        white_rooks[i].col = white_rooks[i].old_col = 0;
+    else 
+        white_rooks[i].col = white_rooks[i].old_col = 7;
 }
+
+white_king.row = white_king.old_row = 0;
+white_king.col = white_king.old_col = 3;
+
+white_queen.row = white_queen.old_row = 0;
+white_queen.col = white_queen.old_col = 4;
+
 //creating black pieces
 for(let i = 0; i < 8; i++){
     black_pawns[i] = new piece("b_pawn", i);
+    black_pawns[i].row = black_pawns[i].old_row = 6;
+    black_pawns[i].col = black_pawns[i].old_col = i;
 }
 
 for(let i = 0; i < 2; i++){
     black_bishops[i] = new piece("b_bishop", i);
+    black_bishops[i].row = black_bishops[i].old_row = 7;
+    if(i == 0)
+        black_bishops[i].col = black_bishops[i].old_col = 2;
+    else 
+        black_bishops[i].col = black_bishops[i].old_col = 5;
 }
 
 for(let i = 0; i < 2; i++){
     black_knights[i] = new piece("b_knight", i);
+    black_knights[i].row = black_knights[i].old_row = 7;
+    if(i == 0)
+        black_knights[i].col = black_knights[i].old_col = 1;
+    else 
+        black_knights[i].col = black_knights[i].old_col = 6;
 }
 
 for(let i = 0; i < 2; i++){
     black_rooks[i] = new piece("b_rook", i);
+    black_rooks[i].row = black_rooks[i].old_row = 7;
+    if(i == 0)
+        black_rooks[i].col = black_rooks[i].old_col = 0;
+    else 
+        black_rooks[i].col = black_rooks[i].old_col = 7;
 }
 
+black_king.row = black_king.old_row = 7;
+black_king.col = black_king.old_col = 3;
+
+black_queen.row = black_queen.old_row = 7;
+black_queen.col = black_queen.old_col = 4;
+
+
+//da mettere le colonne fatte bene
 let board = [
     white_rooks[0], white_knights[0], white_bishops[0], white_king, white_queen, white_bishops[1], white_knights[1], white_rooks[1],
     white_pawns[0], white_pawns[1], white_pawns[2], white_pawns[3], white_pawns[4], white_pawns[5], white_pawns[6], white_pawns[7], 
@@ -122,9 +176,10 @@ let board = [
     0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 
-    black_pawns[7], black_pawns[6], black_pawns[5], black_pawns[4], black_pawns[3], black_pawns[2], black_pawns[1], black_pawns[0], 
-    black_rooks[1], black_knights[1], black_bishops[1], black_king, black_queen, black_bishops[0], black_knights[0], black_rooks[0]
+    black_pawns[0], black_pawns[1], black_pawns[2], black_pawns[3], black_pawns[4], black_pawns[5], black_pawns[6], black_pawns[7], 
+    black_rooks[0], black_knights[0], black_bishops[0], black_king, black_queen, black_bishops[1], black_knights[1], black_rooks[1]
 ];
+
 
 let pieces = [];
 
@@ -135,7 +190,6 @@ for(let i = 0; i < 64; i++){
         pieces[i] = "";
 }
 
-console.log(board);
 
 function build () {
     buildBoard();
@@ -177,27 +231,30 @@ function init_drag() {
 
 let startPositionId;
 let draggedElement;
+let draggedPiece;
 
 function dragStart (e) {
         startPositionId = e.target.parentNode.getAttribute('id');   //square id
         draggedElement = e.target;
-        //console.log(draggedElement);
 }
 
 function dragOver (e) {
     e.preventDefault();
 }
 
+//makes the move
 function dragDrop (e) {
     e.stopPropagation();
-    //console.log(e.target);
     if((white_turn && draggedElement.id.includes("white"))
         || (balck_turn && draggedElement.id.includes("black"))){
         // if true -> the target square is empty
         if(e.target.classList.contains("square"))
         {
-            if(validate_move(e.target, false))
+            if(validate_move(e.target, false)){
                 e.target.append(draggedElement);
+                move_sound.play();
+                updateBoard();
+            }
             else 
                 return;
         }
@@ -209,23 +266,28 @@ function dragDrop (e) {
             if(validate_move(e.target.parentNode, true)) {
                 e.target.parentNode.append(draggedElement);
                 e.target.remove();
-                
+                capture_sound.play();
+                updateBoard();
             }
         }
         else
             return;
-            
-        if(white_turn){
-            white_turn = true;  //should be false
-            balck_turn = true
-        }
-        else{
-            balck_turn = false;
-            white_turn = true;
-        }
+        
+        switchTurn();
+       
     }
-    //console.log(e.target);
-    //console.log(e.target.parentNode);
+ 
+}
+
+function switchTurn(){
+    if(white_turn){
+        white_turn = false;
+        balck_turn = true
+    }
+    else{
+        balck_turn = false;
+        white_turn = true;
+    }
 }
 
 function validate_move (dest_element, captureOpportunity) {
@@ -235,22 +297,26 @@ function validate_move (dest_element, captureOpportunity) {
     let end_index = parseInt(dest_element.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
-    console.log(maxDist(end_row, end_col, "u"));
-    console.log(maxDist(end_row, end_col, "r"));
-    console.log(maxDist(end_row, end_col, "d"));
-    console.log(maxDist(end_row, end_col, "l"));
+    
+
     //white pawn
     if(draggedElement.id.includes("white_pawn")){
         let i = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         let t = white_pawns[i].firstMove ? 1 : 0;
         let diag = captureOpportunity ? 1 : 0;
-        if((end_row >= start_row) && (end_row <= start_row + 1 + t - diag) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+        if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
+                if(captureOpportunity && end_col === start_col)
+                    return false;
+                draggedPiece = white_pawns[i];
                 white_pawns[i].firstMove = false;
+                white_pawns[i].old_row = start_row;
+                white_pawns[i].old_col = start_col;
                 white_pawns[i].row = end_row;
                 white_pawns[i].col = end_col;
                 return true;
             }
+        else return false;
     }
     
     //black pawn
@@ -258,10 +324,14 @@ function validate_move (dest_element, captureOpportunity) {
         let i = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         let t = black_pawns[i].firstMove ? -1 : 0;
         let diag = captureOpportunity ? 1 : 0;
-        // console.log(diag);
-        if((end_row <= start_row) && (end_row >= start_row - 1 + t + diag) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+        if((end_row <= start_row) && (end_row >= start_row - 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
+                if(captureOpportunity && end_col === start_col)
+                    return false;
+                draggedPiece = black_pawns[i];
                 black_pawns[i].firstMove = false;
+                black_pawns[i].old_row = start_row;
+                black_pawns[i].old_col = start_col;
                 black_pawns[i].row = end_row;
                 black_pawns[i].col = end_col;
                 return true;
@@ -277,16 +347,18 @@ function validate_move (dest_element, captureOpportunity) {
             || ((end_row === start_row - 2) && ((end_col === start_col + 1) || (end_col === start_col - 1)))
             || ((end_row === start_row - 1) && ((end_col === start_col + 2) || (end_col === start_col - 2))))
             {
-                if(draggedElement.id.includes("white-knight")){
-                    white_knights[i].firstMove = false;
-                    white_knights[i].row = end_row;
-                    white_knights[i].col = end_col;
+                if(draggedElement.id.includes("white")){
+                    draggedPiece = white_knights[i];
+                    
                 }
-                if(draggedElement.id.includes("black-knight")){
-                    black_knights[i].firstMove = false;
-                    black_knights[i].row = end_row;
-                    black_knights[i].col = end_col;
+                if(draggedElement.id.includes("black")){
+                    draggedPiece = black_knights[i];
                 }
+                draggedPiece.firstMove = false;
+                draggedPiece.old_row = start_row;
+                draggedPiece.old_col = start_col;
+                draggedPiece.row = end_row;
+                draggedPiece.col = end_col;
                 return true;
             }
         else return false;
@@ -295,10 +367,50 @@ function validate_move (dest_element, captureOpportunity) {
     //kings
     if(draggedElement.id.includes("king")){
         if((end_row >= start_row - 1) && (end_row <= start_row + 1)
-            && (end_col >= start_col - 1) && (end_col <= end_col + 1))
-            return true;
+            && (end_col >= start_col - 1) && (end_col <= end_col + 1)){
+                if(draggedElement.id.includes("white"))
+                    draggedPiece = white_king;
+                else   //black king
+                    draggedPiece = black_king;
+                
+                draggedPiece.old_row = start_row;
+                draggedPiece.old_col = start_col;
+                draggedPiece.row = end_row;
+                draggedPiece.col = end_col;
+                return true;
+        }
         else return false;
     }
+
+    console.log(maxDist(start_row, start_col, "u"));
+    console.log(maxDist(start_row, start_col, "r"));
+    console.log(maxDist(start_row, start_col, "d"));
+    console.log(maxDist(start_row, start_col, "l"));
+    console.log("-----------------------------------------------------------");
+    //rooks
+    if(draggedElement.id.includes("white_rook")){
+       if(end_col === start_col){
+            if((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))){
+                return true;
+            }
+            return false;
+       }
+       if(end_row === start_row){
+            if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_row + maxDist(start_row, start_col, "r")))){
+                return true;
+            }
+            return false;
+       }
+    }
+
+}
+
+//updates the board 
+function updateBoard () {
+    board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
+    if(board[draggedPiece.row * cols + draggedPiece.col] != 0)
+        board[draggedPiece.row * cols + draggedPiece.col].captured = true;
+        board[draggedPiece.row * cols + draggedPiece.col] = draggedPiece;
 }
 
 //returns the max number of square between 
@@ -347,3 +459,4 @@ function maxDist(s_row, s_col, c){
         
     }
 }
+
