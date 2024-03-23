@@ -57,7 +57,7 @@ class piece {
         this.col;
         this.old_row;
         this.old_col;
-         
+        this.color;
     }
 }
 
@@ -92,6 +92,8 @@ for(let i = 0; i < 8; i++){
     white_pawns[i] = new piece("w_pawn", i);
     white_pawns[i].row = white_pawns[i].old_row = 1;
     white_pawns[i].col = white_pawns[i].old_col = i;
+    white_pawns[i].color = "white";
+
 }
 
 for(let i = 0; i < 2; i++){
@@ -101,6 +103,7 @@ for(let i = 0; i < 2; i++){
         white_bishops[i].col = white_bishops[i].old_col = 2;
     else 
         white_bishops[i].col = white_bishops[i].old_col = 5;
+    white_bishops[i].color = "white";
 }  
 
 for(let i = 0; i < 2; i++){
@@ -110,6 +113,7 @@ for(let i = 0; i < 2; i++){
         white_knights[i].col = white_knights[i].old_col = 1;
     else 
         white_knights[i].col = white_knights[i].old_col = 6;
+    white_knights[i].color = "white";
 }
 
 for(let i = 0; i < 2; i++){
@@ -119,19 +123,23 @@ for(let i = 0; i < 2; i++){
         white_rooks[i].col = white_rooks[i].old_col = 0;
     else 
         white_rooks[i].col = white_rooks[i].old_col = 7;
+    white_rooks[i].color = "white";
 }
 
 white_king.row = white_king.old_row = 0;
 white_king.col = white_king.old_col = 3;
+white_king.color = "white";
 
 white_queen.row = white_queen.old_row = 0;
 white_queen.col = white_queen.old_col = 4;
+white_queen.color = "white";
 
 //creating black pieces
 for(let i = 0; i < 8; i++){
     black_pawns[i] = new piece("b_pawn", i);
     black_pawns[i].row = black_pawns[i].old_row = 6;
     black_pawns[i].col = black_pawns[i].old_col = i;
+    black_pawns[i].color = "black";
 }
 
 for(let i = 0; i < 2; i++){
@@ -141,6 +149,7 @@ for(let i = 0; i < 2; i++){
         black_bishops[i].col = black_bishops[i].old_col = 2;
     else 
         black_bishops[i].col = black_bishops[i].old_col = 5;
+        black_bishops[i].color = "black";
 }
 
 for(let i = 0; i < 2; i++){
@@ -150,6 +159,7 @@ for(let i = 0; i < 2; i++){
         black_knights[i].col = black_knights[i].old_col = 1;
     else 
         black_knights[i].col = black_knights[i].old_col = 6;
+        black_knights[i].color = "black";
 }
 
 for(let i = 0; i < 2; i++){
@@ -159,13 +169,16 @@ for(let i = 0; i < 2; i++){
         black_rooks[i].col = black_rooks[i].old_col = 0;
     else 
         black_rooks[i].col = black_rooks[i].old_col = 7;
+        black_rooks[i].color = "black";
 }
 
 black_king.row = black_king.old_row = 7;
 black_king.col = black_king.old_col = 3;
+black_king.color = "black";
 
 black_queen.row = black_queen.old_row = 7;
 black_queen.col = black_queen.old_col = 4;
+black_queen.color = "black";
 
 
 //da mettere le colonne fatte bene
@@ -401,7 +414,7 @@ function validate_move (dest_element, captureOpportunity) {
             return false;
        }
        if(end_row === start_row){
-            if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_row + maxDist(start_row, start_col, "r")))){
+            if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_col - maxDist(start_row, start_col, "r")))){
                 return true;
             }
             return false;
@@ -415,21 +428,25 @@ function updateBoard () {
     board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
     if(board[draggedPiece.row * cols + draggedPiece.col] != 0)
         board[draggedPiece.row * cols + draggedPiece.col].captured = true;
-        board[draggedPiece.row * cols + draggedPiece.col] = draggedPiece;
+    board[draggedPiece.row * cols + draggedPiece.col] = draggedPiece;
 }
 
 //returns the max number of square between 
 // the cordinate of the piece and any other piece
 function maxDist(s_row, s_col, c){
     let k = 0;
+
     switch (c) {
         case "l":   //calculate the left distance on the same row
             //row remains the same
             for(let j = s_col+1; j < cols; j++){
                 if(board[s_row * cols + j] == 0)
                     k++;
-                else
+                else{
+                    if(board[s_row * cols + j].color != draggedPiece.color)
+                        k++;
                     break;
+                }
             }
             return k;
         case "r":   //calculate the right distance on the same row
@@ -437,8 +454,12 @@ function maxDist(s_row, s_col, c){
             for(let j = s_col-1; j >= 0; j--){
                 if(board[s_row * cols + j] == 0)
                     k++;
-                else
+                else{
+                    if(board[s_row * cols + j].color != draggedPiece.color)
+                        k++;
                     break;
+                }
+                    
             }
             return k;
 
@@ -447,8 +468,11 @@ function maxDist(s_row, s_col, c){
             for(let i = s_row+1; i < rows; i++){
                 if(board[i * cols + s_col] == 0)
                     k++;
-                else
+                else{
+                    if(board[i * cols + s_col].color != draggedPiece.color)
+                        k++;
                     break;
+                }
             }
             return k;
 
@@ -457,8 +481,11 @@ function maxDist(s_row, s_col, c){
             for(let i = s_row; i >= 0; i--){ //DEBUG
                 if(board[i * cols + s_col] == 0)
                     k++;
-                else
+                else{
+                    if(board[i * cols + s_col].color != draggedPiece.color)
+                        k++;
                     break;
+                }
             }
             return k;
         
