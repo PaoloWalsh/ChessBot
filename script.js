@@ -249,6 +249,21 @@ let draggedPiece;
 function dragStart (e) {
         startPositionId = e.target.parentNode.getAttribute('id');   //square id
         draggedElement = e.target;
+        //per debug
+        let start_index = parseInt(startPositionId);
+        let start_row = Math.floor(start_index/rows);   
+        let start_col = start_index%rows;
+        // console.log(board)
+        // console.log(start_row);
+        // console.log(start_col);
+        // console.log("\n u \n r \n d \n l");
+        // //
+        // console.log(maxDist(start_row, start_col, "u"));
+        // console.log(maxDist(start_row, start_col, "r"));
+        // console.log(maxDist(start_row, start_col, "d"));
+        // console.log(maxDist(start_row, start_col, "l"));
+        
+
 }
 
 function dragOver (e) {
@@ -290,8 +305,7 @@ function dragDrop (e) {
         }
         else
             return;
-        // if(moveMade)
-        //     switchTurn();
+
        
     }
  
@@ -315,11 +329,11 @@ function validate_move (dest_element, captureOpportunity) {
     let end_index = parseInt(dest_element.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
+    let i = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
     
 
     //white pawn
     if(draggedElement.id.includes("white_pawn")){
-        let i = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         let t = white_pawns[i].firstMove ? 1 : 0;
         let diag = captureOpportunity ? 1 : 0;
         if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
@@ -400,21 +414,24 @@ function validate_move (dest_element, captureOpportunity) {
         else return false;
     }
 
+    console.log("\n u \n r \n d \n l");
     console.log(maxDist(start_row, start_col, "u"));
     console.log(maxDist(start_row, start_col, "r"));
     console.log(maxDist(start_row, start_col, "d"));
     console.log(maxDist(start_row, start_col, "l"));
-    console.log("-----------------------------------------------------------");
+    // console.log("-----------------------------------------------------------");
     //rooks
     if(draggedElement.id.includes("white_rook")){
        if(end_col === start_col){
             if((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))){
+                draggedPiece = white_rooks[i];
                 return true;
             }
             return false;
        }
        if(end_row === start_row){
             if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_col - maxDist(start_row, start_col, "r")))){
+                draggedPiece = white_rooks[i];
                 return true;
             }
             return false;
@@ -443,8 +460,9 @@ function maxDist(s_row, s_col, c){
                 if(board[s_row * cols + j] == 0)
                     k++;
                 else{
-                    if(board[s_row * cols + j].color != draggedPiece.color)
+                    if(board[s_row * cols + j].color != board[s_row * cols + s_col].color){
                         k++;
+                    }
                     break;
                 }
             }
@@ -455,7 +473,7 @@ function maxDist(s_row, s_col, c){
                 if(board[s_row * cols + j] == 0)
                     k++;
                 else{
-                    if(board[s_row * cols + j].color != draggedPiece.color)
+                    if(board[s_row * cols + j].color != board[s_row * cols + s_col].color)
                         k++;
                     break;
                 }
@@ -469,7 +487,7 @@ function maxDist(s_row, s_col, c){
                 if(board[i * cols + s_col] == 0)
                     k++;
                 else{
-                    if(board[i * cols + s_col].color != draggedPiece.color)
+                    if(board[i * cols + s_col].color != board[s_row * cols + s_col].color)
                         k++;
                     break;
                 }
@@ -478,11 +496,11 @@ function maxDist(s_row, s_col, c){
 
         case "d":   //calculate the down distance on the same col
             //col remains the same
-            for(let i = s_row; i >= 0; i--){ //DEBUG
+            for(let i = s_row-1; i >= 0; i--){ //DEBUG
                 if(board[i * cols + s_col] == 0)
                     k++;
                 else{
-                    if(board[i * cols + s_col].color != draggedPiece.color)
+                    if(board[i * cols + s_col].color != board[s_row * cols + s_col].color)
                         k++;
                     break;
                 }
