@@ -249,21 +249,6 @@ let draggedPiece;
 function dragStart (e) {
         startPositionId = e.target.parentNode.getAttribute('id');   //square id
         draggedElement = e.target;
-        //per debug
-        let start_index = parseInt(startPositionId);
-        let start_row = Math.floor(start_index/rows);   
-        let start_col = start_index%rows;
-        // console.log(board)
-        // console.log(start_row);
-        // console.log(start_col);
-        // console.log("\n u \n r \n d \n l");
-        // //
-        // console.log(maxDist(start_row, start_col, "u"));
-        // console.log(maxDist(start_row, start_col, "r"));
-        // console.log(maxDist(start_row, start_col, "d"));
-        // console.log(maxDist(start_row, start_col, "l"));
-        
-
 }
 
 function dragOver (e) {
@@ -283,30 +268,27 @@ function dragDrop (e) {
             if(moveMade){
                 e.target.append(draggedElement);
                 move_sound.play();
-                updateBoard();
-                switchTurn();
             }
-            else 
-                return;
+            
         }
         //check if the target square has a same colored piece
         else if ((white_turn && e.target.id.includes("black"))
             || (balck_turn && e.target.id.includes("white")))
         {
             //if true -> the target square has a different color piece
-            moveMade = validate_move(e.target, true);
-            if(validate_move(e.target.parentNode, true)) {
+            moveMade = validate_move(e.target.parentNode, true);
+            if(moveMade) {
                 e.target.parentNode.append(draggedElement);
                 e.target.remove();
                 capture_sound.play();
-                updateBoard();
-                switchTurn();
+                
             }
         }
-        else
-            return;
-
-       
+    }
+    if(moveMade){
+        updateBoard();
+        switchTurn();
+        // printBoard();
     }
  
 }
@@ -413,25 +395,39 @@ function validate_move (dest_element, captureOpportunity) {
         }
         else return false;
     }
-
-    console.log("\n u \n r \n d \n l");
-    console.log(maxDist(start_row, start_col, "u"));
-    console.log(maxDist(start_row, start_col, "r"));
-    console.log(maxDist(start_row, start_col, "d"));
-    console.log(maxDist(start_row, start_col, "l"));
+    
+    // console.log("\n u \n r \n d \n l");
+    // console.log(maxDist(start_row, start_col, "u"));
+    // console.log(maxDist(start_row, start_col, "r"));
+    // console.log(maxDist(start_row, start_col, "d"));
+    // console.log(maxDist(start_row, start_col, "l"));
     // console.log("-----------------------------------------------------------");
     //rooks
-    if(draggedElement.id.includes("white_rook")){
+    if(draggedElement.id.includes("rook")){
        if(end_col === start_col){
             if((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))){
-                draggedPiece = white_rooks[i];
+                if(draggedElement.id.includes("white"))
+                    draggedPiece = white_rooks[i];
+                else
+                    draggedPiece = black_rooks[i];
+                draggedPiece.old_row = start_row;
+                draggedPiece.old_col = start_col;
+                draggedPiece.row = end_row;
+                draggedPiece.col = end_col;
                 return true;
             }
             return false;
        }
        if(end_row === start_row){
             if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_col - maxDist(start_row, start_col, "r")))){
-                draggedPiece = white_rooks[i];
+                if(draggedElement.id.includes("white"))
+                    draggedPiece = white_rooks[i];
+                else
+                    draggedPiece = black_rooks[i];
+                draggedPiece.old_row = start_row;
+                draggedPiece.old_col = start_col;
+                draggedPiece.row = end_row;
+                draggedPiece.col = end_col;
                 return true;
             }
             return false;
@@ -476,19 +472,20 @@ function maxDist(s_row, s_col, c){
                     if(board[s_row * cols + j].color != board[s_row * cols + s_col].color)
                         k++;
                     break;
-                }
-                    
+                }       
             }
             return k;
 
-        case "u":   //calculate the u distance on the same col
+        case "u":   //calculate the up distance on the same col
             //col remains the same
             for(let i = s_row+1; i < rows; i++){
-                if(board[i * cols + s_col] == 0)
+                if(board[i * cols + s_col] == 0){
                     k++;
+                }
                 else{
-                    if(board[i * cols + s_col].color != board[s_row * cols + s_col].color)
+                    if(board[i * cols + s_col].color != board[s_row * cols + s_col].color){
                         k++;
+                    }
                     break;
                 }
             }
@@ -507,6 +504,15 @@ function maxDist(s_row, s_col, c){
             }
             return k;
         
+    }
+}
+
+function printBoard(){
+    for(let i = 0; i < rows; i++){
+        for(let j = 0; j < cols; j++){
+            console.log(board[i*cols + j].id);
+        }
+        console.log("\n");
     }
 }
 

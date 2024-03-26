@@ -25,3 +25,5 @@ add style to the board and background
 add a login
 
 add a game log for different users
+
+add a print board function for debug
