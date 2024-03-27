@@ -51,8 +51,8 @@ class piece {
 
         }
         this.id = type + i;
-        this.firstMove = true;
-        this.captured = false;
+        this.firstMove = true;  //it's only useful for kings and rooks (for castling) and pawns
+        this.captured = false;  //idk if it's actually useful 
         this.row;
         this.col;
         this.old_row;
@@ -76,16 +76,6 @@ let white_queen = new piece("w_queen");
 
 let black_king = new piece("b_king");
 let black_queen = new piece("b_queen");
-
-// let white_bishop = new piece("w_bishop");
-// let white_knight = new piece("w_knight");
-// let white_pawn = new piece("w_pawn");
-// let white_rook = new piece("w_rook");
-
-// let black_bishop = new piece("b_bishop");
-// let black_knight = new piece("b_knight");
-// let black_pawn = new piece("b_pawn");
-// let black_rook = new piece("b_rook");
 
 //creating white pieces
 for(let i = 0; i < 8; i++){
@@ -288,7 +278,6 @@ function dragDrop (e) {
     if(moveMade){
         updateBoard();
         switchTurn();
-        // printBoard();
     }
  
 }
@@ -396,20 +385,24 @@ function validate_move (dest_element, captureOpportunity) {
         else return false;
     }
     
-    // console.log("\n u \n r \n d \n l");
-    // console.log(maxDist(start_row, start_col, "u"));
-    // console.log(maxDist(start_row, start_col, "r"));
-    // console.log(maxDist(start_row, start_col, "d"));
-    // console.log(maxDist(start_row, start_col, "l"));
-    // console.log("-----------------------------------------------------------");
-    //rooks
-    if(draggedElement.id.includes("rook")){
-       if(end_col === start_col){
+    
+    //rooks and queen straight movement
+    if(draggedElement.id.includes("rook") || draggedElement.id.includes("queen")){
+       if(end_col === start_col && end_row === start_row) return false;
+        if(end_col === start_col){
             if((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))){
-                if(draggedElement.id.includes("white"))
-                    draggedPiece = white_rooks[i];
-                else
-                    draggedPiece = black_rooks[i];
+                if(draggedElement.id.includes("white")){
+                    if(draggedElement.id.includes("rook"))
+                        draggedPiece = white_rooks[i];
+                    else
+                        draggedPiece = white_queen;
+                }
+                else{
+                    if(draggedElement.id.includes("rook"))
+                        draggedPiece = black_rooks[i];
+                    else
+                        draggedPiece = white_queen;
+                }
                 draggedPiece.old_row = start_row;
                 draggedPiece.old_col = start_col;
                 draggedPiece.row = end_row;
@@ -420,10 +413,18 @@ function validate_move (dest_element, captureOpportunity) {
        }
        if(end_row === start_row){
             if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_col - maxDist(start_row, start_col, "r")))){
-                if(draggedElement.id.includes("white"))
-                    draggedPiece = white_rooks[i];
-                else
-                    draggedPiece = black_rooks[i];
+                if(draggedElement.id.includes("white")){
+                    if(draggedElement.id.includes("rook"))
+                        draggedPiece = white_rooks[i];
+                    else
+                        draggedPiece = white_queen;
+                }
+                else{
+                    if(draggedElement.id.includes("rook"))
+                        draggedPiece = black_rooks[i];
+                    else
+                        draggedPiece = black_queen;
+                }
                 draggedPiece.old_row = start_row;
                 draggedPiece.old_col = start_col;
                 draggedPiece.row = end_row;
@@ -432,6 +433,134 @@ function validate_move (dest_element, captureOpportunity) {
             }
             return false;
        }
+    }
+    // console.log("\n nw \n ne \n se \n sw");
+    // console.log(maxDistDiag(start_row, start_col, "nw"));
+    // console.log(maxDistDiag(start_row, start_col, "ne"));
+    // console.log(maxDistDiag(start_row, start_col, "se"));
+    // console.log(maxDistDiag(start_row, start_col, "sw"));
+    // console.log("-----------------------------------------------------------");
+    if(draggedElement.id.includes("bishop") || draggedElement.id.includes("queen")){
+        let index = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
+        let slope = Math.abs(end_row - start_row)/Math.abs(end_col - start_col);
+        // let possibleMove = false;
+        // let traveledX = Math.abs(end_col-start_col);
+        // let traveledY = Math.abs(end_row-start_row);
+        // let distance = 0;
+
+        //Math.floor(Math.sqrt((traveledX**2) + (traveledY**2)));
+            //ci metto pitagora con Math.ceil()
+            //e devo controllare di essere sulla stessa slope
+
+        if(end_row > start_row && end_col > start_col && slope === 1){
+            let i = start_row;
+            let j = start_col;
+            while(end_row != i && end_col != j) {
+                distance++;
+                i++;
+                j++;
+            }
+            if(distance <= maxDistDiag(start_row, start_col, "nw") ){
+                possibleMove = true;
+                if(draggedElement.id.includes("white")){
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = white_bishops[index];
+                    else
+                        draggedPiece = white_queen;
+                }
+                else{
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = black_bishops[index];
+                    else
+                        draggedPiece = black_queen;
+                }
+            }
+            else return false;
+            
+        }
+        else if(end_row > start_row && end_col < start_col && slope === 1){
+            let i = start_row;
+            let j = start_col;
+            while(end_row != i && end_col != j) {
+                distance++;
+                i++;
+                j--;
+            }
+            if(distance <= maxDistDiag(start_row, start_col, "ne") ){
+                possibleMove = true;
+                if(draggedElement.id.includes("white")){
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = white_bishops[index];
+                    else
+                        draggedPiece = white_queen;
+                }
+                else{
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = black_bishops[index];
+                    else
+                        draggedPiece = black_queen;
+                }
+            }
+            else return false;
+        }
+        else if(end_row < start_row && end_col > start_col && slope === 1){
+            let i = start_row;
+            let j = start_col;
+            while(end_row != i && end_col != j) {
+                distance++;
+                i--;
+                j++;
+            }
+            if(distance <= maxDistDiag(start_row, start_col, "sw") ){
+                possibleMove = true;
+                if(draggedElement.id.includes("white")){
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = white_bishops[index];
+                    else
+                        draggedPiece = white_queen;
+                }
+                else{
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = black_bishops[index];
+                    else
+                        draggedPiece = black_queen;
+                }
+            }
+            else return false;
+        }
+        else if(end_row < start_row && end_col < start_col && slope === 1){
+            let i = start_row;
+            let j = start_col;
+            while(end_row != i && end_col != j) {
+                distance++;
+                i--;
+                j--;
+            }
+            if(distance <= maxDistDiag(start_row, start_col, "se") ){
+                possibleMove = true;
+                if(draggedElement.id.includes("white")){
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = white_bishops[index];
+                    else
+                        draggedPiece = white_queen;
+                }
+                else{
+                    if(draggedElement.id.includes("bishop"))
+                        draggedPiece = black_bishops[index];
+                    else
+                        draggedPiece = black_queen;
+                }
+            }
+            else return false;
+        }
+        else {
+            return false;
+        }
+        draggedPiece.old_row = start_row;
+        draggedPiece.old_col = start_col;
+        draggedPiece.row = end_row;
+        draggedPiece.col = end_col;
+        return true;
     }
 
 }
@@ -506,6 +635,81 @@ function maxDist(s_row, s_col, c){
         
     }
 }
+
+function maxDistDiag(s_row, s_col, c){
+    let k = 0;
+    let i;
+    let j;
+    switch (c) {
+        case "nw":   //calculate the north west distance on the same diagonal
+            i = s_row+1;
+            j = s_col+1;
+            while(i < 8 && j < 8){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i++;
+                j++;
+            }
+            return k;
+        case "ne":   //calculate the north est distance on the same diagonal
+            i = s_row+1;
+            j = s_col-1;
+            while(i < 8 && j >= 0){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i++;
+                j--;
+            }
+            return k;
+
+        case "se":   //calculate the south est distance on the same diagonal
+            i = s_row-1;
+            j = s_col-1;
+            while(i >= 0 && j >= 0){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i--;
+                j--;
+            }
+            return k;
+
+        case "sw":   //calculate the south est distance on the same diagonal
+            i = s_row-1;
+            j = s_col+1;
+            while(i >= 0 && j < 8){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i--;
+                j++;
+            }
+            return k;
+    }
+}
+
 
 function printBoard(){
     for(let i = 0; i < rows; i++){

@@ -16,6 +16,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     border-collapse: collapse;
+    border: 2px solid #333; /* Board border */
 }
 
 .square {
@@ -47,4 +48,21 @@ h1 {
 
 .selected {
     background-color: rgb(96, 81, 57);
+}
+
+body {
+  /* margin: 0;
+  padding: 0; */
+  font-family: Arial, sans-serif; /* Change font family as needed */
+}
+
+.title-container {
+  text-align: center;
+  margin-top: 50px; /* Adjust as needed */
+}
+
+.big-title {
+  font-size: 3em; /* Adjust font size as needed */
+  color: rgb(96, 81, 57); /* Adjust color as needed */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adjust shadow properties as needed */
 }

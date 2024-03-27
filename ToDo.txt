@@ -1,12 +1,10 @@
 Finish piece move rooles:
-	bishop
-	rook
-		-> works partially 
-		-> if it has a different color piece adjacent, it shouldn't block it could capture it
-	queen
 	fix pawn
-		-> pawn can jump over pieces and it shouldn't
+		-> pawn can eat sidewase same color
+	fix horse
+		-> horse can eat same color piece 
 	en passant
+	castling 
 
 Add css style to piece possibile destinations
 
