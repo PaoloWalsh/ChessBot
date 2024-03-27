@@ -443,10 +443,10 @@ function validate_move (dest_element, captureOpportunity) {
     if(draggedElement.id.includes("bishop") || draggedElement.id.includes("queen")){
         let index = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         let slope = Math.abs(end_row - start_row)/Math.abs(end_col - start_col);
-        // let possibleMove = false;
+        let distance = 0;
+        let possibleMove = false;
         // let traveledX = Math.abs(end_col-start_col);
         // let traveledY = Math.abs(end_row-start_row);
-        // let distance = 0;
 
         //Math.floor(Math.sqrt((traveledX**2) + (traveledY**2)));
             //ci metto pitagora con Math.ceil()
