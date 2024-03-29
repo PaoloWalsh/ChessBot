@@ -1,8 +1,4 @@
 Finish piece move rooles:
-	fix pawn
-		-> pawn can eat sidewase same color
-	fix horse
-		-> horse can eat same color piece 
 	en passant
 	castling 
 

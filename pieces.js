@@ -1,40 +1,40 @@
 class piece {
     constructor(type) {
         switch (type) {
-            case "w_bishop":
+            case "white_bishop":
                 this.div = "<div class='piece' id='white_bishop' draggable='true'><img src='pictures/png/white-bishop.png' alt='w_bishop' id='w_bishop'></div>";
                 break;
-            case "w_king":
+            case "white_king":
                 this.div = "<div class='piece' id='white_king' draggable='true'><img src='pictures/png/white-king.png' alt='w_king' id='w_king'></div>";
                 break;
-            case "w_knight":
+            case "white_knight":
                 this.div = "<div class='piece' id='white_knight' draggable='true'><img src='pictures/png/white-knight.png' alt='w_knight' id='w_knight'></div>";
                 break;
-            case "w_pawn":
+            case "white_pawn":
                 this.div = "<div class='piece' id='white_pawn' draggable='true'><img src='pictures/png/white-pawn.png' alt='w_pawn' id='w_pawn'></div>";
                 break;
-            case "w_queen":
+            case "white_queen":
                 this.div = "<div class='piece' id='white_queen' draggable='true'><img src='pictures/png/white-queen.png' alt='w_queen' id='w_queen'></div>";
                 break;
-            case "w_rook":
+            case "white_rook":
                 this.div = "<div class='piece' id='white_rook' draggable='true'><img src='pictures/png/white-rook.png' alt='w_rook' id='w_rook'></div>";
                 break;
-            case "b_bishop":
+            case "black_bishop":
                 this.div = "<div class='piece' id='black_bishop' draggable='true'><img src='pictures/png/black-bishop.png' alt='b_bishop' id='b_bishop'></div>";
                 break;
-            case "b_king":
+            case "black_king":
                 this.div = "<div class='piece' id='black_king' draggable='true'><img src='pictures/png/black-king.png' alt='b_king' id='b_king'></div>";
                 break;
-            case "b_knight":
+            case "black_knight":
                 this.div = "<div class='piece' id='black_knight' draggable='true'><img src='pictures/png/black-knight.png' alt='b_knight' id='b_knight'></div>";
                 break;
-            case "b_pawn":
+            case "black_pawn":
                 this.div = "<div class='piece' id='black_pawn' draggable='true'><img src='pictures/png/black-pawn.png' alt='b_pawn' id='b_pawn'></div>";
                 break;
-            case "b_queen":
+            case "black_queen":
                 this.div = "<div class='piece' id='black_queen' draggable='true'><img src='pictures/png/black-queen.png' alt='b_queen' id='b_queen'></div>";
                 break;
-            case "b_rook":
+            case "black_rook":
                 this.div = "<div class='piece' id='black_rook' draggable='true'><img src='pictures/png/black-rook.png' alt='b_rook' id='b_rook'></div>";   
                 break;
 
@@ -47,19 +47,19 @@ class piece {
     }
 }
 
-let white_bishop = new piece("w_bishop");
-let white_king = new piece("w_king");
-let white_knight = new piece("w_knight");
-let white_pawn = new piece("w_pawn");
-let white_queen = new piece("w_queen");
-let white_rook = new piece("w_rook");
+let white_bishop = new piece("white_bishop");
+let white_king = new piece("white_king");
+let white_knight = new piece("white_knight");
+let white_pawn = new piece("white_pawn");
+let white_queen = new piece("white_queen");
+let white_rook = new piece("white_rook");
 
-let black_bishop = new piece("b_bishop");
-let black_king = new piece("b_king");
-let black_knight = new piece("b_knight");
-let black_pawn = new piece("b_pawn");
-let black_queen = new piece("b_queen");
-let black_rook = new piece("b_rook");
+let black_bishop = new piece("black_bishop");
+let black_king = new piece("black_king");
+let black_knight = new piece("black_knight");
+let black_pawn = new piece("black_pawn");
+let black_queen = new piece("black_queen");
+let black_rook = new piece("black_rook");
 
 const pieces = [
     white_rook.div, white_knight.div, white_bishop.div, white_king.div, white_queen.div, white_bishop.div, white_knight.div, white_rook.div,

@@ -4,7 +4,7 @@ const rows = 8;
 const cols = 8;
 
 let white_turn = true;
-let balck_turn = false;
+let balck_turn = true;
 
 const capture_sound = new Audio('audio/capture.mp3');
 const move_sound = new Audio('audio/move-self.mp3');
@@ -12,45 +12,48 @@ const move_sound = new Audio('audio/move-self.mp3');
 class piece {
     constructor(type, i) {
         switch (type) {
-            case "w_bishop":
+            case "white_bishop":
                 this.div = "<div class='piece' id='white_bishop" + i + "' draggable='true'><img src='pictures/png/white-bishop.png' alt='w_bishop' id='w_bishop'></div>";
                 break;
-            case "w_king":
+            case "white_king":
                 this.div = "<div class='piece' id='white_king' draggable='true'><img src='pictures/png/white-king.png' alt='w_king' id='w_king'></div>";
                 break;
-            case "w_knight":
+            case "white_knight":
                 this.div = "<div class='piece' id='white_knight" + i + "' draggable='true'><img src='pictures/png/white-knight.png' alt='w_knight' id='w_knight'></div>";
                 break;
-            case "w_pawn":
+            case "white_pawn":
                 this.div = "<div class='piece' id='white_pawn" + i + "' draggable='true'><img src='pictures/png/white-pawn.png' alt='w_pawn' id='w_pawn'></div>";
                 break;
-            case "w_queen":
+            case "white_queen":
                 this.div = "<div class='piece' id='white_queen' draggable='true'><img src='pictures/png/white-queen.png' alt='w_queen' id='w_queen'></div>";
                 break;
-            case "w_rook":
+            case "white_rook":
                 this.div = "<div class='piece' id='white_rook" + i + "' draggable='true'><img src='pictures/png/white-rook.png' alt='w_rook' id='w_rook'></div>";
                 break;
-            case "b_bishop":
+            case "black_bishop":
                 this.div = "<div class='piece' id='black_bishop" + i + "' draggable='true'><img src='pictures/png/black-bishop.png' alt='b_bishop' id='b_bishop'></div>";
                 break;
-            case "b_king":
+            case "black_king":
                 this.div = "<div class='piece' id='black_king' draggable='true'><img src='pictures/png/black-king.png' alt='b_king' id='b_king'></div>";
                 break;
-            case "b_knight":
+            case "black_knight":
                 this.div = "<div class='piece' id='black_knight" + i + "' draggable='true'><img src='pictures/png/black-knight.png' alt='b_knight' id='b_knight'></div>";
                 break;
-            case "b_pawn":
+            case "black_pawn":
                 this.div = "<div class='piece' id='black_pawn" + i + "' draggable='true'><img src='pictures/png/black-pawn.png' alt='b_pawn' id='b_pawn'></div>";
                 break;
-            case "b_queen":
+            case "black_queen":
                 this.div = "<div class='piece' id='black_queen' draggable='true'><img src='pictures/png/black-queen.png' alt='b_queen' id='b_queen'></div>";
                 break;
-            case "b_rook":
+            case "black_rook":
                 this.div = "<div class='piece' id='black_rook" + i + "' draggable='true'><img src='pictures/png/black-rook.png' alt='b_rook' id='b_rook'></div>";   
                 break;
 
         }
-        this.id = type + i;
+        if(isNaN(i))
+            this.id = type;
+        else
+            this.id = type + i;
         this.firstMove = true;  //it's only useful for kings and rooks (for castling) and pawns
         this.captured = false;  //idk if it's actually useful 
         this.row;
@@ -71,15 +74,15 @@ let black_bishops = [];
 let black_knights = [];
 let black_rooks = [];
 
-let white_king = new piece("w_king");
-let white_queen = new piece("w_queen");
+let white_king = new piece("white_king");
+let white_queen = new piece("white_queen");
 
-let black_king = new piece("b_king");
-let black_queen = new piece("b_queen");
+let black_king = new piece("black_king");
+let black_queen = new piece("black_queen");
 
 //creating white pieces
 for(let i = 0; i < 8; i++){
-    white_pawns[i] = new piece("w_pawn", i);
+    white_pawns[i] = new piece("white_pawn", i);
     white_pawns[i].row = white_pawns[i].old_row = 1;
     white_pawns[i].col = white_pawns[i].old_col = i;
     white_pawns[i].color = "white";
@@ -87,7 +90,7 @@ for(let i = 0; i < 8; i++){
 }
 
 for(let i = 0; i < 2; i++){
-    white_bishops[i] = new piece("w_bishop", i);
+    white_bishops[i] = new piece("white_bishop", i);
     white_bishops[i].row = white_bishops[i].old_row = 0;
     if(i == 0)
         white_bishops[i].col = white_bishops[i].old_col = 2;
@@ -97,7 +100,7 @@ for(let i = 0; i < 2; i++){
 }  
 
 for(let i = 0; i < 2; i++){
-    white_knights[i] = new piece("w_knight", i);
+    white_knights[i] = new piece("white_knight", i);
     white_knights[i].row = white_knights[i].old_row = 0;
     if(i == 0)
         white_knights[i].col = white_knights[i].old_col = 1;
@@ -107,7 +110,7 @@ for(let i = 0; i < 2; i++){
 }
 
 for(let i = 0; i < 2; i++){
-    white_rooks[i] = new piece("w_rook", i);
+    white_rooks[i] = new piece("white_rook", i);
     white_rooks[i].row = white_rooks[i].old_row = 0;
     if(i == 0)
         white_rooks[i].col = white_rooks[i].old_col = 0;
@@ -126,14 +129,14 @@ white_queen.color = "white";
 
 //creating black pieces
 for(let i = 0; i < 8; i++){
-    black_pawns[i] = new piece("b_pawn", i);
+    black_pawns[i] = new piece("black_pawn", i);
     black_pawns[i].row = black_pawns[i].old_row = 6;
     black_pawns[i].col = black_pawns[i].old_col = i;
     black_pawns[i].color = "black";
 }
 
 for(let i = 0; i < 2; i++){
-    black_bishops[i] = new piece("b_bishop", i);
+    black_bishops[i] = new piece("black_bishop", i);
     black_bishops[i].row = black_bishops[i].old_row = 7;
     if(i == 0)
         black_bishops[i].col = black_bishops[i].old_col = 2;
@@ -143,7 +146,7 @@ for(let i = 0; i < 2; i++){
 }
 
 for(let i = 0; i < 2; i++){
-    black_knights[i] = new piece("b_knight", i);
+    black_knights[i] = new piece("black_knight", i);
     black_knights[i].row = black_knights[i].old_row = 7;
     if(i == 0)
         black_knights[i].col = black_knights[i].old_col = 1;
@@ -153,7 +156,7 @@ for(let i = 0; i < 2; i++){
 }
 
 for(let i = 0; i < 2; i++){
-    black_rooks[i] = new piece("b_rook", i);
+    black_rooks[i] = new piece("black_rook", i);
     black_rooks[i].row = black_rooks[i].old_row = 7;
     if(i == 0)
         black_rooks[i].col = black_rooks[i].old_col = 0;
@@ -249,8 +252,12 @@ function dragOver (e) {
 function dragDrop (e) {
     let moveMade;
     e.stopPropagation();
+    moveMade = false;
     if((white_turn && draggedElement.id.includes("white"))
         || (balck_turn && draggedElement.id.includes("black"))){
+        // console.log("primissimo");
+        // console.log(draggedElement);
+        // console.log(e.target);
         // if true -> the target square is empty
         if(e.target.classList.contains("square"))
         {
@@ -262,8 +269,8 @@ function dragDrop (e) {
             
         }
         //check if the target square has a same colored piece
-        else if ((white_turn && e.target.id.includes("black"))
-            || (balck_turn && e.target.id.includes("white")))
+        else if ((draggedElement.id.includes("white") && e.target.id.includes("black"))
+            || (draggedElement.id.includes("black") && e.target.id.includes("white")))
         {
             //if true -> the target square has a different color piece
             moveMade = validate_move(e.target.parentNode, true);
@@ -274,10 +281,26 @@ function dragDrop (e) {
                 
             }
         }
+        else if ((draggedElement.id.includes("white_king") && e.target.id.includes("white_rook"))
+            || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
+        )
+        {
+            console.log("dovrei essere qui");
+            moveMade = validate_move(e.target.parentNode, false, e.target);
+            if(moveMade) {
+                console.log("sposto");
+                let rookEndSquare = draggedElement.parentNode;
+                let kingEndSquare = e.target.parentNode;
+                draggedElement.remove();
+                e.target.remove();
+                rookEndSquare.append(e.target);
+                kingEndSquare.append(draggedElement);
+            }
+        }
     }
     if(moveMade){
         updateBoard();
-        switchTurn();
+        // switchTurn();
     }
  
 }
@@ -293,7 +316,7 @@ function switchTurn(){
     }
 }
 
-function validate_move (dest_element, captureOpportunity) {
+function validate_move (dest_element, captureOpportunity, castle) {
     let start_index = parseInt(startPositionId);
     let start_row = Math.floor(start_index/rows);   
     let start_col = start_index%rows;
@@ -369,6 +392,18 @@ function validate_move (dest_element, captureOpportunity) {
 
     //kings
     if(draggedElement.id.includes("king")){
+        let rook_index = parseInt(castle.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
+        let castlignRook;   //rook which with I want to castle
+        if(draggedElement.id.includes("white")){
+            draggedPiece = white_king;
+            castlignRook = white_rooks[rook_index];
+        }
+        else{
+            draggedPiece = black_king;
+            castlignRook = black_rooks[rook_index];
+        }
+        console.log(draggedPiece.id);
+        console.log(castlignRook.id);
         if((end_row >= start_row - 1) && (end_row <= start_row + 1)
             && (end_col >= start_col - 1) && (end_col <= end_col + 1)){
                 if(draggedElement.id.includes("white"))
@@ -382,6 +417,25 @@ function validate_move (dest_element, captureOpportunity) {
                 draggedPiece.col = end_col;
                 return true;
         }
+        else if ((draggedPiece.firstMove == true && castlignRook.firstMove == true)) {
+            if(((draggedPiece.col > castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "r")+1) === Math.abs(draggedPiece.col - castlignRook.col) )) //if the king is right of the rook
+                || ((draggedPiece.col < castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "l")+1) === Math.abs(castlignRook.col - draggedPiece.col))) //if the king is left of the rook
+            ){
+                console.log("can castle");
+                draggedPiece.old_row = start_row;
+                draggedPiece.old_col = start_col;
+                draggedPiece.old_row = end_row;
+                draggedPiece.old_col = end_col;
+                castlignRook.old_row = castlignRook.row;
+                castlignRook.old_col = castlignRook.col;
+                castlignRook.row = start_row;
+                castlignRook.col = start_col;
+                draggedPiece.firstMove = false;
+                castlignRook.firstMove = false;
+                return true;
+            }
+            else return false;
+        } 
         else return false;
     }
     
@@ -401,12 +455,13 @@ function validate_move (dest_element, captureOpportunity) {
                     if(draggedElement.id.includes("rook"))
                         draggedPiece = black_rooks[i];
                     else
-                        draggedPiece = white_queen;
+                        draggedPiece = black_queen;
                 }
                 draggedPiece.old_row = start_row;
                 draggedPiece.old_col = start_col;
                 draggedPiece.row = end_row;
                 draggedPiece.col = end_col;
+                draggedPiece.firstMove = false;
                 return true;
             }
             return false;
@@ -429,6 +484,7 @@ function validate_move (dest_element, captureOpportunity) {
                 draggedPiece.old_col = start_col;
                 draggedPiece.row = end_row;
                 draggedPiece.col = end_col;
+                draggedPiece.firstMove = false;
                 return true;
             }
             return false;
