@@ -1,4 +1,4 @@
-Finish piece move rooles:
+Finish piece move rules:
 	en passant
 	castling 
 
@@ -21,3 +21,4 @@ add a login
 add a game log for different users
 
 add a print board function for debug
+ 

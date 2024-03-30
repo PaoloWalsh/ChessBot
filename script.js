@@ -289,12 +289,27 @@ function dragDrop (e) {
             moveMade = validate_move(e.target.parentNode, false, e.target);
             if(moveMade) {
                 console.log("sposto");
-                let rookEndSquare = draggedElement.parentNode;
-                let kingEndSquare = e.target.parentNode;
+                let rookStartSquare = e.target.parentNode;
+                let kingStartSquare = draggedElement.parentNode;
+                let rookEndSquare;
+                //= draggedElement.parentNode;
+                let kingEndSquare;
+                //= e.target.parentNode;
+                let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
+                let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
                 draggedElement.remove();
                 e.target.remove();
+                if(kingIndex > rookIndex){  //I'm castling to the right
+                    rookEndSquare = document.getElementById((kingIndex-1)+'');
+                    kingEndSquare = document.getElementById((rookIndex+1)+'');
+                }
+                else{
+                    rookEndSquare = document.getElementById((kingIndex+1)+'');
+                    kingEndSquare = document.getElementById((rookIndex-2)+'');
+                }
                 rookEndSquare.append(e.target);
                 kingEndSquare.append(draggedElement);
+                move_sound.play();
             }
         }
     }
