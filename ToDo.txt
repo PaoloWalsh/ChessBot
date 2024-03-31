@@ -1,12 +1,11 @@
 Finish piece move rules:
 	en passant
-	castling 
+
+add check logic
 
 Add css style to piece possibile destinations
 
 Add captured attribute to class piece
-
-add check logic
 
 add check mate 
 
@@ -19,6 +18,4 @@ add style to the board and background
 add a login
 
 add a game log for different users
-
-add a print board function for debug
  

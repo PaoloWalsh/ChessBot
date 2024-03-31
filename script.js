@@ -6,6 +6,8 @@ const cols = 8;
 let white_turn = true;
 let balck_turn = true;
 
+let enPassantPlayed = false;
+
 const capture_sound = new Audio('audio/capture.mp3');
 const move_sound = new Audio('audio/move-self.mp3');
 
@@ -61,6 +63,7 @@ class piece {
         this.old_row;
         this.old_col;
         this.color;
+        this.movesMade = 0; //counts the number of moves that where made
     }
 }
 
@@ -174,7 +177,7 @@ black_queen.col = black_queen.old_col = 4;
 black_queen.color = "black";
 
 
-//da mettere le colonne fatte bene
+
 let board = [
     white_rooks[0], white_knights[0], white_bishops[0], white_king, white_queen, white_bishops[1], white_knights[1], white_rooks[1],
     white_pawns[0], white_pawns[1], white_pawns[2], white_pawns[3], white_pawns[4], white_pawns[5], white_pawns[6], white_pawns[7], 
@@ -255,16 +258,18 @@ function dragDrop (e) {
     moveMade = false;
     if((white_turn && draggedElement.id.includes("white"))
         || (balck_turn && draggedElement.id.includes("black"))){
-        // console.log("primissimo");
-        // console.log(draggedElement);
-        // console.log(e.target);
         // if true -> the target square is empty
         if(e.target.classList.contains("square"))
         {
             moveMade = validate_move(e.target, false);
             if(moveMade){
                 e.target.append(draggedElement);
-                move_sound.play();
+                if(enPassantPlayed){
+                    capture_sound.play();
+                    enPassantPlayed = false;
+                }
+                else
+                    move_sound.play();
             }
             
         }
@@ -284,17 +289,14 @@ function dragDrop (e) {
         else if ((draggedElement.id.includes("white_king") && e.target.id.includes("white_rook"))
             || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
         )
-        {
-            console.log("dovrei essere qui");
-            moveMade = validate_move(e.target.parentNode, false, e.target);
+        {   
+            let castlignRook = divToPiece(e.target);
+            moveMade = validate_move(e.target.parentNode, false, castlignRook);
             if(moveMade) {
-                console.log("sposto");
                 let rookStartSquare = e.target.parentNode;
                 let kingStartSquare = draggedElement.parentNode;
                 let rookEndSquare;
-                //= draggedElement.parentNode;
                 let kingEndSquare;
-                //= e.target.parentNode;
                 let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
                 let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
                 draggedElement.remove();
@@ -331,7 +333,7 @@ function switchTurn(){
     }
 }
 
-function validate_move (dest_element, captureOpportunity, castle) {
+function validate_move (dest_element, captureOpportunity, castlignRook) {
     let start_index = parseInt(startPositionId);
     let start_row = Math.floor(start_index/rows);   
     let start_col = start_index%rows;
@@ -345,19 +347,31 @@ function validate_move (dest_element, captureOpportunity, castle) {
     if(draggedElement.id.includes("white_pawn")){
         let t = white_pawns[i].firstMove ? 1 : 0;
         let diag = captureOpportunity ? 1 : 0;
+        let possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
         if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
                 if(captureOpportunity && end_col === start_col)
                     return false;
                 draggedPiece = white_pawns[i];
-                white_pawns[i].firstMove = false;
-                white_pawns[i].old_row = start_row;
-                white_pawns[i].old_col = start_col;
-                white_pawns[i].row = end_row;
-                white_pawns[i].col = end_col;
-                return true;
+                
             }
-        else return false;
+        else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.id.includes("black_pawn") && 
+            possibleEnPassantPawn.movesMade === 1 && end_row === 5 && (end_row-start_row) === 1){
+            possibleEnPassantPawn.captured = true;
+            board[(end_row-1)*cols + end_col] = 0;
+            pieceOffSquare(end_row-1, end_col);
+            draggedPiece = white_pawns[i];
+            enPassantPlayed = true;
+            }
+        else 
+            return false;
+        draggedPiece.firstMove = false;
+        draggedPiece.old_row = start_row;
+        draggedPiece.old_col = start_col;
+        draggedPiece.row = end_row;
+        draggedPiece.col = end_col;
+        draggedPiece.movesMade++;
+        return true;
     }
     
     //black pawn
@@ -365,19 +379,31 @@ function validate_move (dest_element, captureOpportunity, castle) {
         let i = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         let t = black_pawns[i].firstMove ? -1 : 0;
         let diag = captureOpportunity ? 1 : 0;
+        let possibleEnPassantPawn = board[(end_row+1)*cols + end_col];
         if((end_row <= start_row) && (end_row >= start_row - 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
                 if(captureOpportunity && end_col === start_col)
                     return false;
                 draggedPiece = black_pawns[i];
-                black_pawns[i].firstMove = false;
-                black_pawns[i].old_row = start_row;
-                black_pawns[i].old_col = start_col;
-                black_pawns[i].row = end_row;
-                black_pawns[i].col = end_col;
-                return true;
+                
             }
+        else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.id.includes("white_pawn") 
+            && possibleEnPassantPawn.movesMade === 1 && end_row === 2 && (end_row-start_row) === -1){
+            possibleEnPassantPawn.captured = true;
+            board[(end_row+1)*cols + end_col] = 0;
+            pieceOffSquare(end_row+1, end_col);
+            draggedPiece = black_pawns[i];
+            enPassantPlayed = true;
+        }
         else return false;
+        draggedPiece.firstMove = false;
+        draggedPiece.old_row = start_row;
+        draggedPiece.old_col = start_col;
+        draggedPiece.row = end_row;
+        draggedPiece.col = end_col;
+        draggedPiece.movesMade++;
+        return true;
+            
     }
 
     //knights
@@ -400,6 +426,7 @@ function validate_move (dest_element, captureOpportunity, castle) {
                 draggedPiece.old_col = start_col;
                 draggedPiece.row = end_row;
                 draggedPiece.col = end_col;
+                draggedPiece.movesMade++;
                 return true;
             }
         else return false;
@@ -407,36 +434,28 @@ function validate_move (dest_element, captureOpportunity, castle) {
 
     //kings
     if(draggedElement.id.includes("king")){
-        let rook_index = parseInt(castle.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
-        let castlignRook;   //rook which with I want to castle
+        // let rook_index = parseInt(castle.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
+        //rook which with I want to castle
         if(draggedElement.id.includes("white")){
             draggedPiece = white_king;
-            castlignRook = white_rooks[rook_index];
         }
         else{
             draggedPiece = black_king;
-            castlignRook = black_rooks[rook_index];
         }
-        console.log(draggedPiece.id);
-        console.log(castlignRook.id);
         if((end_row >= start_row - 1) && (end_row <= start_row + 1)
             && (end_col >= start_col - 1) && (end_col <= end_col + 1)){
-                if(draggedElement.id.includes("white"))
-                    draggedPiece = white_king;
-                else   //black king
-                    draggedPiece = black_king;
-                
                 draggedPiece.old_row = start_row;
                 draggedPiece.old_col = start_col;
                 draggedPiece.row = end_row;
                 draggedPiece.col = end_col;
+                draggedPiece.firstMove = false;
+                draggedPiece.movesMade++;
                 return true;
         }
         else if ((draggedPiece.firstMove == true && castlignRook.firstMove == true)) {
             if(((draggedPiece.col > castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "r")+1) === Math.abs(draggedPiece.col - castlignRook.col) )) //if the king is right of the rook
                 || ((draggedPiece.col < castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "l")+1) === Math.abs(castlignRook.col - draggedPiece.col))) //if the king is left of the rook
             ){
-                console.log("can castle");
                 draggedPiece.old_row = start_row;
                 draggedPiece.old_col = start_col;
                 draggedPiece.old_row = end_row;
@@ -447,6 +466,7 @@ function validate_move (dest_element, captureOpportunity, castle) {
                 castlignRook.col = start_col;
                 draggedPiece.firstMove = false;
                 castlignRook.firstMove = false;
+                draggedPiece.movesMade++;
                 return true;
             }
             else return false;
@@ -477,6 +497,7 @@ function validate_move (dest_element, captureOpportunity, castle) {
                 draggedPiece.row = end_row;
                 draggedPiece.col = end_col;
                 draggedPiece.firstMove = false;
+                draggedPiece.movesMade++;
                 return true;
             }
             return false;
@@ -500,28 +521,19 @@ function validate_move (dest_element, captureOpportunity, castle) {
                 draggedPiece.row = end_row;
                 draggedPiece.col = end_col;
                 draggedPiece.firstMove = false;
+                draggedPiece.movesMade++;
                 return true;
             }
             return false;
        }
     }
-    // console.log("\n nw \n ne \n se \n sw");
-    // console.log(maxDistDiag(start_row, start_col, "nw"));
-    // console.log(maxDistDiag(start_row, start_col, "ne"));
-    // console.log(maxDistDiag(start_row, start_col, "se"));
-    // console.log(maxDistDiag(start_row, start_col, "sw"));
-    // console.log("-----------------------------------------------------------");
+
     if(draggedElement.id.includes("bishop") || draggedElement.id.includes("queen")){
         let index = parseInt(draggedElement.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         let slope = Math.abs(end_row - start_row)/Math.abs(end_col - start_col);
         let distance = 0;
         let possibleMove = false;
-        // let traveledX = Math.abs(end_col-start_col);
-        // let traveledY = Math.abs(end_row-start_row);
-
-        //Math.floor(Math.sqrt((traveledX**2) + (traveledY**2)));
-            //ci metto pitagora con Math.ceil()
-            //e devo controllare di essere sulla stessa slope
+        
 
         if(end_row > start_row && end_col > start_col && slope === 1){
             let i = start_row;
@@ -631,8 +643,21 @@ function validate_move (dest_element, captureOpportunity, castle) {
         draggedPiece.old_col = start_col;
         draggedPiece.row = end_row;
         draggedPiece.col = end_col;
+        draggedPiece.movesMade++;
         return true;
     }
+
+}
+
+// deletes a piece from its square html wise
+function pieceOffSquare(row, col) {
+    let squareNumber = row*8 + col;
+    let square = document.getElementById(squareNumber+'');
+    let divPiece = square.firstElementChild;
+    divPiece.remove();
+}
+
+function checkCheck() {
 
 }
 
@@ -791,3 +816,64 @@ function printBoard(){
     }
 }
 
+//gets the html div element that rappresents the piece and returns the js object
+function divToPiece (element) {
+    let piece;
+    let id = element.getAttribute('id');
+    let index = parseInt(id.slice(-1)); //get the last character of the id and convert it to string; 
+    console.log()
+    switch (id) {
+        case "white_king":
+            piece = white_king;
+            return piece;
+        case "white_queen":
+            piece = white_queen;
+            return piece;
+        case "black_king":
+            piece = black_king;
+            return piece;
+        case "black_queen":
+            piece = black_queen;
+            return piece;
+    }
+    id = id.slice(0, -1); //all pieces without an array are coverd, it means the last character is the index so 
+                          //i want the string without the last character
+    switch (id) {
+        case "white_pawn":
+            piece = white_pawns[index];
+            break;
+    
+        case "white_bishop":
+            piece = white_bishops[index];
+            break;
+    
+        case "white_knight":
+            piece = white_knights[index];
+            break;
+    
+        case "white_rook":
+            piece = white_rooks[index];
+            break;
+
+        case "black_pawn":
+            piece = black_pawns[index];
+            break;
+    
+        case "black_bishop":
+            piece = black_bishops[index];
+            break;
+    
+        case "black_knight":
+            piece = black_knights[index];
+            break;
+    
+        case "black_rook":
+            piece = black_rooks[index];
+            break;
+    
+        default:
+            piece = 0;
+            break;
+    }
+    return piece;
+}
