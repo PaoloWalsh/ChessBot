@@ -1,7 +1,7 @@
 Finish piece move rules:
-	en passant
-
-add check logic
+	en passant should only work the subsequent move
+	add check logic with castling
+	add check mate
 
 Add css style to piece possibile destinations
 
