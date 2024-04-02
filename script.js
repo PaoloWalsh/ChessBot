@@ -71,6 +71,7 @@ class piece {
         this.color;
         this.movesMade = 0; //counts the number of moves that where made
         this.possibleMoves = new Array();
+        this.value;
     }
 }
 
@@ -96,6 +97,7 @@ for(let i = 0; i < 8; i++){
     white_pawns[i].row = white_pawns[i].old_row = 1;
     white_pawns[i].col = white_pawns[i].old_col = i;
     white_pawns[i].color = "white";
+    white_pawns[i].value = 1;
 
 }
 
@@ -107,6 +109,7 @@ for(let i = 0; i < 2; i++){
     else 
         white_bishops[i].col = white_bishops[i].old_col = 5;
     white_bishops[i].color = "white";
+    white_bishops[i].value = 3;
 }  
 
 for(let i = 0; i < 2; i++){
@@ -117,6 +120,7 @@ for(let i = 0; i < 2; i++){
     else 
         white_knights[i].col = white_knights[i].old_col = 6;
     white_knights[i].color = "white";
+    white_knights[i].value = 3;
 }
 
 for(let i = 0; i < 2; i++){
@@ -127,6 +131,7 @@ for(let i = 0; i < 2; i++){
     else 
         white_rooks[i].col = white_rooks[i].old_col = 7;
     white_rooks[i].color = "white";
+    white_rooks[i].value = 5;
 }
 
 white_king.row = white_king.old_row = 0;
@@ -136,6 +141,7 @@ white_king.color = "white";
 white_queen.row = white_queen.old_row = 0;
 white_queen.col = white_queen.old_col = 4;
 white_queen.color = "white";
+white_queen.value = 9;
 
 //creating black pieces
 for(let i = 0; i < 8; i++){
@@ -143,6 +149,7 @@ for(let i = 0; i < 8; i++){
     black_pawns[i].row = black_pawns[i].old_row = 6;
     black_pawns[i].col = black_pawns[i].old_col = i;
     black_pawns[i].color = "black";
+    black_pawns[i].value = -1;
 }
 
 for(let i = 0; i < 2; i++){
@@ -152,7 +159,8 @@ for(let i = 0; i < 2; i++){
         black_bishops[i].col = black_bishops[i].old_col = 2;
     else 
         black_bishops[i].col = black_bishops[i].old_col = 5;
-        black_bishops[i].color = "black";
+    black_bishops[i].color = "black";
+    black_bishops[i].value = -3;
 }
 
 for(let i = 0; i < 2; i++){
@@ -163,6 +171,7 @@ for(let i = 0; i < 2; i++){
     else 
         black_knights[i].col = black_knights[i].old_col = 6;
         black_knights[i].color = "black";
+        black_knights[i].value = -3;
 }
 
 for(let i = 0; i < 2; i++){
@@ -173,6 +182,7 @@ for(let i = 0; i < 2; i++){
     else 
         black_rooks[i].col = black_rooks[i].old_col = 7;
         black_rooks[i].color = "black";
+        black_rooks[i].value = -5;
 }
 
 black_king.row = black_king.old_row = 7;
@@ -182,6 +192,7 @@ black_king.color = "black";
 black_queen.row = black_queen.old_row = 7;
 black_queen.col = black_queen.old_col = 4;
 black_queen.color = "black";
+black_queen.value = -9;
 
 
 
@@ -199,8 +210,6 @@ let board = [
 for(let i = 0; i < 16; i++){
     white_pieces[i] = board[i];
     black_pieces[i] = board[48+i];
-    // console.log(white_pieces[i].id);
-    // console.log(black_pieces[i].id);
 }
 
 
@@ -391,16 +400,11 @@ function dragDrop (e) {
     if(moveMade){
         updateBoard();
         checkCheck();
-        console.log("stampo le mosse della nera torre 0 versione 2")
-        for(let i = 0; i < black_rooks[0].possibleMoves.length; i++ )
-            console.log(black_rooks[0].possibleMoves[i]);
+        console.log("stato a fine chiamata");
         console.log(white_in_check);
         console.log(black_in_check);
         switchTurn();
         updateMessages();
-        // console.log(checkCheck());
-        // console.log(white_in_check);
-        // console.log(black_in_check);
     }
     //devo passare a checkcheck le cordinate di dove voglio andare a mettere il re e in caso impedire la mossa
     //prima che avvenga
@@ -408,16 +412,18 @@ function dragDrop (e) {
 //it tells if the move I'm trying to make will get me out of check
 function moveWithCheck (destinationSquare, start_row, start_col, id, pawnCaptureOpportunity) {
     if(validate_move(destinationSquare, start_row, start_col, id, false, pawnCaptureOpportunity)){ //valido la mossa
-        //console.log("dentro if giusto giusto");
+        // console.log("dentro if giusto giusto");
         let piece = divToPiece(draggedElement);
-        console.log(piece.id);
+        // console.log(piece.id);
         let end_index = parseInt(destinationSquare.getAttribute('id'));
-        console.log(end_index);
         let end_row = Math.floor(end_index/rows);
         let end_col = end_index%rows;
         let support_piece = board[end_row*cols+end_col];
+
         if(support_piece != 0)
             support_piece.captured = true;
+        // console.log("ho catturato");
+        // console.log(black_rooks[0].captured);
         let support_row = piece.row;
         let support_col = piece.col;
         piece.row = end_row;
@@ -426,9 +432,6 @@ function moveWithCheck (destinationSquare, start_row, start_col, id, pawnCapture
         board[end_row*cols+end_col] = piece;
         console.log(board[end_row*cols+end_col]);
         checkCheck();
-        console.log("stampo le mosse della nera torre 0 versione 1")
-        for(let i = 0; i < black_rooks[0].possibleMoves.length; i++ )
-            console.log(black_rooks[0].possibleMoves[i]);
         console.log("bianco in scacco:");
         console.log(white_in_check);
         console.log("nero in scacco:");
@@ -440,12 +443,73 @@ function moveWithCheck (destinationSquare, start_row, start_col, id, pawnCapture
             support_piece.captured = false;
         piece.row = support_row;
         piece.col = support_col;
+        // console.log("stampo le mosse possibili del black king");
+        // for(let i = 0; i < black_king.possibleMoves.length; i++)
+        //     console.log(black_king.possibleMoves[i]);
+        // let square = document.getElementById(28+'');
+        // console.log("cordinate re nero");
+        // console.log(black_king.row);
+        // console.log(black_king.col);
+        // console.log(validate_move(square, black_king.row, black_king.col, black_king.id, false, false));
         if((white_turn && white_in_check) || (black_turn && black_in_check)) return false;
         //simulo la mossa e chiamo checkchek
         //se sono ancora in scacco return
         return true;
     }
     else return false;
+}
+
+
+//return true if we are in check mate
+function checkMate () {
+    let my_pieces;
+    if(white_in_check){  //is there a move that gets me out of check?
+        my_pieces = white_pieces;
+    }
+    else if(black_in_check){    //is there a move that gets me out of check?
+        my_pieces = black_pieces;
+    }
+    else return false;
+
+    let temp_white_check = white_in_check;
+    let temp_black_check = black_in_check;
+    for(let i = 0; i < 16; i++){
+        if(my_pieces[i].captured)
+            continue;
+        for(let j = 0; j < 64; j++){
+            let square = document.getElementById(j+'');
+            if(validate_move(square, my_pieces[i].row, my_pieces[i].col, my_pieces[i].id, false, true )){
+                let end_index = parseInt(square.getAttribute('id'));
+                let end_row = Math.floor(end_index/rows);
+                let end_col = end_index%rows;
+                let support_piece = board[end_row*cols+end_col];
+
+                if(support_piece != 0)
+                    support_piece.captured = true;
+                let support_row = my_pieces[i].row;
+                let support_col = my_pieces[i].col;
+                my_pieces[i].row = end_row;
+                my_pieces[i].col = end_col;
+                board[support_row*cols+support_col] = 0;
+                board[end_row*cols+end_col] = my_pieces[i];
+                checkCheck();
+                board[end_row*cols+end_col] = support_piece;
+                board[support_row*cols+support_col] = my_pieces[i];
+                if(support_piece != 0)
+                    support_piece.captured = false;
+                my_pieces[i].row = support_row;
+                my_pieces[i].col = support_col;
+
+            }
+        }
+    }
+    if(white_turn && white_in_check || black_turn && black_in_check)
+        return true;
+    else{
+        white_in_check = temp_white_check;
+        black_in_check = temp_black_check;
+    }
+    return false;
 }
 
 function switchTurn(){
@@ -462,6 +526,8 @@ function switchTurn(){
 function updateMessages () {
     let turn = document.getElementById("turn");
     let check = document.getElementById("check");
+    let score = document.getElementById("score");
+    let checkmate = document.getElementById("checkMate");
     if(white_turn)
         turn.innerHTML = "white to play";
     else
@@ -472,6 +538,29 @@ function updateMessages () {
         check.innerHTML = "black is in check";
     else 
         check.innerHTML = "";
+    let score_value = 0;
+    for(let i = 0; i < 16; i++){
+        if(white_pieces[i].captured)
+            score_value += white_pieces[i].value;
+        if(black_pieces[i].captured)
+            score_value += black_pieces[i].value;
+    }
+    if(score_value < 0)
+        score.innerHTML = "white is winning by: " + (-score_value);
+    else if(score_value > 0)
+        score.innerHTML = "black is winning by: " + (score_value);
+    else
+        score.innerHTML = "";
+
+    if(checkMate()){
+        if(white_in_check)
+            checkmate.innerHTML = "the game is OVER BLACK WINS";
+        else if(black_in_check)
+            checkmate.innerHTML = "the game is OVER WHITE WINS";
+    }
+    else
+        checkmate.innerHTML = "";
+
 }
 
 function validate_move (dest_element, start_row, start_col, id, makingMove, captureOpportunity, castlignRook) {
@@ -826,15 +915,14 @@ function allPossibleMoves() {
             const pawnCaptureOpportunity = true;
             //white_pieces[i].possibleMoves.lenght = 0;
             //console.log(white_pieces[index]);
-            console.log("ciao");
             if(!white_pieces[index].captured){
                 if(validate_move(square, r, c, white_pieces[index].id, makingMove, pawnCaptureOpportunity)){
                     //console.log("ciao");
                     white_pieces[index].possibleMoves.push(i);
                     //console.log(white_pieces[index].possibleMoves[0]);
                 }
-                r = black_pieces[index].row;
             }
+            r = black_pieces[index].row;
             c = black_pieces[index].col;
             if(!black_pieces[index].captured){
                 if(validate_move(square, r, c, black_pieces[index].id, makingMove, pawnCaptureOpportunity)){
@@ -888,9 +976,6 @@ function checkCheck() {
                     white_in_check = true;
                 else   
                     black_in_check = true;
-                if(op_pieces[i].id == "black_rook0")
-                    console.log(op_pieces[i].possibleMoves[j]);
-                console.log(op_pieces[i].id);
                 me_in_check = true;
                 break;
             }

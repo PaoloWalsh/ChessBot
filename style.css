@@ -62,9 +62,9 @@ body {
 }
 
 .big-title {
-  font-size: 3em; /* Adjust font size as needed */
-  color: rgb(96, 81, 57); /* Adjust color as needed */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adjust shadow properties as needed */
+  font-size: 3em; 
+  color: rgb(182, 135, 99); 
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); */
 }
 
 /* p {
