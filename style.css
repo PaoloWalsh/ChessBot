@@ -46,8 +46,12 @@ h1 {
     background-color: rgb(240, 218, 181);
 }
 
-.selected {
-    background-color: rgb(96, 81, 57);
+.selectedLight{
+    background-color: #81a581;
+}
+
+.selectedDark {
+    background-color: #657d65;
 }
 
 body {
@@ -65,6 +69,13 @@ body {
   font-size: 3em; 
   color: rgb(182, 135, 99); 
   /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); */
+}
+
+.number {
+    position: relative;
+    align-self: right;
+    z-index: 10;
+    color: green;
 }
 
 /* p {

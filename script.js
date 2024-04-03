@@ -236,6 +236,10 @@ function buildBoard() {
         for(let j = cols-1; j >= 0; j--){
             const square = document.createElement("div");
             square.innerHTML = pieces[count];
+            // let number = document.createElement('div');
+            // number.innerHTML = count+'';
+            // number.classList.add("number");
+            // square.appendChild(number);
             square.setAttribute("id", count--);
             //square.setAttribute("readonly", "readonly");
             square.classList.add("square");
@@ -270,8 +274,8 @@ let draggedPiece;
 function dragStart (e) {
     startPositionId = e.target.parentNode.getAttribute('id');   //square id
     draggedElement = e.target;
-    
-    
+    let piece = divToPiece(draggedElement);
+    selectLandingSquares(piece);
 }
 
 function dragOver (e) {
@@ -280,6 +284,7 @@ function dragOver (e) {
 
 //makes the move
 function dragDrop (e) {
+    removeSelectedSquares();
     let start_index = parseInt(startPositionId);
     let start_row = Math.floor(start_index/rows);   
     let start_col = start_index%rows;
@@ -288,22 +293,23 @@ function dragDrop (e) {
     let piece; // is the piece that is being moved
     e.stopPropagation();
     moveMade = false;
-    console.log("NUOVA CHIAMATA")
-    console.log("info bianco");
-    console.log(white_turn);
-    console.log(white_in_check);
-    console.log("fine info bianco");
-    console.log("info nero");
-    console.log(black_turn);
-    console.log(black_in_check);
-    console.log("fine info nero");
+    // console.log("NUOVA CHIAMATA")
+    // console.log("info bianco");
+    // console.log(white_turn);
+    // console.log(white_in_check);
+    // console.log("fine info bianco");
+    // console.log("info nero");
+    // console.log(black_turn);
+    // console.log(black_in_check);
+    // console.log("fine info nero");
     if((white_turn && draggedElement.id.includes("white"))
         || (black_turn && draggedElement.id.includes("black"))){
         // if true -> the target square is empty
         if(e.target.classList.contains("square"))
         {
             destinationSquare = e.target;
-            if(!moveWithCheck(destinationSquare, start_row, start_col, id, false)) return;
+            piece = divToPiece(draggedElement);
+            if(!moveWithCheck(destinationSquare, piece, false)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true, false);
             if(moveMade){
                 e.target.append(draggedElement);
@@ -322,11 +328,12 @@ function dragDrop (e) {
         {
             //if true -> the target square has a different color piece
             destinationSquare = e.target.parentNode;
-            console.log("info bianco");
-            console.log(white_turn);
-            console.log(white_in_check);
-            console.log("fine info bianco");
-            if(!moveWithCheck(destinationSquare, start_row, start_col, id, true)) return;
+            // console.log("info bianco");
+            // console.log(white_turn);
+            // console.log(white_in_check);
+            // console.log("fine info bianco");
+            piece = divToPiece(draggedElement);
+            if(!moveWithCheck(destinationSquare, piece, true)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
             if(moveMade) {
                 e.target.parentNode.append(draggedElement);
@@ -339,7 +346,6 @@ function dragDrop (e) {
             || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
         )
         {   
-            console.log("sono qui");
             let castlignRook = divToPiece(e.target);
             destinationSquare = e.target.parentNode;
             if((white_turn && white_in_check) || (black_turn && black_in_check)){
@@ -359,9 +365,9 @@ function dragDrop (e) {
                     board[end_row*cols+end_col] = piece;
                     console.log(piece.id);
                     checkCheck();
-                    console.log("nero in scacco:");
-                    console.log(black_in_check);
-                    console.log("___");
+                    // console.log("nero in scacco:");
+                    // console.log(black_in_check);
+                    // console.log("___");
                     board[end_row*cols+end_col] = support_piece;
                     if(support_piece != 0)
                         support_piece.captured = false;
@@ -400,24 +406,39 @@ function dragDrop (e) {
     if(moveMade){
         updateBoard();
         checkCheck();
-        console.log("stato a fine chiamata");
-        console.log(white_in_check);
-        console.log(black_in_check);
+        // console.log("stato a fine chiamata");
+        // console.log(white_in_check);
+        // console.log(black_in_check);
         switchTurn();
         updateMessages();
+        // console.log("cosa c'è al 49?");
+        // console.log(board[5*cols+1]);
+        // console.log("posso andare al 32?");
+        // let square = document.getElementById(32+'');
+        // console.log(validate_move(square, .row, black_pawns[0].col, black_pawns[0].id, false, true));
+        // console.log("stampo le mosse possibili della black pawn 0");
+        // for(let i = 0; i < black_pawns[0].possibleMoves.length; i++)
+        //     console.log(black_pawns[0].possibleMoves[i]);
+        // console.log("stampo le mosse possibili del black king");
+        // for(let i = 0; i < black_king.possibleMoves.length; i++)
+        //     console.log(black_king.possibleMoves[i]);
+        //     console.log("posso andare al 51?");
+        // let square = document.getElementById(51+'');
+        // console.log(validate_move(square, black_king.row, black_king.col, black_king.id, false, true));
     }
     //devo passare a checkcheck le cordinate di dove voglio andare a mettere il re e in caso impedire la mossa
     //prima che avvenga
 }
-//it tells if the move I'm trying to make will get me out of check
-function moveWithCheck (destinationSquare, start_row, start_col, id, pawnCaptureOpportunity) {
-    if(validate_move(destinationSquare, start_row, start_col, id, false, pawnCaptureOpportunity)){ //valido la mossa
+
+//it simulates a move and then it tells if the move will put my self in check
+function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
+    let end_index = parseInt(destinationSquare.getAttribute('id'));
+    let end_row = Math.floor(end_index/rows);
+    let end_col = end_index%rows;
+    if(validate_move(destinationSquare, piece.row, piece.col, piece.id, false, pawnCaptureOpportunity)){ //valido la mossa
         // console.log("dentro if giusto giusto");
-        let piece = divToPiece(draggedElement);
-        // console.log(piece.id);
-        let end_index = parseInt(destinationSquare.getAttribute('id'));
-        let end_row = Math.floor(end_index/rows);
-        let end_col = end_index%rows;
+        console.log("dentro la funzione scacco:::::");
+        console.log(piece.id);
         let support_piece = board[end_row*cols+end_col];
 
         if(support_piece != 0)
@@ -428,35 +449,37 @@ function moveWithCheck (destinationSquare, start_row, start_col, id, pawnCapture
         let support_col = piece.col;
         piece.row = end_row;
         piece.col = end_col;
-        board[start_row*cols+start_col] = 0;
+        board[support_row*cols+support_col] = 0;
         board[end_row*cols+end_col] = piece;
-        console.log(board[end_row*cols+end_col]);
+        // console.log(board[end_row*cols+end_col]);
         checkCheck();
-        console.log("bianco in scacco:");
-        console.log(white_in_check);
-        console.log("nero in scacco:");
-        console.log(black_in_check);
-        console.log("___");
+        // console.log("bianco in scacco:");
+        // console.log(white_in_check);
+        // console.log("nero in scacco:");
+        // console.log(black_in_check);
+        // console.log("___");
         board[end_row*cols+end_col] = support_piece;
-        board[start_row*cols+start_col] = piece;
+        board[support_row*cols+support_col] = piece;
         if(support_piece != 0)
             support_piece.captured = false;
         piece.row = support_row;
         piece.col = support_col;
-        // console.log("stampo le mosse possibili del black king");
-        // for(let i = 0; i < black_king.possibleMoves.length; i++)
-        //     console.log(black_king.possibleMoves[i]);
-        // let square = document.getElementById(28+'');
-        // console.log("cordinate re nero");
-        // console.log(black_king.row);
-        // console.log(black_king.col);
-        // console.log(validate_move(square, black_king.row, black_king.col, black_king.id, false, false));
-        if((white_turn && white_in_check) || (black_turn && black_in_check)) return false;
+        if((white_turn && white_in_check) || (black_turn && black_in_check)) {
+            console.log("questa mossa viola lo scacco logic");
+            console.log(piece.id + " to row: " + end_row + " col: " + end_col);
+            return false;
+        }
         //simulo la mossa e chiamo checkchek
         //se sono ancora in scacco return
+        console.log("mossa che rompe lo scacco");
+        console.log(piece.id + " to row: " + end_row + " col: " + end_col);
         return true;
     }
-    else return false;
+    else {
+        console.log("questa mossa non è proprio legale");
+        console.log(piece.id + " to row: " + end_row + " col: " + end_col);
+        return false;
+    }
 }
 
 
@@ -467,6 +490,7 @@ function checkMate () {
         my_pieces = white_pieces;
     }
     else if(black_in_check){    //is there a move that gets me out of check?
+        console.log("nero in scacco checkMate");
         my_pieces = black_pieces;
     }
     else return false;
@@ -475,43 +499,42 @@ function checkMate () {
     let temp_black_check = black_in_check;
     for(let i = 0; i < 16; i++){
         if(my_pieces[i].captured)
-            continue;
+            i++;
         for(let j = 0; j < 64; j++){
             let square = document.getElementById(j+'');
-            if(validate_move(square, my_pieces[i].row, my_pieces[i].col, my_pieces[i].id, false, true )){
-                let end_index = parseInt(square.getAttribute('id'));
-                let end_row = Math.floor(end_index/rows);
-                let end_col = end_index%rows;
-                let support_piece = board[end_row*cols+end_col];
-
-                if(support_piece != 0)
-                    support_piece.captured = true;
-                let support_row = my_pieces[i].row;
-                let support_col = my_pieces[i].col;
-                my_pieces[i].row = end_row;
-                my_pieces[i].col = end_col;
-                board[support_row*cols+support_col] = 0;
-                board[end_row*cols+end_col] = my_pieces[i];
-                checkCheck();
-                board[end_row*cols+end_col] = support_piece;
-                board[support_row*cols+support_col] = my_pieces[i];
-                if(support_piece != 0)
-                    support_piece.captured = false;
-                my_pieces[i].row = support_row;
-                my_pieces[i].col = support_col;
-
+            
+            // console.log("scaccho nero");
+            // console.log(black_in_check);
+            // console.log(my_pieces[i].id);
+            if(moveWithCheck(square, my_pieces[i], true)){
+                // console.log(square.getAttribute('id'));
+                // console.log(my_pieces[i].id);
+                // console.log(my_pieces[i].row);
+                // console.log(my_pieces[i].col);
+                if((white_in_check != temp_white_check) || (black_in_check != temp_black_check))
+                {
+                    // console.log("scacco nero dentro if");
+                    // console.log(black_in_check);
+                    // console.log(my_pieces[i].id);
+                    white_in_check = temp_white_check;
+                    black_in_check = temp_black_check;
+                    return false;
+                }
             }
+            
         }
     }
-    if(white_turn && white_in_check || black_turn && black_in_check)
-        return true;
-    else{
-        white_in_check = temp_white_check;
-        black_in_check = temp_black_check;
-    }
-    return false;
+    return true;
+    // if(white_turn && white_in_check || black_turn && black_in_check)
+    //     return true;
+    // else{
+    //     white_in_check = temp_white_check;
+    //     black_in_check = temp_black_check;
+    // }
+    // return false;
 }
 
+//switchs turn between white and black
 function switchTurn(){
     if(white_turn){
         white_turn = false;
@@ -523,6 +546,7 @@ function switchTurn(){
     }
 }
 
+//updates the messages to the player such as who's turn it is, if someone in in check, or if the game is over
 function updateMessages () {
     let turn = document.getElementById("turn");
     let check = document.getElementById("check");
@@ -575,22 +599,30 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     //white pawn
     if(id.includes("white_pawn")){
         let t = white_pawns[i].firstMove ? 1 : 0;
-        let diag = captureOpportunity ? 1 : 0;
-        let possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
-        if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+        let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) ? 1 : 0;
+        t = diag ? 0 : t;
+        let possibleEnPassantPawn;
+        if(end_row > 0)
+            possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
+        else
+            possibleEnPassantPawn = 0;
+        if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
-                if(captureOpportunity && end_col === start_col)
+                if(diag && end_col === start_col)
                     return false;
+                if(diag && end_row === start_row) return false;
                 draggedPiece = white_pawns[i];
                 
             }
         else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.id.includes("black_pawn") && 
             possibleEnPassantPawn.movesMade === 1 && end_row === 5 && (end_row-start_row) === 1){
-            possibleEnPassantPawn.captured = true;
-            board[(end_row-1)*cols + end_col] = 0;
-            pieceOffSquare(end_row-1, end_col);
             draggedPiece = white_pawns[i];
-            enPassantPlayed = true;
+            if(makingMove){
+                possibleEnPassantPawn.captured = true;
+                board[(end_row-1)*cols + end_col] = 0;
+                pieceOffSquare(end_row-1, end_col);
+                enPassantPlayed = true;
+            }
             }
         else 
             return false;
@@ -609,22 +641,30 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     if(id.includes("black_pawn")){
         //let i = parseInt(getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         let t = black_pawns[i].firstMove ? -1 : 0;
-        let diag = captureOpportunity ? 1 : 0;
-        let possibleEnPassantPawn = board[(end_row+1)*cols + end_col];
-        if((end_row <= start_row) && (end_row >= start_row - 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+        let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) ? 1 : 0;
+        t = diag ? 0 : t;
+        let possibleEnPassantPawn;
+        if(end_row > 0)
+            possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
+        else
+            possibleEnPassantPawn = 0;
+        if((end_row <= start_row) && (end_row >= start_row - 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
-                if(captureOpportunity && end_col === start_col)
+                if(diag && end_col === start_col)
                     return false;
+                if(diag && end_row === start_row) return false;
                 draggedPiece = black_pawns[i];
                 
             }
         else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.id.includes("white_pawn") 
             && possibleEnPassantPawn.movesMade === 1 && end_row === 2 && (end_row-start_row) === -1){
-            possibleEnPassantPawn.captured = true;
-            board[(end_row+1)*cols + end_col] = 0;
-            pieceOffSquare(end_row+1, end_col);
             draggedPiece = black_pawns[i];
-            enPassantPlayed = true;
+            if(makingMove){
+                possibleEnPassantPawn.captured = true;
+                board[(end_row+1)*cols + end_col] = 0;
+                pieceOffSquare(end_row+1, end_col);
+                enPassantPlayed = true;
+            }
         }
         else return false;
         if(makingMove){
@@ -648,10 +688,12 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             || ((end_row === start_row - 1) && ((end_col === start_col + 2) || (end_col === start_col - 2))))
             {
                 if(id.includes("white")){
+                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) return false;
                     draggedPiece = white_knights[i];
                     
                 }
                 if(id.includes("black")){
+                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) return false;
                     draggedPiece = black_knights[i];
                 }
                 if(makingMove){
@@ -671,14 +713,23 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     if(id.includes("king")){
         // let rook_index = parseInt(castle.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         //rook which with I want to castle
+        let i = 0;
         if(id.includes("white")){
             draggedPiece = white_king;
+            i = 1;
         }
         else{
             draggedPiece = black_king;
+            i = 2;
         }
         if(((end_row >= start_row - 1) && (end_row <= start_row + 1))
             && ((end_col >= start_col - 1) && (end_col <= start_col + 1))){
+                if(draggedPiece.id === white_king.id){
+                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white") ) return false;
+                }
+                else if(draggedPiece.id === black_king.id){
+                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black") ) return false;
+                }
                 if(makingMove){
                     draggedPiece.old_row = start_row;
                     draggedPiece.old_col = start_col;
@@ -894,6 +945,34 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
 
 }
 
+//highlights all the possible squares that the piece, that's being dragged, can move to
+function selectLandingSquares(piece) {
+    if((white_turn && piece.color != "white") || (black_turn && piece.color != "black")) return;
+    for(let i = 0; i < 64; i++){
+        let square = document.getElementById(i+'');
+        let end_index = parseInt(square.getAttribute('id'));
+        if(!piece.captured){
+            if(moveWithCheck(square, piece, false)){
+                if(square.classList.contains("light"))
+                    square.classList.add("selectedLight");
+                else
+                    square.classList.add("selectedDark");
+            }
+        }
+    }
+}
+
+//it loops over every square and removes the selectedLight or selectedDark css class
+function removeSelectedSquares(){
+    for(let i = 0; i < 64; i++){
+        let square = document.getElementById(i+'');
+        if(square.classList.contains("selectedLight"))
+            square.classList.remove("selectedLight");
+        else if(square.classList.contains("selectedDark"))
+            square.classList.remove("selectedDark");
+    }
+}
+
 // deletes a piece from its square html wise
 function pieceOffSquare(row, col) {
     let squareNumber = row*8 + col;
@@ -902,6 +981,7 @@ function pieceOffSquare(row, col) {
     divPiece.remove();
 }
 
+//calculates every legal move for every non-captured piece
 function allPossibleMoves() {
     for(let index = 0; index < 16; index++){
         //memory leak?
@@ -909,13 +989,20 @@ function allPossibleMoves() {
         black_pieces[index].possibleMoves = [];
         for(let i = 0; i < 64; i++){
             let square = document.getElementById(i+'');
+            let end_index = parseInt(square.getAttribute('id'));
+            let end_row = Math.floor(end_index/rows);
+            let end_col = end_index%rows;
             let r = white_pieces[index].row;
             let c = white_pieces[index].col;
             const makingMove = false;
-            const pawnCaptureOpportunity = true;
+            const pawnCaptureOpportunity = false;
             //white_pieces[i].possibleMoves.lenght = 0;
             //console.log(white_pieces[index]);
             if(!white_pieces[index].captured){
+                if(white_pieces[index].id.includes("pawn"))
+                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black"))
+                        if(validate_move(square, r, c, white_pieces[index].id, makingMove, true))
+                            white_pieces[index].possibleMoves.push(i);
                 if(validate_move(square, r, c, white_pieces[index].id, makingMove, pawnCaptureOpportunity)){
                     //console.log("ciao");
                     white_pieces[index].possibleMoves.push(i);
@@ -925,6 +1012,10 @@ function allPossibleMoves() {
             r = black_pieces[index].row;
             c = black_pieces[index].col;
             if(!black_pieces[index].captured){
+                if(black_pieces[index].id.includes("pawn"))
+                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white"))
+                        if(validate_move(square, r, c, black_pieces[index].id, makingMove, true))
+                            black_pieces[index].possibleMoves.push(i);
                 if(validate_move(square, r, c, black_pieces[index].id, makingMove, pawnCaptureOpportunity)){
                     black_pieces[index].possibleMoves.push(i);
                 }
@@ -932,6 +1023,8 @@ function allPossibleMoves() {
         }
     }
 }
+
+
 //this function is called before making the actual move but it verifies if that move would put someone in check
 function checkCheck() {
     allPossibleMoves();
@@ -1006,7 +1099,7 @@ function updateBoard () {
 }
 
 //returns the max number of square between 
-// the cordinate of the piece and any other piece
+// the cordinate of the piece and any other piece on a straight line
 function maxDist(s_row, s_col, c){
     let k = 0;
 
@@ -1068,6 +1161,9 @@ function maxDist(s_row, s_col, c){
     }
 }
 
+
+//returns the max number of square between 
+// the cordinate of the piece and any other piece on diagonally
 function maxDistDiag(s_row, s_col, c){
     let k = 0;
     let i;
