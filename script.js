@@ -405,12 +405,22 @@ function dragDrop (e) {
     }
     if(moveMade){
         updateBoard();
+        whereIsPiece("black_bishop0");
+        console.log("Prima di checkCheck------------------");
         checkCheck();
+        whereIsPiece("black_bishop0");
         // console.log("stato a fine chiamata");
         // console.log(white_in_check);
         // console.log(black_in_check);
         switchTurn();
-        updateMessages();
+        whereIsPiece("black_bishop0");
+        console.log("Prima di updateMessages");
+        updateMessages();   //qua è il problema
+        whereIsPiece("black_bishop0");
+        console.log("Dopo di updateMessages");
+        // console.log("scacco bianco dentro dragDrop");
+        // console.log(white_in_check);
+        boardIsConsistent();
         // console.log("cosa c'è al 49?");
         // console.log(board[5*cols+1]);
         // console.log("posso andare al 32?");
@@ -419,9 +429,7 @@ function dragDrop (e) {
         // console.log("stampo le mosse possibili della black pawn 0");
         // for(let i = 0; i < black_pawns[0].possibleMoves.length; i++)
         //     console.log(black_pawns[0].possibleMoves[i]);
-        // console.log("stampo le mosse possibili del black king");
-        // for(let i = 0; i < black_king.possibleMoves.length; i++)
-        //     console.log(black_king.possibleMoves[i]);
+        
         //     console.log("posso andare al 51?");
         // let square = document.getElementById(51+'');
         // console.log(validate_move(square, black_king.row, black_king.col, black_king.id, false, true));
@@ -435,10 +443,12 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
     let end_index = parseInt(destinationSquare.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
+    // console.log("scacco bianco inizio moveWithCheck");
+    // console.log(white_in_check);
     if(validate_move(destinationSquare, piece.row, piece.col, piece.id, false, pawnCaptureOpportunity)){ //valido la mossa
         // console.log("dentro if giusto giusto");
-        console.log("dentro la funzione scacco:::::");
-        console.log(piece.id);
+        // console.log("dentro la funzione scacco:::::");
+        // console.log(piece.id);
         let support_piece = board[end_row*cols+end_col];
 
         if(support_piece != 0)
@@ -465,19 +475,22 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
         piece.row = support_row;
         piece.col = support_col;
         if((white_turn && white_in_check) || (black_turn && black_in_check)) {
-            console.log("questa mossa viola lo scacco logic");
-            console.log(piece.id + " to row: " + end_row + " col: " + end_col);
+            // console.log("questa mossa viola lo scacco logic");
+            // console.log(piece.id + " to row: " + end_row + " col: " + end_col);
             return false;
         }
         //simulo la mossa e chiamo checkchek
         //se sono ancora in scacco return
-        console.log("mossa che rompe lo scacco");
-        console.log(piece.id + " to row: " + end_row + " col: " + end_col);
+
+        // console.log("scacco bianco dopo verifica della mossa");
+        // console.log(white_in_check);
+        // console.log("mossa che rompe lo scacco");
+        // console.log(piece.id + " to row: " + end_row + " col: " + end_col);
         return true;
     }
     else {
-        console.log("questa mossa non è proprio legale");
-        console.log(piece.id + " to row: " + end_row + " col: " + end_col);
+        // console.log("questa mossa non è proprio legale");
+        // console.log(piece.id + " to row: " + end_row + " col: " + end_col);
         return false;
     }
 }
@@ -490,7 +503,7 @@ function checkMate () {
         my_pieces = white_pieces;
     }
     else if(black_in_check){    //is there a move that gets me out of check?
-        console.log("nero in scacco checkMate");
+        // console.log("nero in scacco checkMate");
         my_pieces = black_pieces;
     }
     else return false;
@@ -575,8 +588,12 @@ function updateMessages () {
         score.innerHTML = "black is winning by: " + (score_value);
     else
         score.innerHTML = "";
-
-    if(checkMate()){
+    whereIsPiece("black_bishop0");
+    console.log("Prima di checkMate");
+    let t = checkMate();
+    whereIsPiece("black_bishop0");
+    console.log("Prima di checkMate");
+    if(t){
         if(white_in_check)
             checkmate.innerHTML = "the game is OVER BLACK WINS";
         else if(black_in_check)
@@ -606,6 +623,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
         else
             possibleEnPassantPawn = 0;
+        if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) return false;
         if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
                 if(diag && end_col === start_col)
@@ -648,6 +666,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
         else
             possibleEnPassantPawn = 0;
+        if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) return false;
         if((end_row <= start_row) && (end_row >= start_row - 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
                 if(diag && end_col === start_col)
@@ -983,6 +1002,8 @@ function pieceOffSquare(row, col) {
 
 //calculates every legal move for every non-captured piece
 function allPossibleMoves() {
+    whereIsPiece("black_bishop0");
+    console.log("INIZIO allPossibleMoves!!");
     for(let index = 0; index < 16; index++){
         //memory leak?
         white_pieces[index].possibleMoves = [];
@@ -1022,12 +1043,24 @@ function allPossibleMoves() {
             }   
         }
     }
+    // console.log("scacco bianco dentro allMoves");
+    // console.log(white_in_check);
+    // console.log("stampo le mosse possibili del black bishop 0");
+    //     for(let i = 0; i < black_bishops[0].possibleMoves.length; i++)
+    //         console.log(black_bishops[0].possibleMoves[i]);
+    whereIsPiece("black_bishop0");
+    console.log("FINE allPossibleMoves!!");
 }
 
 
 //this function is called before making the actual move but it verifies if that move would put someone in check
 function checkCheck() {
+    whereIsPiece("black_bishop0");
+    console.log("chekCheck prima di allPossibleMoves!!");
     allPossibleMoves();
+    whereIsPiece("black_bishop0");
+    console.log("chekCheck DOPO di allPossibleMoves!!");
+
     let my_king_position;
     let op_king_position;
     let my_pieces;
@@ -1308,4 +1341,45 @@ function divToPiece (element) {
             break;
     }
     return piece;
+}
+
+//Scherzo io non aggiorno mai pieces
+/**
+ * @brief returns true if the piece board on which calculation are made is consistent with the html board
+ *        if not it return false and prints the cordinates of the first square that is not consistent
+ */
+function boardIsConsistent () {
+    for(let i = 0; i < rows; i++)
+        for(let j = 0; j < cols; j++){
+            const square = document.getElementById(i*cols+j+'');
+            const piece = square.firstElementChild;
+            if(piece == null && board[i*cols+j] == 0) continue;
+            if((piece && board[i*cols+j] == 0) || (!piece.id.includes(board[i*cols+j].id)))
+            {
+                console.log("riga " + i + '');
+                console.log("colonna " + j + '');
+                console.log("elemento html " + piece.getAttribute('id'));
+                console.log("elemento board " + board[i*cols+j].id);
+                return false;
+            }
+        }
+
+    console.log("La board è apposto");
+    return true;
+}
+
+
+/**
+ * @brief prints the row and the col of the piece position on the board
+ * @param {string} id is the Id of which I want to print the row and col
+ */
+function whereIsPiece(id){
+    for(let i = 0; i < rows; i++)
+        for(let j = 0; j < rows; j++){
+            if(board[i*rows+j] != 0 && board[i*rows+j].id == id){
+                console.log("the piece "+id+", is in row: "+i+" and col: "+j );
+                return;
+            }
+        }
+    console.log("non ho trovato il pezzo");
 }
