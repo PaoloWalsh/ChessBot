@@ -18,4 +18,8 @@ add style to the board and background
 add a login
 
 add a game log for different users
- 
+
+
+
+BUG SULLO SCACCO:
+	il problema è nella validate move
