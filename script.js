@@ -9,7 +9,11 @@ let black_turn = false;
 let white_in_check = false;
 let black_in_check = false;
 
+let white_can_enpassant = false;
+let black_can_enpassant = false;
 let enPassantPlayed = false;
+
+//let castlignRook = false;
 
 let white_pieces = [];
 let black_pieces = [];
@@ -301,6 +305,7 @@ function dragDrop (e) {
     let id = draggedElement.getAttribute('id');
     let moveMade;
     let piece; // is the piece that is being moved
+    let castlignRook;
     e.stopPropagation();
     moveMade = false;
     if((white_turn && draggedElement.id.includes("white"))
@@ -343,40 +348,11 @@ function dragDrop (e) {
             || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
         )
         {   
-            let castlignRook = divToPiece(e.target);
+            castlignRook = divToPiece(e.target);
             destinationSquare = e.target.parentNode;
-            if((white_turn && white_in_check) || (black_turn && black_in_check)){
-                if(validate_move(destinationSquare, start_row, start_col, id, false, false, castlignRook)){ //valido la mossa
-                    console.log("dentro if giusto giusto");
-                    piece = divToPiece(draggedElement);
-                    let end_index = parseInt(destinationSquare.getAttribute('id'));
-                    let end_row = Math.floor(end_index/rows);
-                    let end_col = end_index%rows;
-                    let support_piece = board[end_row*cols+end_col];
-                    if(support_piece != 0)
-                        support_piece.captured = true;
-                    let support_row = piece.row;
-                    let support_col = piece.col;
-                    piece.row = end_row;
-                    piece.col = end_col;
-                    board[end_row*cols+end_col] = piece;
-                    console.log(piece.id);
-                    checkCheck();
-                    // console.log("nero in scacco:");
-                    // console.log(black_in_check);
-                    // console.log("___");
-                    board[end_row*cols+end_col] = support_piece;
-                    if(support_piece != 0)
-                        support_piece.captured = false;
-                    piece.row = support_row;
-                    piece.col = support_col;
-                    if((white_turn && white_in_check) || (black_turn && black_in_check)) return;
-                    //simulo la mossa e chiamo checkchek
-                    //se sono ancora in scacco return
-                }
-                else return;
-            }
-            moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false, castlignRook);
+            piece = divToPiece(draggedElement);
+            if(!moveWithCheck(destinationSquare, piece, true)) return;
+            moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
             if(moveMade) {
                 let rookStartSquare = e.target.parentNode;
                 let kingStartSquare = draggedElement.parentNode;
@@ -401,11 +377,13 @@ function dragDrop (e) {
         }
     }
     if(moveMade){
-        updateBoard();
+        updateBoard(castlignRook);
         checkCheck();
         switchTurn();
         updateMessages();   //qui controlliamo lo scacco matto
-        boardIsConsistent();
+        boardIsConsistent();//used for debug
+        console.log("row of white king: " + white_king.row + ". col of wk: " + white_king.col);
+        console.log("row of white rook0: " + white_rooks[0].row + ". col of wr0: " + white_rooks[0].col);
     }
     
 }
@@ -431,14 +409,45 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
 
         if(support_piece != 0)
             support_piece.captured = true;
-
+        
+        //if nomaml move
         let support_row = piece.row;
         let support_col = piece.col;
         piece.row = end_row;
         piece.col = end_col;
         board[support_row*cols+support_col] = 0;
         board[end_row*cols+end_col] = piece;
+        //is I'm castling I have to simulate a castle move which is more complicated
+        /*
+        if the validated move returned true and in I'm king moving on a same color rook that means I'm castling
+        if(castling){
+            if(end_col > piece.col){
+                piece.col = end_col-3;
+                castlignRook.col = end_col-3;
+            }
+            else {
+                piece.col = end_col+1;
+                castlignRook.col = end_col+2;
+            }
+            board[piece.row*cols+piece.col] = piece;
+            baord[castlingRook.row*cols+castlingRook.col] = castlingRook;
+        }
+        */
         checkCheck();
+        /*
+        if(castling){
+            board[piece.row*cols+piece.col] = 0;
+            baord[castlingRook.row*cols+castlingRook.col] = 0;
+            if(end_col > piece.col){
+                piece.col = end_col+3;
+                castlignRook.col = end_col+3;
+            }
+            else {
+                piece.col = end_col-1;
+                castlignRook.col = end_col-2;
+            }
+        }
+        */
         if(support_piece != 0)
             support_piece.captured = false;
         board[end_row*cols+end_col] = support_piece;
@@ -446,9 +455,6 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
         piece.col = support_col;
         board[support_row*cols+support_col] = piece;
 
-        whereIsPiece("black_bishop0");
-        console.log("moveWithCheck riaggiustamenti checkCheck");
-        console.log("il pezzo inizialie è " + piece.id+ " with row " + end_row + " and col "+end_col);
         if((white_turn && white_in_check) || (black_turn && black_in_check)) {
             // console.log("questa mossa viola lo scacco logic");
             // console.log(piece.id + " to row: " + end_row + " col: " + end_col);
@@ -554,11 +560,7 @@ function updateMessages () {
         score.innerHTML = "black is winning by: " + (score_value);
     else
         score.innerHTML = "";
-    whereIsPiece("black_bishop0");
-    console.log("Prima di checkMate");
     let t = checkMate();
-    whereIsPiece("black_bishop0");
-    console.log("Prima di checkMate");
     if(t){
         if(white_in_check)
             checkmate.innerHTML = "the game is OVER BLACK WINS";
@@ -580,7 +582,7 @@ function updateMessages () {
  * @param {piece} castlignRook the rook I'm trying to castle with
  * @returns It returns true if the move I'm trying to make follows the piece moving rules (it doesn't consider checks)
  */
-function validate_move (dest_element, start_row, start_col, id, makingMove, captureOpportunity, castlignRook) {
+function validate_move (dest_element, start_row, start_col, id, makingMove, captureOpportunity) {
     //making move is a boolean that if true indicates that I actually want to make the move
     //if is false it meas I'm just verifing if the move would be legal
     let end_index = parseInt(dest_element.getAttribute('id'));
@@ -594,8 +596,9 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         let t = white_pawns[i].firstMove ? 1 : 0;
         let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) ? 1 : 0;
         t = diag ? 0 : t;
-        let possibleEnPassantPawn;
-        // if(board[end_row*cols+end_col] != 0 && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0)
+        // let possibleEnPassantPawn;
+        // console.log("test");
+        // if(board[(end_row-1)*cols+end_col] != undefined && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0)
         //     possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
         // else
         //     possibleEnPassantPawn = 0;
@@ -707,15 +710,19 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     if(id.includes("king")){
         // let rook_index = parseInt(castle.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
         //rook which with I want to castle
-        let i = 0;
         if(id.includes("white")){
             draggedPiece = white_king;
-            i = 1;
         }
         else{
             draggedPiece = black_king;
-            i = 2;
         }
+
+        let castlignRook = false;
+        // console.log("sulla board c'è " + board[end_row*cols + end_col].id);
+        if(board[end_row*cols + end_col] != 0 && board[end_row*cols + end_col].id.includes("rook") && board[end_row*cols + end_col].color == draggedPiece.color)
+            castlignRook = board[end_row*cols + end_col];
+        // console.log("la castlig rook è: " + castlignRook.id);
+
         if(((end_row >= start_row - 1) && (end_row <= start_row + 1))
             && ((end_col >= start_col - 1) && (end_col <= start_col + 1))){
                 if(draggedPiece.id === white_king.id){
@@ -734,28 +741,53 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                 }
                 return true;
         }
-        else if ((castlignRook != undefined && draggedPiece.firstMove == true && castlignRook.firstMove == true)) {
+        
+        
+        else if ((castlignRook != false && draggedPiece.firstMove == true && castlignRook.firstMove == true)) {
             if(((draggedPiece.col > castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "r")+1) === Math.abs(draggedPiece.col - castlignRook.col) )) //if the king is right of the rook
                 || ((draggedPiece.col < castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "l")+1) === Math.abs(castlignRook.col - draggedPiece.col))) //if the king is left of the rook
             ){
                 if(makingMove){
-                    draggedPiece.old_row = start_row;
-                    draggedPiece.old_col = start_col;
-                    draggedPiece.old_row = end_row;
-                    draggedPiece.old_col = end_col;
-                    castlignRook.old_row = castlignRook.row;
-                    castlignRook.old_col = castlignRook.col;
-                    castlignRook.row = start_row;
-                    castlignRook.col = start_col;
+                    console.log("dovrei essere qui");
+                    if(start_col > end_col){
+                        //draggedPiece.old_row = start_row;
+                        draggedPiece.old_col = start_col;
+                        //draggedPiece.row = end_row;
+                        draggedPiece.col = start_col-2;
+                        //castlignRook.old_row = end_row;
+                        castlignRook.old_col = end_col;
+                        castlignRook.col = end_col+2;
+                    }
+                    else {
+                        //draggedPiece.old_row = start_row;
+                        draggedPiece.old_col = start_col;
+                        //draggedPiece.row = end_row;
+                        draggedPiece.col = start_col+2;
+                        //castlignRook.old_row = end_row;
+                        castlignRook.old_col = end_col;
+                        castlignRook.col = end_col_col-3;
+                    }
                     draggedPiece.firstMove = false;
                     castlignRook.firstMove = false;
                     draggedPiece.movesMade++;
+                    console.log("il draggedPiece è :" + draggedPiece.id + " e le sue coridnate sono: " + draggedPiece.row + " " + draggedPiece.col);
+                    console.log("il castlignRook è :" + castlignRook.id + " e le sue coridnate sono: " + castlignRook.row + " " + castlignRook.col);
+                    console.log("row of white king: " + white_king.row + ". col of wk: " + white_king.col);
+                    console.log("row of white rook0: " + white_rooks[0].row + ". col of wr0: " + white_rooks[0].col);
                 }
+                // else
+                    // castlignRook = false;
                 return true;
             }
-            else return false;
+            else{
+                // castlignRook = false;
+                return false;
+            } 
         } 
-        else return false;
+        else{
+            // castlignRook = false;
+            return false;
+        } 
     }
     
     
@@ -1104,11 +1136,20 @@ function checkCheck() {
 
 /**
  * @brief updates the board considering the global variable draggedPiece as the piece that moved
+ * @param castlignRook is the rook that I'm castling with, if undefined it means that the last move wasn't a castle
  */
-function updateBoard () {
+function updateBoard (castlignRook) {
+
     board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
-    if(board[draggedPiece.row * cols + draggedPiece.col] != 0)
-        board[draggedPiece.row * cols + draggedPiece.col].captured = true;
+    if(castlignRook){
+        console.log("dentro updateBoard" + castlignRook.id);
+        board[castlignRook.row*cols + (castlignRook.col)] = castlignRook;
+        board[castlignRook.old_row*cols + (castlignRook.old_col)] = 0;
+    }
+    else{
+        if(board[draggedPiece.row * cols + draggedPiece.col] != 0)
+            board[draggedPiece.row * cols + draggedPiece.col].captured = true;
+    }
     board[draggedPiece.row * cols + draggedPiece.col] = draggedPiece;
 }
 
@@ -1351,10 +1392,14 @@ function boardIsConsistent () {
             const square = document.getElementById(i*cols+j+'');
             const piece = square.firstElementChild;
             if(piece == null && board[i*cols+j] == 0) continue;
-            if((piece && board[i*cols+j] == 0) || (!piece.id.includes(board[i*cols+j].id)))
+            if((piece == null && board[i*cols+j] != 0) || (piece && board[i*cols+j] == 0) || (!piece.id.includes(board[i*cols+j].id)))
             {
                 console.log("row " + i + '');
                 console.log("col " + j + '');
+                if(piece == null){
+                    console.log("square html vuoto");
+                    return false;
+                }
                 console.log("html element " + piece.getAttribute('id'));
                 console.log("board element " + board[i*cols+j].id);
                 return false;
