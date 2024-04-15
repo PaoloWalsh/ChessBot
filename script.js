@@ -352,8 +352,10 @@ function dragDrop (e) {
             destinationSquare = e.target.parentNode;
             piece = divToPiece(draggedElement);
             if(!moveWithCheck(destinationSquare, piece, true)) return;
+            console.log("ho fatto il passo");
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
             if(moveMade) {
+                console.log("ho fatto anche il secondo");
                 let rookStartSquare = e.target.parentNode;
                 let kingStartSquare = draggedElement.parentNode;
                 let rookEndSquare;
@@ -382,8 +384,6 @@ function dragDrop (e) {
         switchTurn();
         updateMessages();   //qui controlliamo lo scacco matto
         boardIsConsistent();//used for debug
-        console.log("row of white king: " + white_king.row + ". col of wk: " + white_king.col);
-        console.log("row of white rook0: " + white_rooks[0].row + ". col of wr0: " + white_rooks[0].col);
     }
     
 }
@@ -401,59 +401,81 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
     let end_index = parseInt(destinationSquare.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
+    let castlingMove = false;
+    let support_piece;
+    let support_row;
+    let support_col;
+    let support_rook_col;
 
     if(piece.captured) return false;
     if(validate_move(destinationSquare, piece.row, piece.col, piece.id, false, false)){ //valido la mossa
-
-        let support_piece = board[end_row*cols+end_col];
-
-        if(support_piece != 0)
-            support_piece.captured = true;
-        
-        //if nomaml move
-        let support_row = piece.row;
-        let support_col = piece.col;
-        piece.row = end_row;
-        piece.col = end_col;
-        board[support_row*cols+support_col] = 0;
-        board[end_row*cols+end_col] = piece;
-        //is I'm castling I have to simulate a castle move which is more complicated
-        /*
-        if the validated move returned true and in I'm king moving on a same color rook that means I'm castling
-        if(castling){
+        let castlingRook = false;
+        if(castling(destinationSquare, piece)){
+            castlingMove = true;
+            let destinationPieceElement = destinationSquare.firstElementChild;
+            castlingRook = divToPiece(destinationPieceElement);
+            support_col = piece.old_col;
+            support_rook_col = castlingRook.old_col;
+            piece.old_col = piece.col;
+            castlingRook.old_col = castlingRook.col;
             if(end_col > piece.col){
-                piece.col = end_col-3;
-                castlignRook.col = end_col-3;
+                piece.col = end_col-2;
+                castlingRook.col = end_col-3;
             }
             else {
                 piece.col = end_col+1;
-                castlignRook.col = end_col+2;
+                castlingRook.col = end_col+2;
             }
             board[piece.row*cols+piece.col] = piece;
-            baord[castlingRook.row*cols+castlingRook.col] = castlingRook;
+            board[castlingRook.row*cols+castlingRook.col] = castlingRook;
+            board[piece.old_row*cols+piece.old_col] = 0;
+            board[castlingRook.old_row*cols+castlingRook.old_col] = 0;
         }
-        */
+        else{
+            support_piece = board[end_row*cols+end_col];
+
+            if(support_piece != 0)
+                support_piece.captured = true;
+            
+            //if nomaml move
+            support_row = piece.row;
+            support_col = piece.col;
+            piece.row = end_row;
+            piece.col = end_col;
+            board[support_row*cols+support_col] = 0;
+            board[end_row*cols+end_col] = piece;
+        }
+        
+        //is I'm castling I have to simulate a castle move which is more complicated
+        
         checkCheck();
-        /*
-        if(castling){
+        
+        if(castlingMove){
             board[piece.row*cols+piece.col] = 0;
-            baord[castlingRook.row*cols+castlingRook.col] = 0;
-            if(end_col > piece.col){
-                piece.col = end_col+3;
-                castlignRook.col = end_col+3;
+            board[castlingRook.row*cols+castlingRook.col] = 0;
+            piece.old_col = support_col;
+            castlingRook.old_col = support_rook_col;
+            board[piece.old_row*cols+piece.old_col] = piece;
+            board[castlingRook.old_row*cols + castlingRook.old_col] = castlingRook;
+            if(end_col > piece.old_col){
+                piece.col = end_col-4;
+                castlingRook.col = end_col;
             }
             else {
-                piece.col = end_col-1;
-                castlignRook.col = end_col-2;
+                piece.col = end_col+3;
+                castlingRook.col = end_col;
             }
         }
-        */
-        if(support_piece != 0)
-            support_piece.captured = false;
-        board[end_row*cols+end_col] = support_piece;
-        piece.row = support_row;
-        piece.col = support_col;
-        board[support_row*cols+support_col] = piece;
+
+        else {
+            if(support_piece != 0)
+                support_piece.captured = false;
+            board[end_row*cols+end_col] = support_piece;
+            piece.row = support_row;
+            piece.col = support_col;
+            board[support_row*cols+support_col] = piece;
+        }
+        
 
         if((white_turn && white_in_check) || (black_turn && black_in_check)) {
             // console.log("questa mossa viola lo scacco logic");
@@ -471,6 +493,26 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
     }
 }
 
+/**
+ * 
+ * @param {html element} destinationSquare the square where I'm trying to move
+ * @param {piece} piece the piece I'm trying to move
+ * @returns returns true if the last legal move that's been valuted is a castling, returns false otherways
+ */
+
+function castling (destinationSquare, piece){
+    if(!destinationSquare.hasChildNodes())
+        return false;
+    let destinationPieceElement = destinationSquare.firstElementChild;
+    let destinationPiece = divToPiece(destinationPieceElement);
+    if(piece.id.includes("king") && destinationPiece.id.includes("rook")){
+        if(piece.color == destinationPiece.color)
+            return true;
+        else return false;
+    }
+    return false;
+
+}
 
 /**
  * 
@@ -506,13 +548,7 @@ function checkMate () {
         }
     }
     return true;
-    // if(white_turn && white_in_check || black_turn && black_in_check)
-    //     return true;
-    // else{
-    //     white_in_check = temp_white_check;
-    //     black_in_check = temp_black_check;
-    // }
-    // return false;
+
 }
 
 /**
@@ -748,7 +784,6 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                 || ((draggedPiece.col < castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "l")+1) === Math.abs(castlignRook.col - draggedPiece.col))) //if the king is left of the rook
             ){
                 if(makingMove){
-                    console.log("dovrei essere qui");
                     if(start_col > end_col){
                         //draggedPiece.old_row = start_row;
                         draggedPiece.old_col = start_col;
@@ -765,15 +800,11 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                         draggedPiece.col = start_col+2;
                         //castlignRook.old_row = end_row;
                         castlignRook.old_col = end_col;
-                        castlignRook.col = end_col_col-3;
+                        castlignRook.col = end_col-3;
                     }
                     draggedPiece.firstMove = false;
                     castlignRook.firstMove = false;
                     draggedPiece.movesMade++;
-                    console.log("il draggedPiece è :" + draggedPiece.id + " e le sue coridnate sono: " + draggedPiece.row + " " + draggedPiece.col);
-                    console.log("il castlignRook è :" + castlignRook.id + " e le sue coridnate sono: " + castlignRook.row + " " + castlignRook.col);
-                    console.log("row of white king: " + white_king.row + ". col of wk: " + white_king.col);
-                    console.log("row of white rook0: " + white_rooks[0].row + ". col of wr0: " + white_rooks[0].col);
                 }
                 // else
                     // castlignRook = false;

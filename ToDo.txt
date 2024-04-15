@@ -1,15 +1,7 @@
 Finish piece move rules:
 	en passant should only work the subsequent move
-	add check logic with castling
-	add check mate
 
-Add css style to piece possibile destinations
-
-Add captured attribute to class piece
-
-add check mate 
-
-add piece respawn
+add piece promotion
 
 transpose gameboard for player 2 to play the move
 
@@ -21,5 +13,7 @@ add a game log for different users
 
 
 
-BUG SULLO SCACCO:
-	il problema è nella validate move
+
+En Passant:
+	-> maybe global variable is true after a player moves a pawn by two squares and the opponent has a the 
+		opportunity to play enPassant
