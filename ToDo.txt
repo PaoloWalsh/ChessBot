@@ -1,5 +1,5 @@
 Finish piece move rules:
-	en passant should only work the subsequent move
+
 
 add piece promotion
 
@@ -12,8 +12,7 @@ add a login
 add a game log for different users
 
 
-
-
-En Passant:
-	-> maybe global variable is true after a player moves a pawn by two squares and the opponent has a the 
-		opportunity to play enPassant
+Promotion:
+	-> need to store queens in array as well, do I create global variables for each piece I add?
+		How do I name this variables?
+	-> What promt do I give?	

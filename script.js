@@ -1,230 +1,5 @@
 
-"use strict";
-const rows = 8;
-const cols = 8;
 
-let white_turn = true;
-let black_turn = false;
-
-let white_in_check = false;
-let black_in_check = false;
-
-let white_can_enpassant = false;
-let black_can_enpassant = false;
-let enPassantPlayed = false;
-
-//let castlignRook = false;
-
-let white_pieces = [];
-let black_pieces = [];
-
-const capture_sound = new Audio('audio/capture.mp3');
-const move_sound = new Audio('audio/move-self.mp3');
-
-class piece {
-    constructor(type, i) {
-        switch (type) {
-            case "white_bishop":
-                this.div = "<div class='piece' id='white_bishop" + i + "' draggable='true'><img src='pictures/png/white-bishop.png' alt='w_bishop' id='w_bishop'></div>";
-                break;
-            case "white_king":
-                this.div = "<div class='piece' id='white_king' draggable='true'><img src='pictures/png/white-king.png' alt='w_king' id='w_king'></div>";
-                break;
-            case "white_knight":
-                this.div = "<div class='piece' id='white_knight" + i + "' draggable='true'><img src='pictures/png/white-knight.png' alt='w_knight' id='w_knight'></div>";
-                break;
-            case "white_pawn":
-                this.div = "<div class='piece' id='white_pawn" + i + "' draggable='true'><img src='pictures/png/white-pawn.png' alt='w_pawn' id='w_pawn'></div>";
-                break;
-            case "white_queen":
-                this.div = "<div class='piece' id='white_queen' draggable='true'><img src='pictures/png/white-queen.png' alt='w_queen' id='w_queen'></div>";
-                break;
-            case "white_rook":
-                this.div = "<div class='piece' id='white_rook" + i + "' draggable='true'><img src='pictures/png/white-rook.png' alt='w_rook' id='w_rook'></div>";
-                break;
-            case "black_bishop":
-                this.div = "<div class='piece' id='black_bishop" + i + "' draggable='true'><img src='pictures/png/black-bishop.png' alt='b_bishop' id='b_bishop'></div>";
-                break;
-            case "black_king":
-                this.div = "<div class='piece' id='black_king' draggable='true'><img src='pictures/png/black-king.png' alt='b_king' id='b_king'></div>";
-                break;
-            case "black_knight":
-                this.div = "<div class='piece' id='black_knight" + i + "' draggable='true'><img src='pictures/png/black-knight.png' alt='b_knight' id='b_knight'></div>";
-                break;
-            case "black_pawn":
-                this.div = "<div class='piece' id='black_pawn" + i + "' draggable='true'><img src='pictures/png/black-pawn.png' alt='b_pawn' id='b_pawn'></div>";
-                break;
-            case "black_queen":
-                this.div = "<div class='piece' id='black_queen' draggable='true'><img src='pictures/png/black-queen.png' alt='b_queen' id='b_queen'></div>";
-                break;
-            case "black_rook":
-                this.div = "<div class='piece' id='black_rook" + i + "' draggable='true'><img src='pictures/png/black-rook.png' alt='b_rook' id='b_rook'></div>";   
-                break;
-
-        }
-        if(isNaN(i))
-            this.id = type;
-        else
-            this.id = type + i;
-        this.firstMove = true;  //it's only useful for kings and rooks (for castling) and pawns
-        this.captured = false;  //idk if it's actually useful 
-        this.row;
-        this.col;
-        this.old_row;
-        this.old_col;
-        this.color;
-        this.movesMade = 0; //counts the number of moves that where made
-        this.possibleMoves = new Array();
-        this.value;
-    }
-}
-
-let white_pawns = [];
-let white_bishops = [];
-let white_knights = [];
-let white_rooks = [];
-
-let black_pawns = [];
-let black_bishops = [];
-let black_knights = [];
-let black_rooks = [];
-
-let white_king = new piece("white_king");
-let white_queen = new piece("white_queen");
-
-let black_king = new piece("black_king");
-let black_queen = new piece("black_queen");
-
-//creating white pieces
-for(let i = 0; i < 8; i++){
-    white_pawns[i] = new piece("white_pawn", i);
-    white_pawns[i].row = white_pawns[i].old_row = 1;
-    white_pawns[i].col = white_pawns[i].old_col = i;
-    white_pawns[i].color = "white";
-    white_pawns[i].value = 1;
-
-}
-
-for(let i = 0; i < 2; i++){
-    white_bishops[i] = new piece("white_bishop", i);
-    white_bishops[i].row = white_bishops[i].old_row = 0;
-    if(i == 0)
-        white_bishops[i].col = white_bishops[i].old_col = 2;
-    else 
-        white_bishops[i].col = white_bishops[i].old_col = 5;
-    white_bishops[i].color = "white";
-    white_bishops[i].value = 3;
-}  
-
-for(let i = 0; i < 2; i++){
-    white_knights[i] = new piece("white_knight", i);
-    white_knights[i].row = white_knights[i].old_row = 0;
-    if(i == 0)
-        white_knights[i].col = white_knights[i].old_col = 1;
-    else 
-        white_knights[i].col = white_knights[i].old_col = 6;
-    white_knights[i].color = "white";
-    white_knights[i].value = 3;
-}
-
-for(let i = 0; i < 2; i++){
-    white_rooks[i] = new piece("white_rook", i);
-    white_rooks[i].row = white_rooks[i].old_row = 0;
-    if(i == 0)
-        white_rooks[i].col = white_rooks[i].old_col = 0;
-    else 
-        white_rooks[i].col = white_rooks[i].old_col = 7;
-    white_rooks[i].color = "white";
-    white_rooks[i].value = 5;
-}
-
-white_king.row = white_king.old_row = 0;
-white_king.col = white_king.old_col = 3;
-white_king.color = "white";
-
-white_queen.row = white_queen.old_row = 0;
-white_queen.col = white_queen.old_col = 4;
-white_queen.color = "white";
-white_queen.value = 9;
-
-//creating black pieces
-for(let i = 0; i < 8; i++){
-    black_pawns[i] = new piece("black_pawn", i);
-    black_pawns[i].row = black_pawns[i].old_row = 6;
-    black_pawns[i].col = black_pawns[i].old_col = i;
-    black_pawns[i].color = "black";
-    black_pawns[i].value = -1;
-}
-
-for(let i = 0; i < 2; i++){
-    black_bishops[i] = new piece("black_bishop", i);
-    black_bishops[i].row = black_bishops[i].old_row = 7;
-    if(i == 0)
-        black_bishops[i].col = black_bishops[i].old_col = 2;
-    else 
-        black_bishops[i].col = black_bishops[i].old_col = 5;
-    black_bishops[i].color = "black";
-    black_bishops[i].value = -3;
-}
-
-for(let i = 0; i < 2; i++){
-    black_knights[i] = new piece("black_knight", i);
-    black_knights[i].row = black_knights[i].old_row = 7;
-    if(i == 0)
-        black_knights[i].col = black_knights[i].old_col = 1;
-    else 
-        black_knights[i].col = black_knights[i].old_col = 6;
-        black_knights[i].color = "black";
-        black_knights[i].value = -3;
-}
-
-for(let i = 0; i < 2; i++){
-    black_rooks[i] = new piece("black_rook", i);
-    black_rooks[i].row = black_rooks[i].old_row = 7;
-    if(i == 0)
-        black_rooks[i].col = black_rooks[i].old_col = 0;
-    else 
-        black_rooks[i].col = black_rooks[i].old_col = 7;
-        black_rooks[i].color = "black";
-        black_rooks[i].value = -5;
-}
-
-black_king.row = black_king.old_row = 7;
-black_king.col = black_king.old_col = 3;
-black_king.color = "black";
-
-black_queen.row = black_queen.old_row = 7;
-black_queen.col = black_queen.old_col = 4;
-black_queen.color = "black";
-black_queen.value = -9;
-
-
-
-let board = [
-    white_rooks[0], white_knights[0], white_bishops[0], white_king, white_queen, white_bishops[1], white_knights[1], white_rooks[1],
-    white_pawns[0], white_pawns[1], white_pawns[2], white_pawns[3], white_pawns[4], white_pawns[5], white_pawns[6], white_pawns[7], 
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    black_pawns[0], black_pawns[1], black_pawns[2], black_pawns[3], black_pawns[4], black_pawns[5], black_pawns[6], black_pawns[7], 
-    black_rooks[0], black_knights[0], black_bishops[0], black_king, black_queen, black_bishops[1], black_knights[1], black_rooks[1]
-];
-
-for(let i = 0; i < 16; i++){
-    white_pieces[i] = board[i];
-    black_pieces[i] = board[48+i];
-}
-
-
-let pieces = [];
-
-for(let i = 0; i < 64; i++){
-    if(board[i] != 0)
-        pieces[i] = board[i].div;
-    else
-        pieces[i] = "";
-}
 
 /**
  * @brief is called after the DOM is loaded, calls the function to get the game started
@@ -317,6 +92,9 @@ function dragDrop (e) {
             piece = divToPiece(draggedElement);
             if(!moveWithCheck(destinationSquare, piece, false)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true, false);
+            // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
+            //     promotion(piece);
+            // }
             if(moveMade){
                 e.target.append(draggedElement);
                 if(enPassantPlayed){
@@ -352,10 +130,8 @@ function dragDrop (e) {
             destinationSquare = e.target.parentNode;
             piece = divToPiece(draggedElement);
             if(!moveWithCheck(destinationSquare, piece, true)) return;
-            console.log("ho fatto il passo");
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
             if(moveMade) {
-                console.log("ho fatto anche il secondo");
                 let rookStartSquare = e.target.parentNode;
                 let kingStartSquare = draggedElement.parentNode;
                 let rookEndSquare;
@@ -497,7 +273,7 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {
  * 
  * @param {html element} destinationSquare the square where I'm trying to move
  * @param {piece} piece the piece I'm trying to move
- * @returns returns true if the last legal move that's been valuted is a castling, returns false otherways
+ * @returns returns true if the last legal move that's been valuted is a castling move, returns false otherways
  */
 
 function castling (destinationSquare, piece){
@@ -552,14 +328,16 @@ function checkMate () {
 }
 
 /**
- * @brief switchs turn between white and black
+ * @brief switchs turn between white and black, and it dissables the possibility of an EnPassant move of the player that just moved
  */
 function switchTurn(){
     if(white_turn){
+        updateEnPassantAttribute(0);
         white_turn = false;
-        black_turn = true
+        black_turn = true;
     }
     else{
+        updateEnPassantAttribute(1);
         white_turn = true;
         black_turn = false;
     }
@@ -626,18 +404,22 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     let end_col = end_index%rows;
     let i = parseInt(id.slice(-1)); //get the last character of the id and convert it to string
     
-
+    // boardIsConsistent();
+    // console.log("dentro validate_move");
+    // console.log("pezzo è : " + id + "to " + end_row + " " + end_col);
     //white pawn
     if(id.includes("white_pawn")){
         let t = white_pawns[i].firstMove ? 1 : 0;
         let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) ? 1 : 0;
         t = diag ? 0 : t;
-        // let possibleEnPassantPawn;
+        let possibleEnPassantPawn;
+        
         // console.log("test");
-        // if(board[(end_row-1)*cols+end_col] != undefined && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0)
-        //     possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
-        // else
-        //     possibleEnPassantPawn = 0;
+        if(end_row > 0 && board[(end_row-1)*cols+end_col] != 0 && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0)
+            possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
+        else
+            possibleEnPassantPawn = 0;
+
         if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) return false;
         if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
@@ -647,16 +429,16 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                 draggedPiece = white_pawns[i];
                 
             }
-        // else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.id.includes("black_pawn") && 
-        //     possibleEnPassantPawn.movesMade === 1 && end_row === 5 && (end_row-start_row) === 1){
-        //     draggedPiece = white_pawns[i];
-        //     if(makingMove){
-        //         possibleEnPassantPawn.captured = true;
-        //         board[(end_row-1)*cols + end_col] = 0;
-        //         pieceOffSquare(end_row-1, end_col);
-        //         enPassantPlayed = true;
-        //     }
-        // }
+        else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes("black_pawn") && 
+            possibleEnPassantPawn.movesMade === 1 && end_row === 5 && (end_row-start_row) === 1){
+            draggedPiece = white_pawns[i];
+            if(makingMove){
+                possibleEnPassantPawn.captured = true;
+                board[(end_row-1)*cols + end_col] = 0;
+                pieceOffSquare(end_row-1, end_col);
+                enPassantPlayed = true;
+            }
+        }
         else 
             return false;
         if(makingMove){
@@ -666,6 +448,9 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             draggedPiece.row = end_row;
             draggedPiece.col = end_col;
             draggedPiece.movesMade++;
+            if(Math.abs(end_row-start_row) == 2){
+                draggedPiece.enPassantCapturable = true;
+            }
         }
         return true;
     }
@@ -676,11 +461,16 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         let t = black_pawns[i].firstMove ? -1 : 0;
         let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) ? 1 : 0;
         t = diag ? 0 : t;
-        // let possibleEnPassantPawn;
-        // if(board[(end_row-1)*cols + end_col].id.includes("white_pawn") && end_row > 0)
-        //     possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
-        // else
-        //     possibleEnPassantPawn = 0;
+        let possibleEnPassantPawn;
+        // console.log("le cordinate sono: " + end_row + " " + end_col);
+        // console.log(board[(end_row+1)*cols+end_col].id);
+        if(end_row < rows-1 && board[(end_row+1)*cols+end_col] != 0 && board[(end_row+1)*cols+end_col].id.includes("white_pawn") && end_row > 0){
+            // console.log(board[(end_row+1)*cols+end_col].id);
+            // console.log("sono entrato");
+            possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
+        }
+        else
+            possibleEnPassantPawn = 0;
         if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) return false;
         if((end_row <= start_row) && (end_row >= start_row - 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
@@ -690,16 +480,16 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                 draggedPiece = black_pawns[i];
                 
             }
-        // else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.id.includes("white_pawn") 
-        //     && possibleEnPassantPawn.movesMade === 1 && end_row === 2 && (end_row-start_row) === -1){
-        //     draggedPiece = black_pawns[i];
-        //     if(makingMove){
-        //         possibleEnPassantPawn.captured = true;
-        //         board[(end_row+1)*cols + end_col] = 0;
-        //         pieceOffSquare(end_row+1, end_col);
-        //         enPassantPlayed = true;
-        //     }
-        // }
+        else if(!captureOpportunity && possibleEnPassantPawn != 0  && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes("white_pawn") 
+            && possibleEnPassantPawn.movesMade === 1 && end_row === 2 && (end_row-start_row) === -1){
+            draggedPiece = black_pawns[i];
+            if(makingMove){
+                possibleEnPassantPawn.captured = true;
+                board[(end_row+1)*cols + end_col] = 0;
+                pieceOffSquare(end_row+1, end_col);
+                enPassantPlayed = true;
+            }
+        }
         else return false;
         if(makingMove){
             draggedPiece.firstMove = false;
@@ -708,6 +498,9 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             draggedPiece.row = end_row;
             draggedPiece.col = end_col;
             draggedPiece.movesMade++;
+            if(Math.abs(end_row-start_row) == 2){
+                draggedPiece.enPassantCapturable = true;
+            }
         }
         return true;
             
@@ -1173,7 +966,6 @@ function updateBoard (castlignRook) {
 
     board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
     if(castlignRook){
-        console.log("dentro updateBoard" + castlignRook.id);
         board[castlignRook.row*cols + (castlignRook.col)] = castlignRook;
         board[castlignRook.old_row*cols + (castlignRook.old_col)] = 0;
     }
@@ -1456,4 +1248,42 @@ function whereIsPiece(id){
         }
     console.log("non ho trovato il pezzo");
     return false;
+}
+/**
+ * @brief is called after a player plays a move, sets to false the opponent pawns enPassantCapturable attribute
+ * @param {int} color 1 is white, 0 is black
+ */
+function updateEnPassantAttribute(color){
+    if(color){
+        for(let i = 0; i < 16; i++){
+            if(white_pieces[i].captured)
+                continue;
+            else
+                white_pieces[i].enPassantCapturable = false;
+        }
+    }
+    else{
+        for(let i = 0; i < 16; i++){
+            if(black_pieces[i].captured)
+                continue;
+            else
+                black_pieces[i].enPassantCapturable = false;
+        }
+    }
+}
+
+
+function promotion (piece) {
+    let pieceString;
+    while(pieceString == "queen" || pieceString == "knight"){
+        pieceString = prompt("What piece do you want? [queen | knight]");
+    }
+    // if(pieceString == "queen"){
+    //     if(piece.color == "white")
+    //     {
+    //         white_queen1 = piece("white_queen", 1);
+    //         white_pieces.push(white_queen1);
+    //     }
+    
+
 }
