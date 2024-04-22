@@ -1,6 +1,4 @@
 
-
-
 /**
  * @brief is called after the DOM is loaded, calls the function to get the game started
  */
@@ -74,22 +72,31 @@ function dragOver (e) {
  */
 function dragDrop (e) {
     removeSelectedSquares();
+    let piece; // is the piece that is being moved
+    piece = divToPiece(draggedElement);
+    let square;
+    if(e.target.classList.contains("square")){
+        square = e.target;
+    }
+    else {
+        square = e.target.parentNode;
+    }
+
     let start_index = parseInt(startPositionId);
     let start_row = Math.floor(start_index/rows);   
     let start_col = start_index%rows;
     let id = draggedElement.getAttribute('id');
     let moveMade;
-    let piece; // is the piece that is being moved
     let castlignRook;
     e.stopPropagation();
     moveMade = false;
+
     if((white_turn && draggedElement.id.includes("white"))
         || (black_turn && draggedElement.id.includes("black"))){
         // if true -> the target square is empty
         if(e.target.classList.contains("square"))
         {
             destinationSquare = e.target;
-            piece = divToPiece(draggedElement);
             if(!moveWithCheck(destinationSquare, piece, false)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true, false);
             // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
@@ -112,7 +119,6 @@ function dragDrop (e) {
         {
             //if true -> the target square has a different color piece
             destinationSquare = e.target.parentNode;
-            piece = divToPiece(draggedElement);
             if(!moveWithCheck(destinationSquare, piece, true)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
             if(moveMade) {
@@ -128,7 +134,92 @@ function dragDrop (e) {
         {   
             castlignRook = divToPiece(e.target);
             destinationSquare = e.target.parentNode;
-            piece = divToPiece(draggedElement);
+            if(!moveWithCheck(destinationSquare, piece, true)) return;
+            moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
+            if(moveMade) {
+                let rookStartSquare = e.target.parentNode;
+                let kingStartSquare = draggedElement.parentNode;
+                let rookEndSquare;
+                let kingEndSquare;
+                let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
+                let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
+                draggedElement.remove();
+                e.target.remove();
+                if(kingIndex > rookIndex){  //I'm castling to the right
+                    rookEndSquare = document.getElementById((kingIndex-1)+'');
+                    kingEndSquare = document.getElementById((rookIndex+1)+'');
+                }
+                else{
+                    rookEndSquare = document.getElementById((kingIndex+1)+'');
+                    kingEndSquare = document.getElementById((rookIndex-2)+'');
+                }
+                rookEndSquare.append(e.target);
+                kingEndSquare.append(draggedElement);
+                move_sound.play();
+            }
+        }
+    }
+    if(moveMade){
+        updateBoard(castlignRook);
+        checkCheck();
+        switchTurn();
+        updateMessages();   //qui controlliamo lo scacco matto
+        boardIsConsistent();//used for debug
+    }
+    
+}
+
+//function that makes the move
+
+function makeMove(piece, square) {
+    let start_row = piece.row;   
+    let start_col = piece.col;
+    let id = piece.id;
+    let moveMade = false;
+    let castlignRook;
+
+    if((white_turn && draggedElement.id.includes("white"))
+        || (black_turn && draggedElement.id.includes("black"))){
+        // if true -> the target square is empty
+        if(!square.hasChildNodes())
+        {
+            if(!moveWithCheck(square, piece, false)) return;
+            moveMade = validate_move(square, start_row, start_col, id, true, false);
+            // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
+            //     promotion(piece);
+            // }
+            if(moveMade){
+                square.append(draggedElement);
+                if(enPassantPlayed){
+                    capture_sound.play();
+                    enPassantPlayed = false;
+                }
+                else
+                    move_sound.play();
+            }
+            
+        }
+        //check if the target square has a same colored piece
+        else if ((piece.id.includes("white") && square.firstElementChild.id.includes("black"))
+            || (piece.id.includes("black") && square.firstElementChild.id.includes("white")))
+        {
+            //if true -> the target square has a different color piece
+            destinationSquare = e.target.parentNode;
+            if(!moveWithCheck(destinationSquare, piece, true)) return;
+            moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
+            if(moveMade) {
+                e.target.parentNode.append(draggedElement);
+                e.target.remove();
+                capture_sound.play();
+                
+            }
+        }
+        else if ((draggedElement.id.includes("white_king") && e.target.id.includes("white_rook"))
+            || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
+        )
+        {   
+            castlignRook = divToPiece(e.target);
+            destinationSquare = e.target.parentNode;
             if(!moveWithCheck(destinationSquare, piece, true)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
             if(moveMade) {

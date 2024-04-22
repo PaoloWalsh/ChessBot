@@ -83,13 +83,10 @@ body {
     color: green;
 }
 
-/* p {
-    padding: 10px;
-    margin: 10px;
+p {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+    padding: 10px 15px;
     border-radius: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    background-color: #DFF2BF;
-    color: #4F8A10;
-    border: 1px solid #4F8A10;
-} */
+}
