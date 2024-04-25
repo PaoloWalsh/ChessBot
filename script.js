@@ -45,8 +45,13 @@ function init_drag() {
         square.addEventListener('dragstart', dragStart)
         square.addEventListener('dragover', dragOver)
         square.addEventListener('drop', dragDrop)
+        // square.addEventListener('onClick', click);
     });
 }
+
+// function click () {
+//     makeMove();
+// }
 
 let destinationSquare;
 let startPositionId;
@@ -74,6 +79,7 @@ function dragDrop (e) {
     removeSelectedSquares();
     let piece; // is the piece that is being moved
     piece = divToPiece(draggedElement);
+    // makeMove(piece, e.target);
     let square;
     if(e.target.classList.contains("square")){
         square = e.target;
@@ -172,14 +178,16 @@ function dragDrop (e) {
 //function that makes the move
 
 function makeMove(piece, square) {
+    console.log("FUNZIONO PADRONE");
     let start_row = piece.row;   
     let start_col = piece.col;
     let id = piece.id;
     let moveMade = false;
     let castlignRook;
+    let element = pieceToDiv(piece);
 
-    if((white_turn && draggedElement.id.includes("white"))
-        || (black_turn && draggedElement.id.includes("black"))){
+    if((white_turn && element.id.includes("white"))
+        || (black_turn && element.id.includes("black"))){
         // if true -> the target square is empty
         if(!square.hasChildNodes())
         {
@@ -189,7 +197,7 @@ function makeMove(piece, square) {
             //     promotion(piece);
             // }
             if(moveMade){
-                square.append(draggedElement);
+                square.append(element);
                 if(enPassantPlayed){
                     capture_sound.play();
                     enPassantPlayed = false;
@@ -204,33 +212,34 @@ function makeMove(piece, square) {
             || (piece.id.includes("black") && square.firstElementChild.id.includes("white")))
         {
             //if true -> the target square has a different color piece
-            destinationSquare = e.target.parentNode;
+            console.log("sono giusto");
+            destinationSquare = square.parentNode;
             if(!moveWithCheck(destinationSquare, piece, true)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
             if(moveMade) {
-                e.target.parentNode.append(draggedElement);
-                e.target.remove();
+                square.parentNode.append(element);
+                square.remove();
                 capture_sound.play();
                 
             }
         }
-        else if ((draggedElement.id.includes("white_king") && e.target.id.includes("white_rook"))
-            || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
+        else if ((element.id.includes("white_king") && square.id.includes("white_rook"))
+            || (element.id.includes("black_king") && square.id.includes("black_rook"))
         )
         {   
-            castlignRook = divToPiece(e.target);
-            destinationSquare = e.target.parentNode;
+            castlignRook = divToPiece(square);
+            destinationSquare = square.parentNode;
             if(!moveWithCheck(destinationSquare, piece, true)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
             if(moveMade) {
-                let rookStartSquare = e.target.parentNode;
-                let kingStartSquare = draggedElement.parentNode;
+                let rookStartSquare = square.parentNode;
+                let kingStartSquare = element.parentNode;
                 let rookEndSquare;
                 let kingEndSquare;
                 let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
                 let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
-                draggedElement.remove();
-                e.target.remove();
+                element.remove();
+                square.remove();
                 if(kingIndex > rookIndex){  //I'm castling to the right
                     rookEndSquare = document.getElementById((kingIndex-1)+'');
                     kingEndSquare = document.getElementById((rookIndex+1)+'');
@@ -239,8 +248,8 @@ function makeMove(piece, square) {
                     rookEndSquare = document.getElementById((kingIndex+1)+'');
                     kingEndSquare = document.getElementById((rookIndex-2)+'');
                 }
-                rookEndSquare.append(e.target);
-                kingEndSquare.append(draggedElement);
+                rookEndSquare.append(square);
+                kingEndSquare.append(element);
                 move_sound.play();
             }
         }
@@ -1004,7 +1013,7 @@ function checkCheck() {
         my_pieces = black_pieces;
         op_pieces = white_pieces;
     }
-    // if(draggedElement.id.includes("king"))
+    // if(element.id.includes("king"))
     //     king_position = parseInt(destinationSquare.getAttribute('id'));
    
     for(let i = 0; i < 16; i++){
@@ -1294,6 +1303,17 @@ function divToPiece (element) {
             break;
     }
     return piece;
+}
+
+/**
+ * 
+ * @param {piece} piece piece of which I want the html element
+ * @returns the html element of the piece
+ */
+
+function pieceToDiv (piece) {
+    let element = document.getElementById(piece.id);
+    return element;
 }
 
 
