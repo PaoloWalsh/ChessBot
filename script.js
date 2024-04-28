@@ -525,6 +525,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                                                                     //    (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) &&
         if((end_row >= start_row) && (end_row <= start_row + 1 + t) &&  (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
+                if((Math.abs(end_row-start_row) > maxDist(start_row, start_col, "u")) && !diag) return false;
                 if(diag && end_col === start_col)
                     return false;
                 if(diag && end_row === start_row) return false;
@@ -578,6 +579,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                                                                         // (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) &&
         if((end_row <= start_row) && (end_row >= start_row - 1 + t) &&  (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
+                if((Math.abs(end_row-start_row) > maxDist(start_row, start_col, "d")) && !diag) return false;
                 if(diag && end_col === start_col)
                     return false;
                 if(diag && end_row === start_row) return false;
