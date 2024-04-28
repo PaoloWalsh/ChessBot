@@ -503,7 +503,6 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
     let i = parseInt(id.slice(-1)); //get the last character of the id and convert it to string
-    
     // boardIsConsistent();
     // console.log("dentro validate_move");
     // console.log("pezzo è : " + id + "to " + end_row + " " + end_col);
@@ -520,8 +519,11 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         else
             possibleEnPassantPawn = 0;
 
-        if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) return false;
-        if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+        if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")){
+            return false;
+        } 
+                                                                    //    (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) &&
+        if((end_row >= start_row) && (end_row <= start_row + 1 + t) &&  (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
                 if(diag && end_col === start_col)
                     return false;
@@ -539,8 +541,9 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                 enPassantPlayed = true;
             }
         }
-        else 
+        else {
             return false;
+        }
         if(makingMove){
             draggedPiece.firstMove = false;
             draggedPiece.old_row = start_row;
@@ -572,7 +575,8 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         else
             possibleEnPassantPawn = 0;
         if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) return false;
-        if((end_row <= start_row) && (end_row >= start_row - 1 + t) && (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+                                                                        // (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) &&
+        if((end_row <= start_row) && (end_row >= start_row - 1 + t) &&  (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
                 if(diag && end_col === start_col)
                     return false;
