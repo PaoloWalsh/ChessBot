@@ -45,18 +45,41 @@ function init_drag() {
         square.addEventListener('dragstart', dragStart)
         square.addEventListener('dragover', dragOver)
         square.addEventListener('drop', dragDrop)
-        // square.addEventListener('onClick', click);
+        // square.addEventListener('click', click);
     });
 }
 
-// function click () {
-//     makeMove();
-// }
 
+
+let firstClick = true;
+let firstElementClicked; 
 let destinationSquare;
 let startPositionId;
 let draggedElement;
 let draggedPiece;
+
+function click (e) {
+    removeSelectedSquares();
+    console.log("funziono");
+    console.log(firstClick);
+    console.log(e.target.id);
+    if(firstElementClicked != undefined && firstElementClicked.color != e.target.color){
+        firstClick = true;
+    }
+    if(firstClick){
+        // if(!e.target.id.includes("white") && !e.target.id.includes("black")) return;
+        if(firstElementClicked != undefined || firstElementClicked.color != e.target.color){
+            firstClick = false;
+        }
+        firstElementClicked = e.target;
+        selectLandingSquares(divToPiece(firstElementClicked));
+        return;
+    }
+    let piece = divToPiece(firstElementClicked);
+    if(makeMove(piece, e.target)){
+        firstClick = true;
+    }
+}
 
 function dragStart (e) {
     startPositionId = e.target.parentNode.getAttribute('id');   //square id
@@ -69,6 +92,8 @@ function dragOver (e) {
     e.preventDefault();
 }
 
+
+
 //makes the move
 /**
  * @brief if legal, makes the move html wise,  calls update board, and calls update messages and checkMate 
@@ -76,17 +101,17 @@ function dragOver (e) {
  * @returns 
  */
 function dragDrop (e) {
-    removeSelectedSquares();
+    
     let piece; // is the piece that is being moved
     piece = divToPiece(draggedElement);
     // makeMove(piece, e.target);
-    let square;
-    if(e.target.classList.contains("square")){
-        square = e.target;
-    }
-    else {
-        square = e.target.parentNode;
-    }
+    let square = e.target;
+    // if(e.target.classList.contains("square")){
+    //     square = e.target;
+    // }
+    // else {
+    //     square = e.target.parentNode;
+    // }
 
     let start_index = parseInt(startPositionId);
     let start_row = Math.floor(start_index/rows);   
@@ -95,90 +120,96 @@ function dragDrop (e) {
     let moveMade;
     let castlignRook;
     e.stopPropagation();
-    moveMade = false;
+    makeMove(piece, square);
+    // moveMade = false;
 
-    if((white_turn && draggedElement.id.includes("white"))
-        || (black_turn && draggedElement.id.includes("black"))){
-        // if true -> the target square is empty
-        if(e.target.classList.contains("square"))
-        {
-            destinationSquare = e.target;
-            if(!moveWithCheck(destinationSquare, piece, false)) return;
-            moveMade = validate_move(destinationSquare, start_row, start_col, id, true, false);
-            // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
-            //     promotion(piece);
-            // }
-            if(moveMade){
-                e.target.append(draggedElement);
-                if(enPassantPlayed){
-                    capture_sound.play();
-                    enPassantPlayed = false;
-                }
-                else
-                    move_sound.play();
-            }
+    // if((white_turn && draggedElement.id.includes("white"))
+    //     || (black_turn && draggedElement.id.includes("black"))){
+    //     // if true -> the target square is empty
+    //     if(e.target.classList.contains("square"))
+    //     {
+    //         destinationSquare = e.target;
+    //         if(!moveWithCheck(destinationSquare, piece, false)) return;
+    //         moveMade = validate_move(destinationSquare, start_row, start_col, id, true, false);
+    //         // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
+    //         //     promotion(piece);
+    //         // }
+    //         if(moveMade){
+    //             e.target.append(draggedElement);
+    //             if(enPassantPlayed){
+    //                 capture_sound.play();
+    //                 enPassantPlayed = false;
+    //             }
+    //             else
+    //                 move_sound.play();
+    //         }
             
-        }
-        //check if the target square has a same colored piece
-        else if ((draggedElement.id.includes("white") && e.target.id.includes("black"))
-            || (draggedElement.id.includes("black") && e.target.id.includes("white")))
-        {
-            //if true -> the target square has a different color piece
-            destinationSquare = e.target.parentNode;
-            if(!moveWithCheck(destinationSquare, piece, true)) return;
-            moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
-            if(moveMade) {
-                e.target.parentNode.append(draggedElement);
-                e.target.remove();
-                capture_sound.play();
+    //     }
+    //     //check if the target square has a same colored piece
+    //     else if ((draggedElement.id.includes("white") && e.target.id.includes("black"))
+    //         || (draggedElement.id.includes("black") && e.target.id.includes("white")))
+    //     {
+    //         //if true -> the target square has a different color piece
+    //         destinationSquare = e.target.parentNode;
+    //         if(!moveWithCheck(destinationSquare, piece, true)) return;
+    //         moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
+    //         if(moveMade) {
+    //             e.target.parentNode.append(draggedElement);
+    //             e.target.remove();
+    //             capture_sound.play();
                 
-            }
-        }
-        else if ((draggedElement.id.includes("white_king") && e.target.id.includes("white_rook"))
-            || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
-        )
-        {   
-            castlignRook = divToPiece(e.target);
-            destinationSquare = e.target.parentNode;
-            if(!moveWithCheck(destinationSquare, piece, true)) return;
-            moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
-            if(moveMade) {
-                let rookStartSquare = e.target.parentNode;
-                let kingStartSquare = draggedElement.parentNode;
-                let rookEndSquare;
-                let kingEndSquare;
-                let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
-                let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
-                draggedElement.remove();
-                e.target.remove();
-                if(kingIndex > rookIndex){  //I'm castling to the right
-                    rookEndSquare = document.getElementById((kingIndex-1)+'');
-                    kingEndSquare = document.getElementById((rookIndex+1)+'');
-                }
-                else{
-                    rookEndSquare = document.getElementById((kingIndex+1)+'');
-                    kingEndSquare = document.getElementById((rookIndex-2)+'');
-                }
-                rookEndSquare.append(e.target);
-                kingEndSquare.append(draggedElement);
-                move_sound.play();
-            }
-        }
-    }
-    if(moveMade){
-        updateBoard(castlignRook);
-        checkCheck();
-        switchTurn();
-        updateMessages();   //qui controlliamo lo scacco matto
-        boardIsConsistent();//used for debug
-    }
+    //         }
+    //     }
+    //     else if ((draggedElement.id.includes("white_king") && e.target.id.includes("white_rook"))
+    //         || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
+    //     )
+    //     {   
+    //         castlignRook = divToPiece(e.target);
+    //         destinationSquare = e.target.parentNode;
+    //         if(!moveWithCheck(destinationSquare, piece, true)) return;
+    //         moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
+    //         if(moveMade) {
+    //             let rookStartSquare = e.target.parentNode;
+    //             let kingStartSquare = draggedElement.parentNode;
+    //             let rookEndSquare;
+    //             let kingEndSquare;
+    //             let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
+    //             let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
+    //             draggedElement.remove();
+    //             e.target.remove();
+    //             if(kingIndex > rookIndex){  //I'm castling to the right
+    //                 rookEndSquare = document.getElementById((kingIndex-1)+'');
+    //                 kingEndSquare = document.getElementById((rookIndex+1)+'');
+    //             }
+    //             else{
+    //                 rookEndSquare = document.getElementById((kingIndex+1)+'');
+    //                 kingEndSquare = document.getElementById((rookIndex-2)+'');
+    //             }
+    //             rookEndSquare.append(e.target);
+    //             kingEndSquare.append(draggedElement);
+    //             move_sound.play();
+    //         }
+    //     }
+    // }
+    // if(moveMade){
+    //     updateBoard(castlignRook);
+    //     checkCheck();
+    //     switchTurn();
+    //     updateMessages();   //qui controlliamo lo scacco matto
+    //     boardIsConsistent();//used for debug
+    // }
     
 }
 
 //function that makes the move
-
+/**
+ * @brief function that makes the move
+ * @param {js piece} piece the javascript class object piece I want to move
+ * @param {*} square the html destination element, could be a square or a piece
+ * @returns returns true if the move was made, false otherways
+ */
 function makeMove(piece, square) {
-    console.log("FUNZIONO PADRONE");
+    removeSelectedSquares();
     let start_row = piece.row;   
     let start_col = piece.col;
     let id = piece.id;
@@ -208,11 +239,12 @@ function makeMove(piece, square) {
             
         }
         //check if the target square has a same colored piece
-        else if ((piece.id.includes("white") && square.firstElementChild.id.includes("black"))
-            || (piece.id.includes("black") && square.firstElementChild.id.includes("white")))
+        else if ((piece.id.includes("white") && square.id.includes("black"))
+            || (piece.id.includes("black") && square.id.includes("white")))
         {
             //if true -> the target square has a different color piece
             console.log("sono giusto");
+            // console.log(square.firstElementChild.id);
             destinationSquare = square.parentNode;
             if(!moveWithCheck(destinationSquare, piece, true)) return;
             moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
@@ -260,7 +292,9 @@ function makeMove(piece, square) {
         switchTurn();
         updateMessages();   //qui controlliamo lo scacco matto
         boardIsConsistent();//used for debug
+        return true;
     }
+    return false;
     
 }
 
@@ -514,8 +548,10 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         let possibleEnPassantPawn;
         
         // console.log("test");
-        if(end_row > 0 && board[(end_row-1)*cols+end_col] != 0 && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0)
+        if(Math.abs(end_col-start_col) >= 2) return false;
+        if(end_row > 0 && board[(end_row-1)*cols+end_col] != 0 && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0){
             possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
+        }
         else
             possibleEnPassantPawn = 0;
 
@@ -568,6 +604,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         let possibleEnPassantPawn;
         // console.log("le cordinate sono: " + end_row + " " + end_col);
         // console.log(board[(end_row+1)*cols+end_col].id);
+        if(Math.abs(end_col-start_col) >= 2) return false;
         if(end_row < rows-1 && board[(end_row+1)*cols+end_col] != 0 && board[(end_row+1)*cols+end_col].id.includes("white_pawn") && end_row > 0){
             // console.log(board[(end_row+1)*cols+end_col].id);
             // console.log("sono entrato");
