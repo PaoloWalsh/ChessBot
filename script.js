@@ -45,7 +45,7 @@ function init_drag() {
         square.addEventListener('dragstart', dragStart)
         square.addEventListener('dragover', dragOver)
         square.addEventListener('drop', dragDrop)
-        // square.addEventListener('click', click);
+        square.addEventListener('click', click);
     });
 }
 
@@ -63,12 +63,12 @@ function click (e) {
     console.log("funziono");
     console.log(firstClick);
     console.log(e.target.id);
-    if(firstElementClicked != undefined && firstElementClicked.color != e.target.color){
+    if(firstElementClicked != undefined && firstElementClicked.color == e.target.color){
         firstClick = true;
     }
     if(firstClick){
         // if(!e.target.id.includes("white") && !e.target.id.includes("black")) return;
-        if(firstElementClicked != undefined || firstElementClicked.color != e.target.color){
+        if(firstElementClicked == undefined ||  firstElementClicked.color != e.target.color){
             firstClick = false;
         }
         firstElementClicked = e.target;
