@@ -49,10 +49,21 @@ function init_drag() {
     });
 }
 
+/**
+ * @param element html element
+ * @returns true if html of a piece, false if html of a square
+ */
+function isPieceElement(element){
+    let rv = false;
+    if(element.id.includes("white") || element.id.includes("black")){
+        rv = true;
+    }
+    return rv;
+}
 
 
 let firstClick = true;
-let firstElementClicked; 
+let firstPieceClicked; 
 let destinationSquare;
 let startPositionId;
 let draggedElement;
@@ -62,23 +73,66 @@ function click (e) {
     removeSelectedSquares();
     console.log("funziono");
     console.log(firstClick);
-    console.log(e.target.id);
-    if(firstElementClicked != undefined && firstElementClicked.color == e.target.color){
-        firstClick = true;
-    }
+    // console.log(e.target.id);
+    // console.log(e.target.color);
+    // console.log(firstPieceClicked);
+
+    // 1. clicco su elemento
+    // 2. controllo l'ultimo elemente cliccato è un pezzo
+    // 3. se è un pezzo dello stesso colore (e controllo arrocco) -> resetto il click
+    // 4. altrimenti faccio la mossa
+
+    //supponiamo sia il primo click
+    
+    let currentElement = e.target;
+    let pieceElement;
+    let pieceClicked = false;
+    let squareCliecked = false;
+    if(isPieceElement(currentElement)){
+        pieceElement = divToPiece(currentElement);
+        pieceClicked = true;
+    } else 
+        squareCliecked = true;
+    
     if(firstClick){
-        // if(!e.target.id.includes("white") && !e.target.id.includes("black")) return;
-        if(firstElementClicked == undefined ||  firstElementClicked.color != e.target.color){
-            firstClick = false;
-        }
-        firstElementClicked = e.target;
-        selectLandingSquares(divToPiece(firstElementClicked));
+        if(squareCliecked) return;
+        firstPieceClicked = pieceElement;
+        selectLandingSquares(firstPieceClicked);
+        firstClick = false;
         return;
     }
-    let piece = divToPiece(firstElementClicked);
-    if(makeMove(piece, e.target)){
-        firstClick = true;
+
+    if(pieceClicked){
+        if(firstPieceClicked.color == pieceElement.color 
+            && !((firstPieceClicked.id.includes("king") && pieceElement.id.includes("rook")) 
+            || (firstPieceClicked.id.includes("rook") && pieceElement.id(includes("king"))))){
+            firstClick = true;
+            return;
+        }
     }
+    if(makeMove(firstPieceClicked, currentElement))
+        firstClick = true;
+    
+    // if(firstElementClicked != undefined && e.target.color != undefined && firstElementClicked.color == e.target.color){
+    //     firstClick = true;
+    //     console.log("1 if");
+    // }
+    // if(firstClick){
+    //     console.log("2 if");
+    //     // if(!e.target.id.includes("white") && !e.target.id.includes("black")) return;
+    //     if(firstElementClicked == undefined ||  firstElementClicked.color != e.target.color){
+    //         firstClick = false;
+    //         console.log("3 if");
+    //     }
+    //     firstElementClicked = e.target;
+    //     selectLandingSquares(divToPiece(firstElementClicked));
+    //     return;
+    // }
+    // let piece = divToPiece(firstElementClicked);
+    // if(makeMove(piece, e.target)){
+    //     firstClick = true;
+    //     console.log("4 if");
+    // }
 }
 
 function dragStart (e) {
