@@ -155,7 +155,6 @@ function dragOver (e) {
  * @returns 
  */
 function dragDrop (e) {
-    
     let piece; // is the piece that is being moved
     piece = divToPiece(draggedElement);
     // makeMove(piece, e.target);
@@ -270,7 +269,8 @@ function makeMove(piece, square) {
     let moveMade = false;
     let castlignRook;
     let element = pieceToDiv(piece);
-
+    // console.log("primo");
+    // console.log(piece);
     if((white_turn && element.id.includes("white"))
         || (black_turn && element.id.includes("black"))){
         // if true -> the target square is empty
@@ -297,7 +297,7 @@ function makeMove(piece, square) {
             || (piece.id.includes("black") && square.id.includes("white")))
         {
             //if true -> the target square has a different color piece
-            console.log("sono giusto");
+            // console.log("sono giusto");
             // console.log(square.firstElementChild.id);
             destinationSquare = square.parentNode;
             if(!moveWithCheck(destinationSquare, piece, true)) return;
@@ -1345,7 +1345,6 @@ function divToPiece (element) {
     let piece;
     let id = element.getAttribute('id');
     let index = parseInt(id.slice(-1)); //get the last character of the id and convert it to string; 
-    console.log()
     switch (id) {
         case "white_king":
             piece = white_king;

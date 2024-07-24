@@ -1,3 +1,21 @@
+/* div[style] {
+    -webkit-user-drag: element; 
+    -moz-user-drag: -moz-element; 
+    -ms-user-drag: element; 
+    user-select: none; 
+    -webkit-user-select: none; 
+    -moz-user-select: -moz-none; 
+    -ms-user-select: none; 
+} */
+
+:root{
+    --dark-square: rgb(182, 135, 99);
+    --light-square: rgb(240, 218, 181);
+    --dark-square-selected: #657d65;
+    --light-square-selected: #81a581;
+
+}
+
 .centered-title {
     display: flex;
     justify-content: center;
@@ -22,7 +40,7 @@ h1 {
 .square {
     width: 60px;
     height: 60px;
-    position: relative;
+    /* position: relative; */
 }
 
 .square img {
@@ -31,27 +49,32 @@ h1 {
     margin: 3px;
     position: relative;
     z-index: -9;
+    pointer-events: none; /* This makes the child ignore pointer events */
+    /* position: absolute;
+    z-index: 10; */
 }
 
 .piece {
     position: relative;
     z-index: 9;
+    /* z-index: 10; */
+    /* background-color: var(--light-square-selected); */
 }
 
 .dark {
-    background-color: rgb(182, 135, 99);
+    background-color: var(--dark-square);
 }
 
 .light {
-    background-color: rgb(240, 218, 181);
+    background-color: var(--light-square);
 }
 
 .selectedLight{
-    background-color: #81a581;
+    background-color: var(--light-square-selected);
 }
 
 .selectedDark {
-    background-color: #657d65;
+    background-color: var(--dark-square-selected);
 }
 
 body {
@@ -72,7 +95,7 @@ body {
 
 .big-title {
   font-size: 3em; 
-  color: rgb(182, 135, 99); 
+  color: var(--dark-square);
   /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); */
 }
 
@@ -84,9 +107,13 @@ body {
 }
 
 p {
+    width: auto;
+    height: auto;
     background-color: #d1ecf1;
     color: #0c5460;
     border: 1px solid #bee5eb;
     padding: 10px 15px;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
 }
