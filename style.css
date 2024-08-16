@@ -101,7 +101,7 @@ body {
 
 .number {
     position: relative;
-    align-self: right;
+    /* align-self: right; */
     z-index: 10;
     color: green;
 }

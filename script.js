@@ -96,6 +96,7 @@ function click (e) {
     
     if(firstClick){
         if(squareCliecked) return;
+        if((pieceElement.color == "white" && black_turn) || (pieceElement.color == "black" && white_turn)) return;
         firstPieceClicked = pieceElement;
         selectLandingSquares(firstPieceClicked);
         firstClick = false;
@@ -103,36 +104,23 @@ function click (e) {
     }
 
     if(pieceClicked){
-        if(firstPieceClicked.color == pieceElement.color 
-            && !((firstPieceClicked.id.includes("king") && pieceElement.id.includes("rook")) 
-            || (firstPieceClicked.id.includes("rook") && pieceElement.id(includes("king"))))){
-            firstClick = true;
-            return;
+        if(firstPieceClicked.color == pieceElement.color){
+            if(!((firstPieceClicked.id.includes("king") && pieceElement.id.includes("rook")) || (firstPieceClicked.id.includes("rook") && pieceElement.id.includes("king")))){
+                // firstClick = true
+                // return;
+                if((pieceElement.color == "white" && black_turn) || (pieceElement.color == "black" && white_turn)) return;
+                firstPieceClicked = pieceElement;
+                selectLandingSquares(firstPieceClicked);
+                firstClick = false;
+                return;
+            }
+            // return;
         }
     }
+
     if(makeMove(firstPieceClicked, currentElement))
         firstClick = true;
     
-    // if(firstElementClicked != undefined && e.target.color != undefined && firstElementClicked.color == e.target.color){
-    //     firstClick = true;
-    //     console.log("1 if");
-    // }
-    // if(firstClick){
-    //     console.log("2 if");
-    //     // if(!e.target.id.includes("white") && !e.target.id.includes("black")) return;
-    //     if(firstElementClicked == undefined ||  firstElementClicked.color != e.target.color){
-    //         firstClick = false;
-    //         console.log("3 if");
-    //     }
-    //     firstElementClicked = e.target;
-    //     selectLandingSquares(divToPiece(firstElementClicked));
-    //     return;
-    // }
-    // let piece = divToPiece(firstElementClicked);
-    // if(makeMove(piece, e.target)){
-    //     firstClick = true;
-    //     console.log("4 if");
-    // }
 }
 
 function dragStart (e) {
@@ -1126,7 +1114,7 @@ function checkCheck() {
                 break;
             }
         }
-         // I'm verifing if the move I'm goint to make puts me out of check
+         // I'm verifing if the move I'm going to make puts me out of check
         for(let j = 0; j < op_pieces[i].possibleMoves.length; j++){
             if (my_king_position === op_pieces[i].possibleMoves[j]){
                 if(white_turn)
