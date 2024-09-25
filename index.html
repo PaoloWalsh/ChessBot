@@ -7,7 +7,8 @@
     <title>ChessBot</title>
     <link rel="icon" type="image/png" href="pictures/png/white-knight.png">
     <link rel="stylesheet" href="style.css">
-    
+    <script src="init.js"></script>
+    <script src="script.js"></script>
 </head>
 <body>
     <div class="title-container">
@@ -16,9 +17,13 @@
     <div id="boardWrapper">
         <div id="board">
         </div>
+        <div id="buttons">
+            <button id="restart" onclick="reset()" disabled>Nuova Partita</button>
+            <!-- <button id="avvia">Avvia</button> -->
+        </div>
     </div>
-    <script src="init.js"></script>
-    <script src="script.js"></script>
+    
+
     <p id="turn"></p>
     <p id="check"></p>
     <p id="score"></p>

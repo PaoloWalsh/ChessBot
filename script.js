@@ -3,8 +3,11 @@
  * @brief is called after the DOM is loaded, calls the function to get the game started
  */
 function build () {
+    init_Pieces();
+    fill_Board();
     buildBoard();
     init_drag();
+    resetGlobalVariables();
     updateMessages();
 }
 
@@ -12,28 +15,64 @@ function build () {
  * @brief builds the board html wise inserting all the pieces img in the starting position
  */
 function buildBoard() {
-    const board = document.getElementById("board");
+    const scacchiera = document.getElementById("board");
     let count = 63;
     for(let i = rows-1; i >= 0; i--) {
         for(let j = cols-1; j >= 0; j--){
             const square = document.createElement("div");
-            square.innerHTML = pieces[count];
-            // let number = document.createElement('div');
-            // number.innerHTML = count+'';
-            // number.classList.add("number");
-            // square.appendChild(number);
+            if(board[count])
+                square.appendChild(board[count].getDiv());
             square.setAttribute("id", count--);
-            //square.setAttribute("readonly", "readonly");
             square.classList.add("square");
             if(!((i+j)%2))
                 square.classList.add("light");
             else
                 square.classList.add("dark");
-            board.appendChild(square);
+            scacchiera.appendChild(square);
         }
     }
 }
 
+function removeAllChildren(elem){
+    while(elem.firstChild){
+        elem.removeChild(elem.firstChild);
+    }
+}
+
+/**
+ * @brief updates the disable attribute of the reset button
+ */
+function updateResetButton() {
+    const button = document.getElementById('restart');
+    button.disabled = !button.disabled;
+}
+
+/**
+ * @brief reset the value of all global variable to prepare for a new game
+ */
+function resetGlobalVariables() {
+    white_turn = true;
+    black_turn = false;
+
+    white_in_check = false;
+    black_in_check = false;
+
+    enPassantPlayed = false;
+
+    firstClick = true;
+}
+
+function reset(){
+    const scacchiera = document.getElementById("board");
+    removeAllChildren(scacchiera);
+    // init_Pieces();
+    // fill_Board();
+    // buildBoard();
+    build();
+    updateResetButton();
+}
+
+//global variable
 let allSquares;
 document.addEventListener("DOMContentLoaded", function() {
     build();
@@ -61,7 +100,7 @@ function isPieceElement(element){
     return rv;
 }
 
-
+//global variables
 let firstClick = true;
 let firstPieceClicked; 
 let destinationSquare;
@@ -556,6 +595,7 @@ function updateMessages () {
             checkmate.innerHTML = "the game is OVER BLACK WINS";
         else if(black_in_check)
             checkmate.innerHTML = "the game is OVER WHITE WINS";
+        updateResetButton();
     }
     else
         checkmate.innerHTML = "";

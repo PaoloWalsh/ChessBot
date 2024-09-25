@@ -86,6 +86,9 @@ body {
 #boardWrapper {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .title-container {
@@ -116,4 +119,24 @@ p {
     border-radius: 5px;
     display: flex;
     justify-content: center;
+}
+
+#buttons {
+    display: flex;
+    gap: 1rem;
+}
+#buttons > * {
+    margin: 1rem 0.5rem 1rem 0.5rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    font-size: 1rem;
+    /* border-radius: 25%; */
+    background-color: var(--light-square);
+    border: 1px solid var(--dark-square);
+    color: black;
+    cursor: pointer;
+}
+
+#buttons > *:disabled {
+    color: grey;
+    cursor: default;
 }
