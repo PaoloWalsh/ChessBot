@@ -12,8 +12,16 @@
     --dark-square: rgb(182, 135, 99);
     --light-square: rgb(240, 218, 181);
     --dark-square-selected: #657d65;
-    --light-square-selected: #81a581;
+    --light-square-selected: #81a581;   
+    --primary-color: #333;
+    --accent-color: #f0a500;
+    --text-light: #fff;
+    --background: linear-gradient(135deg, var(--dark-square), var(--light-square));
+}
 
+body {
+    /* background: var(--background);
+      color: var(--primary-color); */
 }
 
 .centered-title {
