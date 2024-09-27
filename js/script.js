@@ -65,11 +65,7 @@ function resetGlobalVariables() {
 function reset(){
     const scacchiera = document.getElementById("board");
     removeAllChildren(scacchiera);
-    // init_Pieces();
-    // fill_Board();
-    // buildBoard();
     build();
-    updateResetButton();
 }
 
 //global variable
@@ -110,8 +106,6 @@ let draggedPiece;
 
 function click (e) {
     removeSelectedSquares();
-    console.log("funziono");
-    console.log(firstClick);
     // console.log(e.target.id);
     // console.log(e.target.color);
     // console.log(firstPieceClicked);
@@ -202,83 +196,6 @@ function dragDrop (e) {
     e.stopPropagation();
     makeMove(piece, square);
     // moveMade = false;
-
-    // if((white_turn && draggedElement.id.includes("white"))
-    //     || (black_turn && draggedElement.id.includes("black"))){
-    //     // if true -> the target square is empty
-    //     if(e.target.classList.contains("square"))
-    //     {
-    //         destinationSquare = e.target;
-    //         if(!moveWithCheck(destinationSquare, piece, false)) return;
-    //         moveMade = validate_move(destinationSquare, start_row, start_col, id, true, false);
-    //         // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
-    //         //     promotion(piece);
-    //         // }
-    //         if(moveMade){
-    //             e.target.append(draggedElement);
-    //             if(enPassantPlayed){
-    //                 capture_sound.play();
-    //                 enPassantPlayed = false;
-    //             }
-    //             else
-    //                 move_sound.play();
-    //         }
-            
-    //     }
-    //     //check if the target square has a same colored piece
-    //     else if ((draggedElement.id.includes("white") && e.target.id.includes("black"))
-    //         || (draggedElement.id.includes("black") && e.target.id.includes("white")))
-    //     {
-    //         //if true -> the target square has a different color piece
-    //         destinationSquare = e.target.parentNode;
-    //         if(!moveWithCheck(destinationSquare, piece, true)) return;
-    //         moveMade = validate_move(destinationSquare, start_row, start_col, id, true, true);
-    //         if(moveMade) {
-    //             e.target.parentNode.append(draggedElement);
-    //             e.target.remove();
-    //             capture_sound.play();
-                
-    //         }
-    //     }
-    //     else if ((draggedElement.id.includes("white_king") && e.target.id.includes("white_rook"))
-    //         || (draggedElement.id.includes("black_king") && e.target.id.includes("black_rook"))
-    //     )
-    //     {   
-    //         castlignRook = divToPiece(e.target);
-    //         destinationSquare = e.target.parentNode;
-    //         if(!moveWithCheck(destinationSquare, piece, true)) return;
-    //         moveMade = validate_move(destinationSquare, start_row, start_col, id, true ,false);
-    //         if(moveMade) {
-    //             let rookStartSquare = e.target.parentNode;
-    //             let kingStartSquare = draggedElement.parentNode;
-    //             let rookEndSquare;
-    //             let kingEndSquare;
-    //             let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
-    //             let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
-    //             draggedElement.remove();
-    //             e.target.remove();
-    //             if(kingIndex > rookIndex){  //I'm castling to the right
-    //                 rookEndSquare = document.getElementById((kingIndex-1)+'');
-    //                 kingEndSquare = document.getElementById((rookIndex+1)+'');
-    //             }
-    //             else{
-    //                 rookEndSquare = document.getElementById((kingIndex+1)+'');
-    //                 kingEndSquare = document.getElementById((rookIndex-2)+'');
-    //             }
-    //             rookEndSquare.append(e.target);
-    //             kingEndSquare.append(draggedElement);
-    //             move_sound.play();
-    //         }
-    //     }
-    // }
-    // if(moveMade){
-    //     updateBoard(castlignRook);
-    //     checkCheck();
-    //     switchTurn();
-    //     updateMessages();   //qui controlliamo lo scacco matto
-    //     boardIsConsistent();//used for debug
-    // }
-    
 }
 
 //function that makes the move
@@ -303,7 +220,7 @@ function makeMove(piece, square) {
         // if true -> the target square is empty
         if(!square.hasChildNodes())
         {
-            if(!moveWithCheck(square, piece, false)) return;
+            // if(!moveWithCheck(square, piece, false)) return;
             moveMade = validate_move(square, start_row, start_col, id, true, false);
             // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
             //     promotion(piece);
@@ -369,7 +286,7 @@ function makeMove(piece, square) {
     }
     if(moveMade){
         updateBoard(castlignRook);
-        checkCheck();
+        checkCheck();    
         switchTurn();
         updateMessages();   //qui controlliamo lo scacco matto
         boardIsConsistent();//used for debug
@@ -567,15 +484,15 @@ function updateMessages () {
     let score = document.getElementById("score");
     let checkmate = document.getElementById("checkMate");
     if(white_turn)
-        turn.innerHTML = "white to play";
+        turn.innerText = "white to play";
     else
-        turn.innerHTML = "black to play";
+        turn.innerText = "black to play";
     if(white_in_check)
-        check.innerHTML = "white is in check";
+        check.innerText = "white is in check";
     else if (black_in_check)
-        check.innerHTML = "black is in check";
+        check.innerText = "black is in check";
     else 
-        check.innerHTML = "";
+        check.innerText = "";
     let score_value = 0;
     for(let i = 0; i < 16; i++){
         if(white_pieces[i].captured)
@@ -584,21 +501,21 @@ function updateMessages () {
             score_value += black_pieces[i].value;
     }
     if(score_value < 0)
-        score.innerHTML = "white is winning by: " + (-score_value);
+        score.innerText = "white is winning by: " + (-score_value);
     else if(score_value > 0)
-        score.innerHTML = "black is winning by: " + (score_value);
+        score.innerText = "black is winning by: " + (score_value);
     else
-        score.innerHTML = "";
+        score.innerText = "";
     let t = checkMate();
     if(t){
         if(white_in_check)
-            checkmate.innerHTML = "the game is OVER BLACK WINS";
+            checkmate.innerText = "the game is OVER BLACK WINS";
         else if(black_in_check)
-            checkmate.innerHTML = "the game is OVER WHITE WINS";
+            checkmate.innerText = "the game is OVER WHITE WINS";
         updateResetButton();
     }
     else
-        checkmate.innerHTML = "";
+        checkmate.innerText = "";
 
 }
 
@@ -641,7 +558,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             return false;
         } 
                                                                     //    (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) &&
-        if((end_row >= start_row) && (end_row <= start_row + 1 + t) &&  (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+        if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
             {
                 if((Math.abs(end_row-start_row) > maxDist(start_row, start_col, "u")) && !diag) return false;
                 if(diag && end_col === start_col)
@@ -673,6 +590,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             if(Math.abs(end_row-start_row) == 2){
                 draggedPiece.enPassantCapturable = true;
             }
+            //console.log(draggedPiece);  //debug
         }
         return true;
     }
@@ -684,16 +602,16 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) ? 1 : 0;
         t = diag ? 0 : t;
         let possibleEnPassantPawn;
-        // console.log("le cordinate sono: " + end_row + " " + end_col);
         // console.log(board[(end_row+1)*cols+end_col].id);
         if(Math.abs(end_col-start_col) >= 2) return false;
         if(end_row < rows-1 && board[(end_row+1)*cols+end_col] != 0 && board[(end_row+1)*cols+end_col].id.includes("white_pawn") && end_row > 0){
             // console.log(board[(end_row+1)*cols+end_col].id);
             // console.log("sono entrato");
-            possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
+            possibleEnPassantPawn = board[(end_row+1)*cols + end_col];
         }
         else
             possibleEnPassantPawn = 0;
+
         if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) return false;
                                                                         // (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) &&
         if((end_row <= start_row) && (end_row >= start_row - 1 + t) &&  (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
@@ -705,7 +623,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                 draggedPiece = black_pawns[i];
                 
             }
-        else if(!captureOpportunity && possibleEnPassantPawn != 0  && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes("white_pawn") 
+        else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes("white_pawn") 
             && possibleEnPassantPawn.movesMade === 1 && end_row === 2 && (end_row-start_row) === -1){
             draggedPiece = black_pawns[i];
             if(makingMove){
@@ -1256,7 +1174,7 @@ function maxDist(s_row, s_col, c){
 
         case "d":   //calculate the down distance on the same col
             //col remains the same
-            for(let i = s_row-1; i >= 0; i--){ //DEBUG
+            for(let i = s_row-1; i >= 0; i--){
                 if(board[i * cols + s_col] == 0)
                     k++;
                 else{

@@ -31,45 +31,6 @@ const move_sound = new Audio('audio/move-self.mp3');
 
 class piece {
     constructor(type, i) {
-        // switch (type) {
-        //     case "white_bishop":
-        //         this.div = "<div class='piece' id='white_bishop" + i + "' draggable='true'><img src='pictures/png/white-bishop.png' alt='w_bishop' id='w_bishop'></div>";
-        //         break;
-        //     case "white_king":
-        //         this.div = "<div class='piece' id='white_king' draggable='true'><img src='pictures/png/white-king.png' alt='w_king' id='w_king'></div>";
-        //         break;
-        //     case "white_knight":
-        //         this.div = "<div class='piece' id='white_knight" + i + "' draggable='true'><img src='pictures/png/white-knight.png' alt='w_knight' id='w_knight'></div>";
-        //         break;
-        //     case "white_pawn":
-        //         this.div = "<div class='piece' id='white_pawn" + i + "' draggable='true'><img src='pictures/png/white-pawn.png' alt='w_pawn' id='w_pawn'></div>";
-        //         break;
-        //     case "white_queen":
-        //         this.div = "<div class='piece' id='white_queen' draggable='true'><img src='pictures/png/white-queen.png' alt='w_queen' id='w_queen'></div>";
-        //         break;
-        //     case "white_rook":
-        //         this.div = "<div class='piece' id='white_rook" + i + "' draggable='true'><img src='pictures/png/white-rook.png' alt='w_rook' id='w_rook'></div>";
-        //         break;
-        //     case "black_bishop":
-        //         this.div = "<div class='piece' id='black_bishop" + i + "' draggable='true'><img src='pictures/png/black-bishop.png' alt='b_bishop' id='b_bishop'></div>";
-        //         break;
-        //     case "black_king":
-        //         this.div = "<div class='piece' id='black_king' draggable='true'><img src='pictures/png/black-king.png' alt='b_king' id='b_king'></div>";
-        //         break;
-        //     case "black_knight":
-        //         this.div = "<div class='piece' id='black_knight" + i + "' draggable='true'><img src='pictures/png/black-knight.png' alt='b_knight' id='b_knight'></div>";
-        //         break;
-        //     case "black_pawn":
-        //         this.div = "<div class='piece' id='black_pawn" + i + "' draggable='true'><img src='pictures/png/black-pawn.png' alt='b_pawn' id='b_pawn'></div>";
-        //         break;
-        //     case "black_queen":
-        //         this.div = "<div class='piece' id='black_queen' draggable='true'><img src='pictures/png/black-queen.png' alt='b_queen' id='b_queen'></div>";
-        //         break;
-        //     case "black_rook":
-        //         this.div = "<div class='piece' id='black_rook" + i + "' draggable='true'><img src='pictures/png/black-rook.png' alt='b_rook' id='b_rook'></div>";   
-        //         break;
-
-        // }
         if(isNaN(i)){
             this.id = type;
             this.numero = '';
@@ -96,7 +57,7 @@ class piece {
         const div = document.createElement('div');
         const img = document.createElement('img');
         div.classList.add('piece');
-        let sorgente = "pictures/png/";
+        let sorgente = "img/png/";
         div.id = this.type+this.numero;
         div.draggable = true;
         img.src = sorgente+this.type+'.png';
