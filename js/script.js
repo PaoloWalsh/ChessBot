@@ -220,7 +220,7 @@ function makeMove(piece, square) {
         // if true -> the target square is empty
         if(!square.hasChildNodes())
         {
-            // if(!moveWithCheck(square, piece, false)) return;
+            if(!moveWithCheck(square, piece, false)) return;
             moveMade = validate_move(square, start_row, start_col, id, true, false);
             // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
             //     promotion(piece);
