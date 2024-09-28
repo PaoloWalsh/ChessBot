@@ -27,21 +27,52 @@
             </ul>
         </nav>
     </header>
-    <div class="title-container">
-        <h1 class="big-title">Chess</h1>
-    </div>
-    <div id="boardWrapper">
-        <div id="board">
+    <main>
+        <div class="title-container">
+            <h1 class="big-title">Chess</h1>
         </div>
-        <div id="buttons">
-            <button id="restart" onclick="reset()">Nuova Partita</button>
-            <!-- <button id="avvia">Avvia</button> -->
+        <div class="main-flex">
+            <div class="grid-layout">
+                <div class="card left-card">
+                    <h3 id="bp-nome">Player 1</h3>
+                    <p id="bp-turno">
+                    </p>
+                    <p id="bp-punteggio">
+                    </p>
+                    <p id="bp-scacco">
+                    </p>
+                    <p id="bp-vittoria" class="vittoria">
+                    </p>
+                </div>
+                <div id="boardWrapper">
+                    <div id="board"></div>
+                    <!-- <div id="buttons">
+                        <button id="restart" onclick="reset()">Nuova Partita</button>
+                    </div> -->
+                    <!-- <p id="turn"></p>
+                    <p id="check"></p>
+                    <p id="score"></p>
+                    <p id="checkMate"></p> -->
+                </div>
+                
+                <div class="card right-card">
+                    <h3 id="wp-nome">Player 1</h3>
+                    <p id="wp-turno">
+                    </p>
+                    <p id="wp-punteggio"> 
+                    </p>
+                    <p id="wp-scacco">
+                    </p>
+                    <p id="wp-vittoria" class="vittoria">
+                    </p>
+                </div>
+            </div>
+            <div id="buttons">
+                        <button id="restart" onclick="reset()">Nuova Partita</button>
+                    </div>
         </div>
-        <p id="turn"></p>
-        <p id="check"></p>
-        <p id="score"></p>
-        <p id="checkMate"></p>
-    </div>
+        
+    </main>
     
 
     

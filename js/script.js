@@ -475,24 +475,51 @@ function switchTurn(){
     }
 }
 
+const tuoTurno = "È il tuo turno!";
+const punteggioBene = "Sei in vantaggio di: ";
+const punteggioMale = "Sei in svantaggio di: ";
+const scaccoBene = "Hai messo il tuo avversario in scacco!";
+const scaccoMale = "Sei in scacco!";
+const scaccoMattoBene = "Scacco matto, hai vinto! :)";
+const scaccoMattoMale = "Scacco matto, hai perso! :(";
+
 /**
  * @brief updates the messages to the player such as who's turn it is, if someone in in check, or if the game is over
  */
 function updateMessages () {
-    let turn = document.getElementById("turn");
-    let check = document.getElementById("check");
-    let score = document.getElementById("score");
-    let checkmate = document.getElementById("checkMate");
-    if(white_turn)
-        turn.innerText = "white to play";
-    else
-        turn.innerText = "black to play";
-    if(white_in_check)
-        check.innerText = "white is in check";
-    else if (black_in_check)
-        check.innerText = "black is in check";
-    else 
-        check.innerText = "";
+    // let turn = document.getElementById("turn");
+    // let check = document.getElementById("check");
+    // let score = document.getElementById("score");
+    // let checkmate = document.getElementById("checkMate");
+    let bpTurno = document.getElementById('bp-turno');
+    let bpPunteggio = document.getElementById('bp-punteggio');
+    let bpScacco = document.getElementById('bp-scacco');
+    let bpVittoria = document.getElementById('bp-vittoria');
+    let wpTurno = document.getElementById('wp-turno');
+    let wpPunteggio = document.getElementById('wp-punteggio');
+    let wpScacco = document.getElementById('wp-scacco');
+    let wpVittoria = document.getElementById('wp-vittoria');
+
+    if(white_turn){
+        wpTurno.innerText = tuoTurno;
+        bpTurno.innerText = "";
+    }
+    else{
+        bpTurno.innerText = tuoTurno;
+        wpTurno.innerText = "";
+    }
+    if(white_in_check){
+        wpScacco.innerText = scaccoMale;
+        bpScacco.innerText = scaccoBene;
+    }
+    else if (black_in_check){
+        bpScacco.innerText = scaccoMale;
+        wpScacco.innerText = scaccoBene;
+    }
+    else {
+        bpScacco.innerText = "";
+        wpScacco.innerText = "";
+    }
     let score_value = 0;
     for(let i = 0; i < 16; i++){
         if(white_pieces[i].captured)
@@ -500,23 +527,41 @@ function updateMessages () {
         if(black_pieces[i].captured)
             score_value += black_pieces[i].value;
     }
-    if(score_value < 0)
-        score.innerText = "white is winning by: " + (-score_value);
-    else if(score_value > 0)
-        score.innerText = "black is winning by: " + (score_value);
-    else
-        score.innerText = "";
+    if(score_value < 0){
+        console.log("vince-bianco");
+        wpPunteggio.innerText = punteggioBene + (-score_value) + " punti!";
+        bpPunteggio.innerText = punteggioMale + (-score_value) + " punti!";
+    }
+    else if(score_value > 0){
+        bpPunteggio.innerText = punteggioBene + (score_value) + " punti!";
+        wpPunteggio.innerText = punteggioMale + (score_value) + " punti!";
+    }
+    else{
+        bpPunteggio.innerText = "";
+        wpPunteggio.innerText = "";
+    }
     let t = checkMate();
     if(t){
-        if(white_in_check)
-            checkmate.innerText = "the game is OVER BLACK WINS";
-        else if(black_in_check)
-            checkmate.innerText = "the game is OVER WHITE WINS";
-        updateResetButton();
+        bpTurno.innerText = "";
+        wpTurno.innerText = "";
+        bpScacco.innerText = "";
+        wpScacco.innerText = "";
+        bpPunteggio.innerText = "";
+        wpPunteggio.innerText = "";
+        if(white_in_check){
+            bpVittoria.innerText = scaccoMattoBene;
+            wpVittoria.innerText = scaccoMattoMale;
+        }
+        else if(black_in_check){
+            wpVittoria.innerText = scaccoMattoBene;
+            bpVittoria.innerText = scaccoMattoMale;
+        }
+        // updateResetButton();
     }
-    else
-        checkmate.innerText = "";
-
+    else{
+        wpVittoria.innerText = "";
+        bpVittoria.innerText = "";
+    }
 }
 
 /**

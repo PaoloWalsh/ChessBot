@@ -45,8 +45,8 @@ h1 {
 }
 
 #board {
-    width: 480px;
-    height: 480px;
+    width: 30rem;
+    height: 30rem;
     display: flex;
     flex-wrap: wrap;
     border-collapse: collapse;
@@ -54,15 +54,15 @@ h1 {
 }
 
 .square {
-    width: 60px;
-    height: 60px;
+    width: 3.75rem;
+    height: 3.75rem;
     /* position: relative; */
 }
 
 .square img {
-    height: 57px;
-    width: 57px;
-    margin: 3px;
+    height: 3.5rem;
+    width: 3.5rem;
+    margin: 0.1875rem;
     position: relative;
     z-index: -9;
     pointer-events: none; /* This makes the child ignore pointer events */
@@ -93,17 +93,78 @@ h1 {
     background-color: var(--dark-square-selected);
 }
 
-#boardWrapper {
+/* #boardWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 1rem;
+} */
+
+.main-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+}
+
+#boardWrapper {
+    grid-row: span 2;
+    margin: auto;
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2rem;
+    /* align-items: center; */
+}
+
+.card {
+    width: 15rem;
+    height: 11rem;
+    border: 1px solid black;
+    background-color: white;
+    border-radius: 5px;
+    background-color: var(--light-square);
+}
+
+.card > * {
+    margin: 1rem;
+}
+
+
+.card h3 {
+    color: var(--primary-color);
+    font-weight: 900;
+}
+
+.card p {
+    color: var(--primary-color);
+    margin: 0.5rem;
+    margin-left: 1rem;
+}
+
+.vittoria {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.left-card {
+    grid-row-start: 1;
+    /* align-self: end; */
+    justify-self: end;
+}
+
+.right-card {
+    grid-column: 3;
+    grid-row-start: 2;
+    align-self: end;
 }
 
 .title-container {
   text-align: center;
-  margin-top: 3rem; /* Adjust as needed */
 }
 
 .big-title {
@@ -119,24 +180,23 @@ h1 {
     color: green;
 }
 
-p {
+/* p {
     width: 50%;
     height: auto;
     background-color: var(--dark-square);
-    /* color: lightgrey; */
+    /* color: lightgrey; 
     color: var(--primary-color);
     border: 0;
     padding: 10px 15px;
     border-radius: 5px;
     text-align: center;
-}
+} */
 
 #buttons {
-    display: flex;
-    gap: 1rem;
+
 }
 #buttons > * {
-    margin: 1rem 0.5rem 1rem 0.5rem;
+    margin: 2rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     font-size: 1rem;
     border-radius: 100vh;
