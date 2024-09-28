@@ -646,7 +646,6 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             }
         }
         return true;
-            
     }
 
     //knights

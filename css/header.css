@@ -1,0 +1,25 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header img {
+    width: 2.5rem;
+    aspect-ratio: 1;
+    margin: 1rem;
+}
+
+.primary-navigation {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+    margin: 0;
+}
+
+.primary-navigation a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}

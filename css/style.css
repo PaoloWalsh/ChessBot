@@ -20,9 +20,17 @@
 }
 
 body {
-    /* background: var(--background);
-      color: var(--primary-color); */
+    background: var(--background);
+    color: var(--primary-color);
+    height: 100vh;
+    font-family: Arial, sans-serif;
 }
+
+/*
+    header
+*/
+
+
 
 .centered-title {
     display: flex;
@@ -85,12 +93,6 @@ h1 {
     background-color: var(--dark-square-selected);
 }
 
-body {
-  /* margin: 0;
-  padding: 0; */
-  font-family: Arial, sans-serif; /* Change font family as needed */
-}
-
 #boardWrapper {
     display: flex;
     justify-content: center;
@@ -101,12 +103,12 @@ body {
 
 .title-container {
   text-align: center;
-  margin-top: 50px; /* Adjust as needed */
+  margin-top: 3rem; /* Adjust as needed */
 }
 
 .big-title {
-  font-size: 3em; 
-  color: var(--dark-square);
+  font-size: 3rem; 
+  color: var(--primary-color);
   /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); */
 }
 
@@ -118,15 +120,15 @@ body {
 }
 
 p {
-    width: auto;
+    width: 50%;
     height: auto;
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
+    background-color: var(--dark-square);
+    /* color: lightgrey; */
+    color: var(--primary-color);
+    border: 0;
     padding: 10px 15px;
     border-radius: 5px;
-    display: flex;
-    justify-content: center;
+    text-align: center;
 }
 
 #buttons {
@@ -137,7 +139,7 @@ p {
     margin: 1rem 0.5rem 1rem 0.5rem;
     padding: 0.5rem 1rem 0.5rem 1rem;
     font-size: 1rem;
-    /* border-radius: 25%; */
+    border-radius: 100vh;
     background-color: var(--light-square);
     border: 1px solid var(--dark-square);
     color: black;

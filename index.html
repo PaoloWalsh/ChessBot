@@ -7,10 +7,26 @@
     <title>ChessBot</title>
     <link rel="icon" type="image/png" href="img/png/white_knight.png">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
     <script src="js/init.js"></script>
     <script src="js/script.js"></script>
 </head>
 <body>
+    <header>
+        <div>
+            <a href="html/login.html">
+                <img src="img/png/white_knight.png" alt="logo">
+            </a>
+        </div>
+        <nav class="header-nav">
+            <ul class="primary-navigation">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Game</a></li>
+                <li><a href="#">Classifiche</a></li>
+                <li><a href="#">Boh</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="title-container">
         <h1 class="big-title">Chess</h1>
     </div>
@@ -21,14 +37,14 @@
             <button id="restart" onclick="reset()">Nuova Partita</button>
             <!-- <button id="avvia">Avvia</button> -->
         </div>
+        <p id="turn"></p>
+        <p id="check"></p>
+        <p id="score"></p>
+        <p id="checkMate"></p>
     </div>
     
 
-    <p id="turn"></p>
-    <p id="check"></p>
-    <p id="score"></p>
-    <p id="checkMate"></p>
-    <!--<script src="pieces.js"></script>-->
+    
 </body>
 </html>
 
