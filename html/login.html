@@ -5,63 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chess Landing Page</title>
   <link rel="stylesheet" href="../css/login.css">
-  <!-- <link rel="stylesheet" href="../css/header.css"> -->
+  <link rel="stylesheet" href="../css/header.css">
 </head>
 <body>
-    <!-- <header>
-        <div>
-            <a href="html/login.html">
-                <img src="img/png/white_knight.png" alt="logo">
-            </a>
-        </div>
-        <nav class="header-nav">
-            <ul class="primary-navigation">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Game</a></li>
-                <li><a href="#">Classifiche</a></li>
-                <li><a href="#">Boh</a></li>
-            </ul>
-        </nav>
-    </header> -->
-  <div class="container">
-    <h1>Welcome to Chess World</h1>
-    <p>Login to sharpen your skills and challenge opponents around the world!</p>
-    
-    <form class="login-form" onsubmit="login(event)">
-      <input type="text" id="username" placeholder="Username" required>
-      <input type="password" id="password" placeholder="Password" required>
-      <button type="submit" class="login-btn">Login</button>
-    </form>
-
-    <!-- Chessboard for decoration -->
-    <div class="chessboard">
-      <!-- Generate chessboard squares -->
-      <script>
-        const board = document.querySelector('.chessboard');
-        for (let row = 0; row < 8; row++) {
-          for (let col = 0; col < 8; col++) {
-            const square = document.createElement('div');
-            square.classList.add('chess-square');
-            if ((row + col) % 2 === 0) {
-              square.classList.add('light');
-            } else {
-              square.classList.add('dark');
+  <header>
+    <div>
+        <a href="../index.html">
+            <img src="../img/png/white_knight.png" alt="logo">
+        </a>
+    </div>
+    <nav class="header-nav">
+        <ul class="primary-navigation">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Game</a></li>
+            <li><a href="#">Classifiche</a></li>
+            <li><a href="../index.html">Login</a></li>
+        </ul>
+    </nav>
+  </header>
+  <div class="fake-body">
+    <div class="container">
+      <h1>Welcome to Chess World</h1>
+      <p>Login to sharpen your skills and challenge opponents around the world!</p>
+      
+      <form class="login-form" onsubmit="login(event)">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+  
+      <div class="chessboard">
+        <script>
+          const board = document.querySelector('.chessboard');
+          for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+              const square = document.createElement('div');
+              square.classList.add('chess-square');
+              if ((row + col) % 2 === 0) {
+                square.classList.add('light');
+              } else {
+                square.classList.add('dark');
+              }
+              board.appendChild(square);
             }
-            board.appendChild(square);
           }
-        }
-
-        function login(event) {
-          event.preventDefault();
-          const username = document.getElementById('username').value;
-          const password = document.getElementById('password').value;
-          if (username === 'admin' && password === 'chessmaster') {
-            alert(`Welcome ${username}!`);
-          } else {
-            alert('Invalid credentials!');
-          }
-        }
-      </script>
+  
+          // function login(event) {
+          //   event.preventDefault();
+          //   const username = document.getElementById('username').value;
+          //   const password = document.getElementById('password').value;
+          //   if (username === 'admin' && password === 'chessmaster') {
+          //     alert(`Welcome ${username}!`);
+          //   } else {
+          //     alert('Invalid credentials!');
+          //   }
+          // }
+        </script>
+      </div>
     </div>
   </div>
 </body>
