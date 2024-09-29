@@ -133,6 +133,21 @@ body {
     background-color: var(--light-square);
 }
 
+@media (max-width: 1300px) {
+    .card {
+        display: none;
+    }
+    .grid-layout {
+        display: block;
+    }
+}
+
+@media (max-width: 600px) {
+    html {
+        font-size: 12px;
+    }
+}
+
 .card > * {
     margin: 1rem;
 }
