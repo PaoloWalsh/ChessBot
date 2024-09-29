@@ -1,74 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChessBot</title>
-    <link rel="icon" type="image/png" href="img/png/white_knight.png">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/header.css">
-    <script src="js/init.js"></script>
-    <script src="js/script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mondo degli Scacchi</title>
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <header>
-        <div>
-            <a href="index.html">
-                <img src="img/png/white_knight.png" alt="logo">
-            </a>
-        </div>
-        <nav class="header-nav">
-            <ul class="primary-navigation">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Game</a></li>
-                <li><a href="#">Classifiche</a></li>
-                <li><a href="html/login.html">Login</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <div class="title-container">
-            <h1 class="big-title">Chess</h1>
-        </div>
-        <div class="main-flex">
-            <div class="grid-layout">
-                <div class="card left-card">
-                    <h3 id="bp-nome">Player 1</h3>
-                    <p id="bp-turno">
-                    </p>
-                    <p id="bp-punteggio">
-                    </p>
-                    <p id="bp-scacco">
-                    </p>
-                    <p id="bp-vittoria" class="vittoria">
-                    </p>
-                </div>
-                <div id="boardWrapper">
-                    <div id="board"></div>
-                </div>
-                
-                <div class="card right-card">
-                    <h3 id="wp-nome">Player 1</h3>
-                    <p id="wp-turno">
-                    </p>
-                    <p id="wp-punteggio"> 
-                    </p>
-                    <p id="wp-scacco">
-                    </p>
-                    <p id="wp-vittoria" class="vittoria">
-                    </p>
-                </div>
-            </div>
-            <div id="buttons">
-                        <button id="restart" onclick="reset()">Nuova Partita</button>
-                    </div>
-        </div>
-        
-    </main>
-    
+  <header>
+    <div>
+        <a href="index.html">
+            <img src="img/png/white_knight.png" alt="logo">
+        </a>
+    </div>
+    <nav class="header-nav">
+        <ul class="primary-navigation">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="html/game.html">Gioco</a></li>
+            <li><a href="#">Classifiche</a></li>
+            <li><a href="html/login.html">Login</a></li>
+            <li><a href="html/signUp.html">Sign-Up</a></li>
+        </ul>
+    </nav>
+  </header>
+  
+  <div class="fake-body">
+    <div class="container">
+      <h1>Benvenuto nel Mondo degli Scacchi</h1>
+      <div class="chess-info">
+        <h2>Introduzione agli Scacchi</h2>
+        <p>Gli scacchi sono un gioco di strategia giocato su una scacchiera con 64 caselle, alternando colori chiari e scuri. Ogni giocatore ha 16 pezzi: un re, una regina, due torri, due cavalli, due alfieri e otto pedoni.</p>
+        <p>Obiettivo del gioco: mettere sotto scacco il re avversario in modo che non possa più sfuggire, ovvero il famoso "scacco matto".</p>
+        <p>Per vincere, devi pianificare le tue mosse con attenzione, proteggere i tuoi pezzi e cercare di sfruttare gli errori del tuo avversario.</p>
+      </div>
+      
+      <!-- <form class="login-form" onsubmit="login(event)">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit" class="login-btn">Login</button>
+      </form> -->
 
-    
+      <div class="chessboard">
+        <script>
+          const board = document.querySelector('.chessboard');
+          for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+              const square = document.createElement('div');
+              square.classList.add('chess-square');
+              if ((row + col) % 2 === 0) {
+                square.classList.add('light');
+              } else {
+                square.classList.add('dark');
+              }
+              board.appendChild(square);
+            }
+          }
+        </script>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
-

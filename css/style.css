@@ -26,10 +26,18 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/*
-    header
-*/
-
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: min(65rem, 80%);
+    /* width: 80%; */
+    margin: auto;
+    max-height: 42rem;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+  }
 
 
 .centered-title {
@@ -37,11 +45,6 @@ body {
     justify-content: center;
     align-items: flex-start;
     height: 100vh; /* Set the height to 100% of the viewport height */
-}
-
-h1 {
-    text-align: center;
-    color: black;
 }
 
 #board {
@@ -168,9 +171,10 @@ h1 {
 }
 
 .big-title {
-  font-size: 3rem; 
-  color: var(--primary-color);
-  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); */
+    font-size: 3rem;
+    color: var(--dark-square);
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .number {
@@ -210,3 +214,14 @@ h1 {
     color: grey;
     cursor: default;
 }
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

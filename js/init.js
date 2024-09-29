@@ -26,8 +26,8 @@ let numberBlackQueens = 1;
 let numberBlackKnights = 2;
 
 
-const capture_sound = new Audio('audio/capture.mp3');
-const move_sound = new Audio('audio/move-self.mp3');
+const capture_sound = new Audio('../audio/capture.mp3');
+const move_sound = new Audio('../audio/move-self.mp3');
 
 class piece {
     constructor(type, i) {
@@ -57,7 +57,7 @@ class piece {
         const div = document.createElement('div');
         const img = document.createElement('img');
         div.classList.add('piece');
-        let sorgente = "img/png/";
+        let sorgente = "../img/png/";
         div.id = this.type+this.numero;
         div.draggable = true;
         img.src = sorgente+this.type+'.png';
