@@ -8,8 +8,8 @@
     <link rel="icon" type="image/png" href="../img/png/white_knight.png">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header.css">
-    <script src="../js/init.js"></script>
-    <script src="../js/script.js"></script>
+    <script src="../js/game/init.js"></script>
+    <script src="../js/game/script.js"></script>
 </head>
 <body>
     <header>
@@ -21,10 +21,10 @@
         <nav class="header-nav">
             <ul class="primary-navigation">
                 <li><a href="../index.html">Home</a></li>
-                <li><a href="game.html">Gioco</a></li>
+                <li><a href="scegliColore.html">Gioco</a></li>
                 <li><a href="#">Classifiche</a></li>
                 <li><a href="login.html">Login</a></li>
-                <li><a href="signUp.html">Sign-Up</a></li>
+                <li><a href="signUp.html">Sign in</a></li>
             </ul>
         </nav>
     </header>
@@ -35,7 +35,7 @@
             </div>
             <div class="main-flex">
                 <div class="grid-layout">
-                    <div class="card left-card">
+                    <div class="sub-container left-card">
                         <h3 id="bp-nome">Player 1</h3>
                         <p id="bp-turno">
                         </p>
@@ -50,7 +50,7 @@
                         <div id="board"></div>
                     </div>
                     
-                    <div class="card right-card">
+                    <div class="sub-container right-card">
                         <h3 id="wp-nome">Player 1</h3>
                         <p id="wp-turno">
                         </p>
@@ -63,14 +63,20 @@
                     </div>
                 </div>
                 <div id="buttons">
-                    <button id="restart" onclick="reset()">Nuova Partita</button>
+                    <button class="btn" onclick="reset()">Nuova Partita</button>
                 </div>
             </div>
         </div>
     </main>
-    
-
-    
+    <script>
+        const giocatoreHost = "Host Player";
+        const giocatoreGuest = "Guest Player";
+        const colore = localStorage.getItem('colore');
+        const mioTitolo = (colore === "bianco") ? document.getElementById('wp-nome') : document.getElementById('bp-nome'); 
+        const avvTitolo = (colore === "nero") ? document.getElementById('wp-nome') : document.getElementById('bp-nome'); 
+        mioTitolo.innerText = giocatoreHost;
+        avvTitolo.innerText = giocatoreGuest;
+    </script>
 </body>
 </html>
 

@@ -20,6 +20,8 @@ header img {
 
 .primary-navigation a {
     text-decoration: none;
-    color: black;
-    font-weight: 500;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    /* transition: background 0.3s, transform 0.2s; */
 }
