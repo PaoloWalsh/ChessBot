@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="../img/png/white_knight.png">
-  <title>Login</title>
+  <title>Sign In</title>
   <link rel="stylesheet" href="../css/login.css">
   <link rel="stylesheet" href="../css/header.css">
   <script src="../js/front/chessBoard.js"></script>
@@ -27,16 +27,16 @@
     </nav>
   </header>
     <div class="container">
-      <h1>Login</h1>
-      <p>Esegui il login ed Inizia a giocare!</p>
+      <h1>Sign in</h1>
+      <p>Crea un account e inizia ad esplorare il magico mondo degli scacchi!</p>
       
-      <form class="login-form" onsubmit="login(event)">
+      <form class="login-form" action="signUp.php" method="post">
         <input type="text" id="username" placeholder="Username" required>
         <input type="password" id="password" placeholder="Password" required>
-        <button type="submit" class="login-btn">Login</button>
+        <button type="submit" class="login-btn">Sign in</button>
       </form>
 
-      <a href="signUp.html">Non hai ancora un account?</a>
+      <a href="login.html">Hai già un account?</a>
   
       <div class="chessboard">
       </div>
