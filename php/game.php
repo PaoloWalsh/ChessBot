@@ -23,8 +23,15 @@
                 <li><a href="../index.php">Home</a></li>
                 <li><a href="scegliColore.php">Gioco</a></li>
                 <li><a href="#">Classifiche</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="signUp.html">Sign in</a></li>
+                <?php
+                    session_start();
+                    if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
+                        echo'<li><a href="logout.php">Log Out</a></li>';  
+                    } else {
+                        echo '<li><a href="login.php">Login</a></li>';
+                        echo '<li><a href="signUp.php">Sign in</a></li>';
+                    }
+                ?>
             </ul>
         </nav>
     </header>
@@ -36,7 +43,7 @@
             <div class="main-flex">
                 <div class="grid-layout">
                     <div class="sub-container left-card">
-                        <h3 id="bp-nome">Player 1</h3>
+                        <h3 id="bp-nome"></h3>
                         <p id="bp-turno">
                         </p>
                         <p id="bp-punteggio">
@@ -51,7 +58,7 @@
                     </div>
                     
                     <div class="sub-container right-card">
-                        <h3 id="wp-nome">Player 1</h3>
+                        <h3 id="wp-nome"></h3>
                         <p id="wp-turno">
                         </p>
                         <p id="wp-punteggio"> 
@@ -68,9 +75,23 @@
             </div>
         </div>
     </main>
+    <?php
+        $_username = "";
+        if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
+            $_username = $_SESSION['username'];
+        }
+    ?>
     <script>
-        const giocatoreHost = "Host Player";
-        const giocatoreGuest = "Guest Player";
+        const userName = <?php echo json_encode($_username); ?>;
+        let giocatoreHost;
+        let giocatoreGuest;
+        if(userName != ""){
+            giocatoreHost = userName;
+            giocatoreGuest = "Ospite di " + userName;
+        } else {
+            giocatoreHost = "Giocatore Host";
+            giocatoreGuest = "Giocatore Guest";
+        }
         const colore = localStorage.getItem('colore');
         const mioTitolo = (colore === "bianco") ? document.getElementById('wp-nome') : document.getElementById('bp-nome'); 
         const avvTitolo = (colore === "nero") ? document.getElementById('wp-nome') : document.getElementById('bp-nome'); 

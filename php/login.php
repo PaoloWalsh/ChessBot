@@ -63,7 +63,7 @@ if(isset($_POST['login'])&&isset($_POST['username'])&&isset($_POST['password']))
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="../img/png/white_knight.png">
   <title>Login</title>
-  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/header.css">
   <script src="../js/front/chessBoard.js"></script>
 </head>
@@ -79,8 +79,15 @@ if(isset($_POST['login'])&&isset($_POST['username'])&&isset($_POST['password']))
           <li><a href="../index.php">Home</a></li>
           <li><a href="scegliColore.php">Gioco</a></li>
           <li><a href="#">Classifiche</a></li>
-          <li><a href="login.php">Login</a></li>
-          <li><a href="signUp.php">Sign in</a></li>
+          <?php
+              session_start();
+              if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
+                echo'<li><a href="logout.php">Log Out</a></li>';  
+              } else {
+                echo '<li><a href="login.php">Login</a></li>';
+                echo '<li><a href="signUp.php">Sign in</a></li>';
+              }
+              ?>
         </ul>
     </nav>
   </header>
