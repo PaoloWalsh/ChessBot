@@ -12,17 +12,17 @@
 <body>
   <header>
     <div>
-        <a href="index.html">
+        <a href="index.php">
             <img src="img/png/white_knight.png" alt="logo">
         </a>
     </div>
     <nav class="header-nav">
         <ul class="primary-navigation">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="html/scegliColore.html">Gioco</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="php/scegliColore.php">Gioco</a></li>
             <li><a href="#">Classifiche</a></li>
-            <li><a href="html/login.html">Login</a></li>
-            <li><a href="html/signUp.html">Sign in</a></li>
+            <li><a href="php/login.php">Login</a></li>
+            <li><a href="php/signUp.php">Sign in</a></li>
         </ul>
     </nav>
   </header>

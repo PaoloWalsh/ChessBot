@@ -181,3 +181,9 @@ input[type="password"]:focus {
     transform: translateY(0);
   }
 }
+
+.errore {
+  color: var(--primary-color);
+  text-decoration: double;
+  font-weight: 600;
+}
