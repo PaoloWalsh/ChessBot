@@ -25,8 +25,7 @@ if(isset($_POST['login'])&&isset($_POST['username'])&&isset($_POST['password']))
         mysqli_stmt_execute($statement);
         $result = mysqli_stmt_get_result($statement);
         if(mysqli_num_rows($result)==0){
-           $erroreNonEsiste= true;
-          
+           $erroreNonEsiste = true;
         }
            
         

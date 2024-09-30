@@ -63,9 +63,12 @@ function resetGlobalVariables() {
 }
 
 function reset(){
+    /*
     const scacchiera = document.getElementById("board");
     removeAllChildren(scacchiera);
     build();
+    */
+    window.location.href = "scegliColore.php";
 }
 
 //global variable

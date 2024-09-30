@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(isset($_SESSION['logged'])){
+if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
    
     require_once "dbaccess.php";
     
@@ -27,7 +27,7 @@ if(isset($_SESSION['logged'])){
         die(mysqli_connect_error());
     }
 }
-else{
-    echo "<p>Utente non loggato!</p>";
+else {
+    echo "<script>console.log('Utente non loggato');</script>";
 }
 ?>
