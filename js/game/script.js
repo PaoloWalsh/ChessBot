@@ -528,7 +528,6 @@ function updateMessages () {
             score_value += black_pieces[i].value;
     }
     if(score_value < 0){
-        console.log("vince-bianco");
         wpPunteggio.innerText = punteggioBene + (-score_value) + " punti!";
         bpPunteggio.innerText = punteggioMale + (-score_value) + " punti!";
     }
@@ -542,26 +541,52 @@ function updateMessages () {
     }
     let t = checkMate();
     if(t){
+        let vittoria;
+        let colore = localStorage.getItem('colore');
         bpTurno.innerText = "";
         wpTurno.innerText = "";
         bpScacco.innerText = "";
         wpScacco.innerText = "";
         bpPunteggio.innerText = "";
         wpPunteggio.innerText = "";
+        //black wins
         if(white_in_check){
             bpVittoria.innerText = scaccoMattoBene;
             wpVittoria.innerText = scaccoMattoMale;
+            if(colore == "nero")
+                vittoria = true;
+            else 
+                vittoria = false;
         }
+        //white wins
         else if(black_in_check){
             wpVittoria.innerText = scaccoMattoBene;
             bpVittoria.innerText = scaccoMattoMale;
+            if(colore == "bianco")
+                vittoria = true;
+            else 
+                vittoria = false;
         }
-        // updateResetButton();
+        insertMatchDB(vittoria);
     }
     else{
         wpVittoria.innerText = "";
         bpVittoria.innerText = "";
     }
+}
+
+/**
+ * @brief inserts the match into the database
+ */
+function insertMatchDB(vittoria){
+    
+    //inserimento partita nel database
+    let http = new XMLHttpRequest();
+    let url = 'inserisciPartita.php';
+    let params =  "vittoria=" + vittoria;
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.send(params);
 }
 
 /**

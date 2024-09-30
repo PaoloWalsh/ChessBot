@@ -1,0 +1,33 @@
+<?php
+session_start();
+
+if(isset($_SESSION['logged'])){
+   
+    require_once "dbaccess.php";
+    
+    $username = $_SESSION["username"];
+    $vittoria = $_POST["vittoria"];
+    if($vittoria == "true"){
+        $vittoria = 1;
+    }
+    else{
+        $vittoria = 0;
+    }
+    $connection = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+    // Create a connection
+    if(mysqli_connect_errno())
+        die(mysqli_connect_error());
+    // Check connection
+    $query = "insert into partita (Username, Vittoria) values (?, ?)";
+    if($statement = mysqli_prepare($connection, $query)){
+        mysqli_stmt_bind_param($statement, 'si', $username, $vittoria);
+        mysqli_stmt_execute($statement);
+    }
+    else{
+        die(mysqli_connect_error());
+    }
+}
+else{
+    echo "<p>Utente non loggato!</p>";
+}
+?>

@@ -19,7 +19,7 @@
         <ul class="primary-navigation">
           <li><a href="../index.php">Home</a></li>
           <li><a href="scegliColore.php">Gioco</a></li>
-          <li><a href="#">Classifiche</a></li>
+          <li><a href="classifiche.php">Classifiche</a></li>
           <?php
               session_start();
               if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
