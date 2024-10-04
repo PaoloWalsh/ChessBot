@@ -1139,7 +1139,7 @@ function checkCheck() {
                     black_in_check = true;
                 else   
                     white_in_check = true;
-                //console.log
+                // console.log()
                 opponent_in_check = true;
                 break;
             }

@@ -46,7 +46,7 @@
             <th>Utente</th><th>Vittorie</th>
         </thead>
         <?php 
-            $utenti_classificati = [];;
+            $utenti_classificati = [];
             function riga($user, $count){
                 echo "<tr> <td>$user</td><td>$count</td></tr>";
             }
