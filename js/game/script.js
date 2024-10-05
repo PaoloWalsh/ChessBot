@@ -1,8 +1,13 @@
 
+let hostColor;
+let hostNumberMoves;
+
 /**
  * @brief is called after the DOM is loaded, calls the function to get the game started
  */
 function build () {
+    hostColor = localStorage.getItem('colore');
+    hostNumberMoves = 0;
     init_Pieces();
     fill_Board();
     buildBoard();
@@ -288,6 +293,8 @@ function makeMove(piece, square) {
         }
     }
     if(moveMade){
+        if(((hostColor == 'bianco') && white_turn ) || ((hostColor == 'nero') && black_turn ))
+            hostNumberMoves++;
         updateBoard(castlignRook);
         checkCheck();    
         switchTurn();
@@ -582,10 +589,10 @@ function updateMessages () {
  * @brief inserts the match into the database
  */
 function insertMatchDB(vittoria){
-    
     //inserimento partita nel database
     let http = new XMLHttpRequest();
     let url = 'inserisciPartita.php';
+    // da aggiungere mosse per la classifica
     let params =  "vittoria=" + vittoria;
     http.open('POST', url, true);
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
