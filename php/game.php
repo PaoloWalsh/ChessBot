@@ -41,12 +41,10 @@
         
         <div class="container relative">
 
-            <dialog id="promotion-dialog" open>
-                <h2 class="special-h2">Scegli il pezzo</h2>
-                <p>Sarai il bianco o il nero?</p>
-                    
-                <div class="over-container-flex">
-                    <div class="sub-container">
+            <dialog id="promotion-dialog">
+                <h2 class="special-h2">Promozione</h2>
+                <div id="over-container-flex">
+                    <!-- <div class="sub-container">
                         <img id="scelto-bianco" src="../img/png/white_queen.png" alt="torre-bianca">
                     </div>
                     <div class="sub-container">
@@ -57,7 +55,7 @@
                     </div>
                     <div class="sub-container">
                         <img id="scelto-nero" src="../img/png/white_knight.png" alt="torre-nera">
-                    </div>
+                    </div> -->
                 </div>
             </dialog>
 

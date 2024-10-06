@@ -76,6 +76,7 @@ function reset(){
     window.location.href = "scegliColore.php";
 }
 
+
 //global variable
 let allSquares;
 document.addEventListener("DOMContentLoaded", function() {
@@ -293,6 +294,7 @@ function makeMove(piece, square) {
         }
     }
     if(moveMade){
+        handleDialog();
         if(((hostColor == 'bianco') && white_turn ) || ((hostColor == 'nero') && black_turn ))
             hostNumberMoves++;
         updateBoard(castlignRook);
@@ -304,6 +306,32 @@ function makeMove(piece, square) {
     }
     return false;
     
+}
+
+function handleDialog() {
+    const dialog = document.getElementById('promotion-dialog');
+    dialog.show();
+    const overContainer = document.getElementById('over-container-flex');
+    console.log(overContainer);
+    const head = (white_turn) ? "../img/png/white_" : "../img/png/black_";
+    const tail = ".png";
+    let promotionOptions = ['queen', 'rook', 'bishop', 'knight'];
+    for(let i = 0; i < 4; i++){
+        const container = document.createElement('div');
+        container.classList.add('sub-container');
+        overContainer.appendChild(container);
+        const img = document.createElement('img');
+        img.src = head+promotionOptions[i]+tail;
+        img.alt = promotionOptions[i];
+        img.id = head.split('/')[3]+promotionOptions[i];
+        img.addEventListener('click', () => {
+            console.log(draggedElement);
+            console.log(img);
+            dialog.close();
+            removeAllChildren(overContainer);
+        });
+        container.appendChild(img);
+    }
 }
 
 //it simulates a move and then it tells if the move will put my self in check
