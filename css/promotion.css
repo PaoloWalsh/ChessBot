@@ -1,0 +1,48 @@
+:root {
+    --dark-square: rgb(182, 135, 99);
+    --light-square: rgb(240, 218, 181);
+    --primary-color: #333;
+    --accent-color: #f0a500;
+    --text-light: #fff;
+    --background: linear-gradient(135deg, var(--dark-square), var(--light-square));
+}
+
+
+#promotion-dialog {
+    z-index: 100;
+    position: absolute;
+    top: 40%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    /* padding: 20px; */
+    margin-inline: auto;
+    text-align: center;
+}
+
+dialog * {
+    z-index: inherit;
+}
+
+dialog img {
+    aspect-ratio: 1;
+    width: 4rem;
+}
+
+.over-container-flex {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-evenly;
+    margin: 1rem;
+}
+
+.sub-container {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    margin: 0rem;
+    /* padding: 20px; */
+    /* max-height: 40rem; */
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+  }

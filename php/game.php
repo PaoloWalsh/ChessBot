@@ -8,6 +8,8 @@
     <link rel="icon" type="image/png" href="../img/png/white_knight.png">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header.css">
+    <!-- <link rel="stylesheet" href="../css/main.css"> -->
+    <link rel="stylesheet" href="../css/promotion.css">
     <script src="../js/game/init.js"></script>
     <script src="../js/game/script.js"></script>
 </head>
@@ -36,13 +38,35 @@
         </nav>
     </header>
     <main>
-        <div class="container">
+        
+        <div class="container relative">
+
+            <dialog id="promotion-dialog" open>
+                <h2 class="special-h2">Scegli il pezzo</h2>
+                <p>Sarai il bianco o il nero?</p>
+                    
+                <div class="over-container-flex">
+                    <div class="sub-container">
+                        <img id="scelto-bianco" src="../img/png/white_queen.png" alt="torre-bianca">
+                    </div>
+                    <div class="sub-container">
+                        <img id="scelto-nero" src="../img/png/white_rook.png" alt="torre-nera">
+                    </div>
+                    <div class="sub-container">
+                        <img id="scelto-bianco" src="../img/png/white_bishop.png" alt="torre-bianca">
+                    </div>
+                    <div class="sub-container">
+                        <img id="scelto-nero" src="../img/png/white_knight.png" alt="torre-nera">
+                    </div>
+                </div>
+            </dialog>
+
             <div class="title-container">
                 <h1 class="big-title">Chess</h1>
             </div>
             <div class="main-flex">
                 <div class="grid-layout">
-                    <div class="sub-container left-card">
+                    <div class="sub-container-player left-card">
                         <h3 id="bp-nome"></h3>
                         <p id="bp-turno">
                         </p>
@@ -57,7 +81,7 @@
                         <div id="board"></div>
                     </div>
                     
-                    <div class="sub-container right-card">
+                    <div class="sub-container-player right-card">
                         <h3 id="wp-nome"></h3>
                         <p id="wp-turno">
                         </p>

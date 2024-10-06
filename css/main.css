@@ -36,15 +36,7 @@ a {
   animation: fadeIn 1s ease-in-out;
 }
 
-.chess-info p {
-  background-color: red;
-}
 
-.chess-info a {
-  display: inline;
-  color: var(--primary-color);
-  background-color: red!important;
-}
 
 .container a {
   display: block;
@@ -80,6 +72,13 @@ a {
 
 h1 {
   font-size: 2.5rem;
+  color: var(--dark-square);
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.special-h2 {
+  font-size: 2rem;
   color: var(--dark-square);
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -192,6 +191,8 @@ input[type="password"]:focus {
 .chess-info-link {
   display: inline;
   color: var(--primary-color);
-  background-color: red!important;
 }
 
+.relative {
+  position: relative;
+}

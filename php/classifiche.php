@@ -37,13 +37,12 @@
   <div class="container">
     <h1>Classifiche</h1>
     <div class="chess-info">
-        <h2>Migliori Giocatori</h2>
         <p>Qui puoi vedere i migliori giocatori della piattaforma.</p>       
         <p>Abbiamo riportanto in questa classifica i giocatori con più vittorie!</p>
     </div>
     <div class="tables">
         <div class="most-wins">
-            <h3>Giocatori più vincenti</h3>
+        <h2>Migliori Giocatori</h2>
             <table>
                 <thead>
                     <th>Utente</th><th>Vittorie</th>
@@ -76,7 +75,7 @@
             </table>
         </div>
         <div class="most-wins">
-            <h3>Giocatori più vincenti</h3>
+            <h2>Migliori Giocatori</h2>
             <table>
                 <thead>
                     <th>Utente</th><th>Vittorie</th>
