@@ -41,36 +41,66 @@
         <p>Qui puoi vedere i migliori giocatori della piattaforma.</p>       
         <p>Abbiamo riportanto in questa classifica i giocatori con più vittorie!</p>
     </div>
-    <table>
-        <thead>
-            <th>Utente</th><th>Vittorie</th>
-        </thead>
-        <?php 
-            $utenti_classificati = [];
-            function riga($user, $count){
-                echo "<tr> <td>$user</td><td>$count</td></tr>";
-            }
-            function query($query){
-                $connection = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
-                $result = mysqli_query($connection, $query);
-                return $result;
-            }
-            require_once "dbaccess.php";
-            $query = "SELECT Username, count(*) as partite
-                        from partita
-                        where vittoria = 1
-                        group by Username
-                        order by partite desc
-                        LIMIT 5";
-            $result = query($query);
-            while($row = mysqli_fetch_assoc($result)){
-                $user = $row["Username"];
-                $count = $row["partite"];
-                array_push($utenti_classificati, $user);
-                riga($user, $count);
-            }   
-        ?>
-    </table>
+    <div class="tables">
+        <div class="most-wins">
+            <h3>Giocatori più vincenti</h3>
+            <table>
+                <thead>
+                    <th>Utente</th><th>Vittorie</th>
+                </thead>
+                <?php 
+                    $utenti_classificati = [];
+                    function riga($user, $count){
+                        echo "<tr> <td>$user</td><td>$count</td></tr>";
+                    }
+                    function query($query){
+                        $connection = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+                        $result = mysqli_query($connection, $query);
+                        return $result;
+                    }
+                    require_once "dbaccess.php";
+                    $query = "SELECT Username, count(*) as partite
+                                from partita
+                                where vittoria = 1
+                                group by Username
+                                order by partite desc
+                                LIMIT 5";
+                    $result = query($query);
+                    while($row = mysqli_fetch_assoc($result)){
+                        $user = $row["Username"];
+                        $count = $row["partite"];
+                        array_push($utenti_classificati, $user);
+                        riga($user, $count);
+                    }   
+                ?>
+            </table>
+        </div>
+        <div class="most-wins">
+            <h3>Giocatori più vincenti</h3>
+            <table>
+                <thead>
+                    <th>Utente</th><th>Vittorie</th>
+                </thead>
+                <?php 
+                    $utenti_classificati = [];
+                    require_once "dbaccess.php";
+                    $query = "SELECT Username, count(*) as partite
+                                from partita
+                                where vittoria = 1
+                                group by Username
+                                order by partite desc
+                                LIMIT 5";
+                    $result = query($query);
+                    while($row = mysqli_fetch_assoc($result)){
+                        $user = $row["Username"];
+                        $count = $row["partite"];
+                        array_push($utenti_classificati, $user);
+                        riga($user, $count);
+                    }   
+                ?>
+            </table>
+        </div>
+    </div>
     <?php
         if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
             $username = $_SESSION['username'];

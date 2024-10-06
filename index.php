@@ -38,8 +38,18 @@
     <div class="chess-info">
       <h2>Introduzione agli Scacchi</h2>
       <p>Gli scacchi sono un gioco di strategia giocato su una scacchiera con 64 caselle, alternando colori chiari e scuri. Ogni giocatore ha 16 pezzi: un re, una regina, due torri, due cavalli, due alfieri e otto pedoni.</p>
-      <p>Obiettivo del gioco: mettere sotto scacco il re avversario in modo che non possa più sfuggire, ovvero il famoso "scacco matto".</p>
+      <p>Obiettivo del gioco: mettere sotto scacco il re avversario, ovvero intrappolarlo e fare in modo che non abbia mosse legali disponibili.</p>
       <p>Per vincere, devi pianificare le tue mosse con attenzione, proteggere i tuoi pezzi e cercare di sfruttare gli errori del tuo avversario.</p>
+      <h2>Funzionamento dell'applicazione</h2>
+      <!-- <a class="chess-info-link" href="php/signUp.php">Sign in</a>
+      <a class="chess-info-link" href="php/login.php">Login</a>
+      <a class="chess-info-link" href="php/scegliColore.php">Gioco</a>
+      <a class="chess-info-link" href="php/classifiche.php">Classifiche</a> -->
+      <p>È possibile creare un account per avere salvate tutte le partite giocate all'interno del sito. Per farlo è necessario andare sulla pagina Sign in e creare un nuovo account, 
+        a questo punto si sarà ridirezionati sulla pagina di Login e si dovrà inserire la credenziali dell'account appena creato. </p>
+      <p>Per giocare è necessario andare sulla pagina Gioco, a questo punto si dovrà scegliere il colore che si vorrà utilizzare, l'altro colore verrà automaticamente assegnato al nostro ospite.
+        È possibile giocare anche senza aver creato un account o aver fatto il login, anche se le partite effettuate non verranno registrate e non verranno quindi
+      prese in considrezione per le varie classifiche consultabili dalla pagina classifiche. </p>
       <?php
         if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
           $username = $_SESSION['username'];
