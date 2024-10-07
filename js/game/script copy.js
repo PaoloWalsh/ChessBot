@@ -1,8 +1,13 @@
 
+let hostColor;
+let hostNumberMoves;
+
 /**
  * @brief is called after the DOM is loaded, calls the function to get the game started
  */
 function build () {
+    hostColor = localStorage.getItem('colore');
+    hostNumberMoves = 0;
     init_Pieces();
     fill_Board();
     buildBoard();
@@ -70,6 +75,7 @@ function reset(){
     */
     window.location.href = "scegliColore.php";
 }
+
 
 //global variable
 let allSquares;
@@ -288,6 +294,9 @@ function makeMove(piece, square) {
         }
     }
     if(moveMade){
+        handleDialog();
+        if(((hostColor == 'bianco') && white_turn ) || ((hostColor == 'nero') && black_turn ))
+            hostNumberMoves++;
         updateBoard(castlignRook);
         checkCheck();    
         switchTurn();
@@ -297,6 +306,32 @@ function makeMove(piece, square) {
     }
     return false;
     
+}
+
+function handleDialog() {
+    const dialog = document.getElementById('promotion-dialog');
+    dialog.show();
+    const overContainer = document.getElementById('over-container-flex');
+    // console.log(overContainer);
+    const head = (white_turn) ? "../img/png/white_" : "../img/png/black_";
+    const tail = ".png";
+    let promotionOptions = ['queen', 'rook', 'bishop', 'knight'];
+    for(let i = 0; i < 4; i++){
+        const container = document.createElement('div');
+        container.classList.add('sub-container');
+        overContainer.appendChild(container);
+        const img = document.createElement('img');
+        img.src = head+promotionOptions[i]+tail;
+        img.alt = promotionOptions[i];
+        img.id = head.split('/')[3]+promotionOptions[i];
+        img.addEventListener('click', () => {
+            console.log(draggedElement);
+            console.log(img);
+            dialog.close();
+            removeAllChildren(overContainer);
+        });
+        container.appendChild(img);
+    }
 }
 
 //it simulates a move and then it tells if the move will put my self in check
@@ -582,10 +617,10 @@ function updateMessages () {
  * @brief inserts the match into the database
  */
 function insertMatchDB(vittoria){
-    
     //inserimento partita nel database
     let http = new XMLHttpRequest();
     let url = 'inserisciPartita.php';
+    // da aggiungere mosse per la classifica
     let params =  "vittoria=" + vittoria;
     http.open('POST', url, true);
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -608,7 +643,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     let end_index = parseInt(dest_element.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
-    let i = parseInt(id.slice(-1)); //get the last character of the id and convert it to int
+    let i = parseInt(id.slice(-1)); //get the last character of the id and convert it to string
     // boardIsConsistent();
     // console.log("dentro validate_move");
     // console.log("pezzo è : " + id + "to " + end_row + " " + end_col);
@@ -620,9 +655,8 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         let possibleEnPassantPawn;
         
         // console.log("test");
-        if((Math.abs(end_col-start_col) >= 2) || (Math.abs(end_row-start_row) >= 1)) return false;
-        
-        if(board[(end_row-1)*cols+end_col] != 0 && board[(end_row-1)*cols + end_col].id.includes("black_pawn")){
+        if(Math.abs(end_col-start_col) >= 2) return false;
+        if(end_row > 0 && board[(end_row-1)*cols+end_col] != 0 && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0){
             possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
         }
         else
@@ -1140,7 +1174,7 @@ function checkCheck() {
                     black_in_check = true;
                 else   
                     white_in_check = true;
-                //console.log
+                // console.log()
                 opponent_in_check = true;
                 break;
             }

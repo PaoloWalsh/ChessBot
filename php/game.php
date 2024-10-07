@@ -11,6 +11,7 @@
     <!-- <link rel="stylesheet" href="../css/main.css"> -->
     <link rel="stylesheet" href="../css/promotion.css">
     <script src="../js/game/init.js"></script>
+    <!-- <script src="../js/game/script.js"></script> -->
     <script src="../js/game/script.js"></script>
 </head>
 <body>

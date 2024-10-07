@@ -169,6 +169,7 @@ function dragStart (e) {
     startPositionId = e.target.parentNode.getAttribute('id');   //square id
     draggedElement = e.target;
     let piece = divToPiece(draggedElement);
+    // console.log(piece);     //debug
     selectLandingSquares(piece);
 }
 
@@ -294,7 +295,7 @@ function makeMove(piece, square) {
         }
     }
     if(moveMade){
-        handleDialog();
+        // handleDialog();
         if(((hostColor == 'bianco') && white_turn ) || ((hostColor == 'nero') && black_turn ))
             hostNumberMoves++;
         updateBoard(castlignRook);
@@ -312,7 +313,7 @@ function handleDialog() {
     const dialog = document.getElementById('promotion-dialog');
     dialog.show();
     const overContainer = document.getElementById('over-container-flex');
-    console.log(overContainer);
+    // console.log(overContainer);
     const head = (white_turn) ? "../img/png/white_" : "../img/png/black_";
     const tail = ".png";
     let promotionOptions = ['queen', 'rook', 'bishop', 'knight'];
@@ -324,14 +325,109 @@ function handleDialog() {
         img.src = head+promotionOptions[i]+tail;
         img.alt = promotionOptions[i];
         img.id = head.split('/')[3]+promotionOptions[i];
-        img.addEventListener('click', () => {
-            console.log(draggedElement);
-            console.log(img);
-            dialog.close();
-            removeAllChildren(overContainer);
-        });
+        img.addEventListener('click', promotionClick);
         container.appendChild(img);
     }
+}
+
+function promotionClick (event) {
+    const img = event.target;
+    const dialog = document.getElementById('promotion-dialog');
+    dialog.close();
+    const overContainer = document.getElementById('over-container-flex');
+    removeAllChildren(overContainer);
+    let newPieceColor = img.id.split('_')[0];
+    let newPieceType = img.id.split('_')[1];
+    let oldPieceColor = newPieceColor;
+    let oldPieceType = (draggedElement.id.split('_')[1]).slice(0, -1);
+    let oldPieceIndex = draggedElement.id.slice(-1);
+    let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
+    let oldPieceDiv = pieceToDiv(oldPiece);
+    let childImg = oldPieceDiv.firstElementChild;
+    console.log(newPieceColor);
+    console.log(newPieceType);
+    console.log(oldPieceColor);
+    console.log(oldPieceType);
+    console.log(oldPiece);
+    console.log(oldPieceDiv);
+    console.log(childImg);
+
+    let newPiece;
+    let numberPiece;
+    let colorHead = oldPieceColor+'_';
+    switch (newPieceType) {
+        case 'knight':
+            numberPiece = (newPieceColor == 'white') ? numberWhiteKnights : numberBlackKnights;
+            newPiece = new piece(colorHead+'knight', numberPiece);
+            if(newPieceColor == 'white'){
+                white_knights.push(newPiece);
+                numberWhiteKnights++;
+            } else {
+                black_knights.push(newPiece);
+                numberBlackKnights++;
+            }
+            break;
+        case 'bishop':
+            numberPiece = (newPieceColor == 'white') ? numberWhiteBishops : numberBlackBishops;
+            newPiece = new piece(colorHead+'bishop', numberPiece);
+            if(newPieceColor == 'white'){
+                white_bishops.push(newPiece);
+                numberWhiteBishops++;
+            } else {
+                black_bishops.push(newPiece);
+                numberBlackBishops++;
+            }
+            break;
+        case 'rook':
+            numberPiece = (newPieceColor == 'white') ? numberWhiteRooks : numberBlackRooks;
+            newPiece = new piece(colorHead+'rook', numberPiece);
+            if(newPieceColor == 'white'){
+                white_rooks.push(newPiece);
+                numberWhiteRooks++;
+            } else {
+                black_rooks.push(newPiece);
+                numberBlackRooks++;
+            }
+            break;
+            case 'queen':
+            numberPiece = (newPieceColor == 'white') ? numberWhiteQueens : numberBlackQueens;
+            newPiece = new piece(colorHead+'queen', numberPiece);
+            if(newPieceColor == 'white'){
+                white_queens.push(newPiece);
+                numberWhiteQueens++;
+            } else {
+                black_queens.push(newPiece);
+                numberBlackQueens++;
+            }
+            break;
+        default:
+            break;
+    }
+
+    newPiece.color = newPieceColor;
+    newPiece.row = oldPiece.row;
+    newPiece.col = oldPiece.col;
+    oldPiece.captured = true;
+    board[oldPiece.row*cols + oldPiece.col] = newPiece;
+    oldPieceDiv.id = newPiece.id;
+    const head = "../img/png/";
+    const tail = ".png";
+    childImg.src = head+(newPiece.id).slice(0, -1)+tail;
+
+    // if(oldPieceColor == 'white'){
+    //     white_pawns = white_pawns.filter(obj => obj.id !== oldPiece.id);
+    //     // white_pieces = white_pieces.filter(obj => obj.id !== oldPiece.id);
+    //     // white_pieces.push(newPiece);
+    // }
+    // else{
+    //     black_pawns = black_pawns.filter(obj => obj.id !== oldPiece.id);
+    //     // black_pieces = black_pieces.filter(obj => obj.id !== oldPiece.id);
+    //     // black_pieces.push(newPiece);
+    // }
+    console.log(white_pawns);
+    console.log(black_pawns);
+    console.log(white_pieces);
+    console.log(black_pieces);
 }
 
 //it simulates a move and then it tells if the move will put my self in check
@@ -645,103 +741,66 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
     let end_col = end_index%rows;
     let i = parseInt(id.slice(-1)); //get the last character of the id and convert it to string
     // boardIsConsistent();
-    // console.log("dentro validate_move");
-    // console.log("pezzo è : " + id + "to " + end_row + " " + end_col);
-    //white pawn
-    if(id.includes("white_pawn")){
-        let t = white_pawns[i].firstMove ? 1 : 0;
-        let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) ? 1 : 0;
-        t = diag ? 0 : t;
+
+    //pawns
+    if(id.includes('pawn')){
+        let pawnColor = (id.includes('white')) ? 'white' : 'black';
+        let opponentColor = (id.includes('white')) ? 'black' : 'white';
+        let pawn = (pawnColor == 'white') ? white_pawns[i] : black_pawns[i];
+        let firstMoveBoost = (pawn.firstMove) ? ((pawnColor == 'white') ? 1 : -1) : 0;
+        let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes(opponentColor)) ? 1 : 0;
+        firstMoveBoost = diag ? 0 : firstMoveBoost; //se mi posso muovere in diagonale allora posso fare solo 1 casella in avanti e non due
+        let enPassantPosition = (id.includes('white')) ? -1 : 1;
+        let enPassantRow = (id.includes('white')) ? 5 : 2;  //riga su cui è possibile fare l'enPassant
         let possibleEnPassantPawn;
-        
-        // console.log("test");
+
+        let promotionRow = (id.includes('white')) ? 7 : 0;
+        let promoting = false;
+
         if(Math.abs(end_col-start_col) >= 2) return false;
-        if(end_row > 0 && board[(end_row-1)*cols+end_col] != 0 && board[(end_row-1)*cols + end_col].id.includes("black_pawn") && end_row > 0){
-            possibleEnPassantPawn = board[(end_row-1)*cols + end_col];
+        
+        //verifico se c'è un pedone che potrebbe essere mangiato con l'enpassant
+        if(end_row > 0 && end_row < (rows-1) && board[(end_row+enPassantPosition)*cols+end_col] != 0 && board[(end_row+enPassantPosition)*cols + end_col].id.includes(opponentColor+"_pawn")){
+            possibleEnPassantPawn = board[(end_row+enPassantPosition)*cols + end_col];
         }
         else
             possibleEnPassantPawn = 0;
 
-        if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")){
+        //verifico che non cerchi di mangiare un pezzo dello stesso colore
+        if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes(pawnColor)){
             return false;
         } 
-                                                                    //    (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "u")) &&
-        if((end_row >= start_row) && (end_row <= start_row + 1 + t) && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
-            {
-                if((Math.abs(end_row-start_row) > maxDist(start_row, start_col, "u")) && !diag) return false;
-                if(diag && end_col === start_col)
-                    return false;
-                if(diag && end_row === start_row) return false;
-                draggedPiece = white_pawns[i];
-                
-            }
-        else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes("black_pawn") && 
-            possibleEnPassantPawn.movesMade === 1 && end_row === 5 && (end_row-start_row) === 1){
-            draggedPiece = white_pawns[i];
-            if(makingMove){
-                possibleEnPassantPawn.captured = true;
-                board[(end_row-1)*cols + end_col] = 0;
-                pieceOffSquare(end_row-1, end_col);
-                enPassantPlayed = true;
-            }
-        }
-        else {
-            return false;
-        }
-        if(makingMove){
-            draggedPiece.firstMove = false;
-            draggedPiece.old_row = start_row;
-            draggedPiece.old_col = start_col;
-            draggedPiece.row = end_row;
-            draggedPiece.col = end_col;
-            draggedPiece.movesMade++;
-            if(Math.abs(end_row-start_row) == 2){
-                draggedPiece.enPassantCapturable = true;
-            }
-            //console.log(draggedPiece);  //debug
-        }
-        return true;
-    }
-    
-    //black pawn
-    if(id.includes("black_pawn")){
-        //let i = parseInt(getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
-        let t = black_pawns[i].firstMove ? -1 : 0;
-        let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white")) ? 1 : 0;
-        t = diag ? 0 : t;
-        let possibleEnPassantPawn;
-        // console.log(board[(end_row+1)*cols+end_col].id);
-        if(Math.abs(end_col-start_col) >= 2) return false;
-        if(end_row < rows-1 && board[(end_row+1)*cols+end_col] != 0 && board[(end_row+1)*cols+end_col].id.includes("white_pawn") && end_row > 0){
-            // console.log(board[(end_row+1)*cols+end_col].id);
-            // console.log("sono entrato");
-            possibleEnPassantPawn = board[(end_row+1)*cols + end_col];
-        }
-        else
-            possibleEnPassantPawn = 0;
 
-        if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black")) return false;
-                                                                        // (Math.abs(end_row-start_row) <= maxDist(start_row, start_col, "d")) &&
-        if((end_row <= start_row) && (end_row >= start_row - 1 + t) &&  (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
-            {
-                if((Math.abs(end_row-start_row) > maxDist(start_row, start_col, "d")) && !diag) return false;
-                if(diag && end_col === start_col)
-                    return false;
-                if(diag && end_row === start_row) return false;
-                draggedPiece = black_pawns[i];
-                
-            }
-        else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes("white_pawn") 
-            && possibleEnPassantPawn.movesMade === 1 && end_row === 2 && (end_row-start_row) === -1){
-            draggedPiece = black_pawns[i];
+        let maxMovement = (pawnColor == 'white') ? (firstMoveBoost + 1) : (firstMoveBoost - 1);
+
+        if( (((pawnColor == 'white') && (end_row >= start_row) && (end_row <= start_row + maxMovement)) 
+            || ((pawnColor == 'black') && (end_row <= start_row) && (end_row >= start_row + maxMovement)))
+         && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
+        {
+            let direction = (pawnColor == 'white') ? 'u': 'd';
+            if((Math.abs(end_row-start_row) > maxDist(start_row, start_col, direction)) && !diag) 
+                return false;
+            if(diag && end_col === start_col)
+                return false;
+            if(diag && end_row === start_row) 
+                return false;
+            if(end_row === promotionRow)
+                promoting = true;
+            draggedPiece = pawn;
+        }
+        else if(!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes(opponentColor+"_pawn") && 
+            possibleEnPassantPawn.movesMade === 1 && end_row === enPassantRow && Math.abs(end_row-start_row) === 1){
+            draggedPiece = pawn;
             if(makingMove){
                 possibleEnPassantPawn.captured = true;
-                board[(end_row+1)*cols + end_col] = 0;
-                pieceOffSquare(end_row+1, end_col);
+                board[(end_row+enPassantPosition)*cols + end_col] = 0;
+                pieceOffSquare(end_row+enPassantPosition, end_col);
                 enPassantPlayed = true;
             }
         }
-        else return false;
+        else 
+            return false;
+        
         if(makingMove){
             draggedPiece.firstMove = false;
             draggedPiece.old_row = start_row;
@@ -752,6 +811,8 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             if(Math.abs(end_row-start_row) == 2){
                 draggedPiece.enPassantCapturable = true;
             }
+            if(promoting)
+                handleDialog();
         }
         return true;
     }
@@ -874,13 +935,13 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                     if(id.includes("rook"))
                         draggedPiece = white_rooks[i];
                     else
-                        draggedPiece = white_queen;
+                        draggedPiece = white_queens[i];
                 }
                 else{
                     if(id.includes("rook"))
                         draggedPiece = black_rooks[i];
                     else
-                        draggedPiece = black_queen;
+                        draggedPiece = black_queens[i];
                 }
                 if(makingMove){
                     draggedPiece.old_row = start_row;
@@ -900,13 +961,13 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                     if(id.includes("rook"))
                         draggedPiece = white_rooks[i];
                     else
-                        draggedPiece = white_queen;
+                        draggedPiece = white_queens[i];
                 }
                 else{
                     if(id.includes("rook"))
                         draggedPiece = black_rooks[i];
                     else
-                        draggedPiece = black_queen;
+                        draggedPiece = black_queens[i];
                 }
                 if(makingMove){
                     draggedPiece.old_row = start_row;
@@ -943,13 +1004,13 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                     if(id.includes("bishop"))
                         draggedPiece = white_bishops[index];
                     else
-                        draggedPiece = white_queen;
+                        draggedPiece = white_queens[index];
                 }
                 else{
                     if(id.includes("bishop"))
                         draggedPiece = black_bishops[index];
                     else
-                        draggedPiece = black_queen;
+                        draggedPiece = black_queens[index];
                 }
             }
             else return false;
@@ -969,13 +1030,13 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                     if(id.includes("bishop"))
                         draggedPiece = white_bishops[index];
                     else
-                        draggedPiece = white_queen;
+                        draggedPiece = white_queens[index];
                 }
                 else{
                     if(id.includes("bishop"))
                         draggedPiece = black_bishops[index];
                     else
-                        draggedPiece = black_queen;
+                        draggedPiece = black_queens[index];
                 }
             }
             else return false;
@@ -994,13 +1055,13 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                     if(id.includes("bishop"))
                         draggedPiece = white_bishops[index];
                     else
-                        draggedPiece = white_queen;
+                        draggedPiece = white_queens[index];
                 }
                 else{
                     if(id.includes("bishop"))
                         draggedPiece = black_bishops[index];
                     else
-                        draggedPiece = black_queen;
+                        draggedPiece = black_queens[index];
                 }
             }
             else return false;
@@ -1019,13 +1080,13 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
                     if(id.includes("bishop"))
                         draggedPiece = white_bishops[index];
                     else
-                        draggedPiece = white_queen;
+                        draggedPiece = white_queens[index];
                 }
                 else{
                     if(id.includes("bishop"))
                         draggedPiece = black_bishops[index];
                     else
-                        draggedPiece = black_queen;
+                        draggedPiece = black_queens[index];
                 }
             }
             else return false;
@@ -1099,10 +1160,12 @@ function pieceOffSquare(row, col) {
  */
 function allPossibleMoves() {
     for(let index = 0; index < 16; index++){
-        //memory leak?
         white_pieces[index].possibleMoves = [];
         black_pieces[index].possibleMoves = [];
         for(let i = 0; i < 64; i++){
+            // console.log(white_pieces[index]);
+            // console.log(black_pieces[index]);
+            
             let square = document.getElementById(i+'');
             let end_index = parseInt(square.getAttribute('id'));
             let end_row = Math.floor(end_index/rows);
@@ -1112,22 +1175,22 @@ function allPossibleMoves() {
             const makingMove = false;
             const pawnCaptureOpportunity = false;
             if(!white_pieces[index].captured){
-                if(white_pieces[index].id.includes("pawn"))
-                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black"))
-                        if(validate_move(square, r, c, white_pieces[index].id, makingMove, true))
-                            white_pieces[index].possibleMoves.push(i);
-                if(validate_move(square, r, c, white_pieces[index].id, makingMove, pawnCaptureOpportunity)){
+                // if(white_pieces[index].id.includes("pawn"))
+                //     if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black"))
+                //         if(validate_move(square, r, c, white_pieces[index].id, makingMove, true))
+                //             white_pieces[index].possibleMoves.push(i);
+                if(validate_move(square, r, c, white_pieces[index].id, makingMove)){
                     white_pieces[index].possibleMoves.push(i);
                 }
             }
             r = black_pieces[index].row;
             c = black_pieces[index].col;
             if(!black_pieces[index].captured){
-                if(black_pieces[index].id.includes("pawn"))
-                    if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white"))
-                        if(validate_move(square, r, c, black_pieces[index].id, makingMove, true))
-                            black_pieces[index].possibleMoves.push(i);
-                if(validate_move(square, r, c, black_pieces[index].id, makingMove, pawnCaptureOpportunity)){
+                // if(black_pieces[index].id.includes("pawn"))
+                //     if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white"))
+                //         if(validate_move(square, r, c, black_pieces[index].id, makingMove, true))
+                //             black_pieces[index].possibleMoves.push(i);
+                if(validate_move(square, r, c, black_pieces[index].id, makingMove)){
                     black_pieces[index].possibleMoves.push(i);
                 }
             }   
@@ -1402,14 +1465,8 @@ function divToPiece (element) {
         case "white_king":
             piece = white_king;
             return piece;
-        case "white_queen":
-            piece = white_queen;
-            return piece;
         case "black_king":
             piece = black_king;
-            return piece;
-        case "black_queen":
-            piece = black_queen;
             return piece;
     }
     id = id.slice(0, -1); //all pieces without an array are coverd, it means the last character is the index so 
@@ -1431,6 +1488,10 @@ function divToPiece (element) {
             piece = white_rooks[index];
             break;
 
+        case "white_queen":
+            piece = white_queens[index];
+            return piece;
+
         case "black_pawn":
             piece = black_pawns[index];
             break;
@@ -1446,6 +1507,10 @@ function divToPiece (element) {
         case "black_rook":
             piece = black_rooks[index];
             break;
+
+        case "black_queen":
+            piece = black_queens[index];
+            return piece;
     
         default:
             piece = 0;
@@ -1530,20 +1595,4 @@ function updateEnPassantAttribute(color){
                 black_pieces[i].enPassantCapturable = false;
         }
     }
-}
-
-
-function promotion (piece) {
-    let pieceString;
-    while(pieceString == "queen" || pieceString == "knight"){
-        pieceString = prompt("What piece do you want? [queen | knight]");
-    }
-    // if(pieceString == "queen"){
-    //     if(piece.color == "white")
-    //     {
-    //         white_queen1 = piece("white_queen", 1);
-    //         white_pieces.push(white_queen1);
-    //     }
-    
-
 }

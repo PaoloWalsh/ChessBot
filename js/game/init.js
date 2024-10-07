@@ -21,9 +21,13 @@ let black_pieces = [];
 
 let numberWhiteQueens = 1;
 let numberWhiteKnights = 2;
+let numberWhiteBishops = 2;
+let numberWhiteRooks = 2;
 
 let numberBlackQueens = 1;
 let numberBlackKnights = 2;
+let numberBlackBishops = 2;
+let numberBlackRooks = 2;
 
 
 const capture_sound = new Audio('../audio/capture.mp3');
@@ -80,10 +84,10 @@ let black_knights = [];
 let black_rooks = [];
 
 let white_king;
-let white_queen;
+let white_queens = [];
 
 let black_king;
-let black_queen;
+let black_queens = [];
 
 
 
@@ -94,11 +98,6 @@ let black_queen;
 function init_Pieces(){
 //creating white pieces
 
-    white_king = new piece("white_king");
-    white_queen = new piece("white_queen");
-
-    black_king = new piece("black_king");
-    black_queen = new piece("black_queen");
 
     for(let i = 0; i < 8; i++){
         white_pawns[i] = new piece("white_pawn", i);
@@ -142,14 +141,17 @@ function init_Pieces(){
         white_rooks[i].value = 5;
     }
 
+    white_king = new piece("white_king");
     white_king.row = white_king.old_row = 0;
     white_king.col = white_king.old_col = 3;
     white_king.color = "white";
-
+    
+    let white_queen = new piece("white_queen", 0);
     white_queen.row = white_queen.old_row = 0;
     white_queen.col = white_queen.old_col = 4;
     white_queen.color = "white";
     white_queen.value = 9;
+    white_queens.push(white_queen);
 
     //creating black pieces
     for(let i = 0; i < 8; i++){
@@ -193,14 +195,18 @@ function init_Pieces(){
             black_rooks[i].value = -5;
     }
 
+
+    black_king = new piece("black_king");
     black_king.row = black_king.old_row = 7;
     black_king.col = black_king.old_col = 3;
     black_king.color = "black";
-
+    
+    let black_queen = new piece("black_queen", 0);
     black_queen.row = black_queen.old_row = 7;
     black_queen.col = black_queen.old_col = 4;
     black_queen.color = "black";
     black_queen.value = -9;
+    black_queens.push(black_queen);
 }
 
 let board;
@@ -211,14 +217,14 @@ let board;
  */
 function fill_Board() {
     board = [
-        white_rooks[0], white_knights[0], white_bishops[0], white_king, white_queen, white_bishops[1], white_knights[1], white_rooks[1],
+        white_rooks[0], white_knights[0], white_bishops[0], white_king, white_queens[0], white_bishops[1], white_knights[1], white_rooks[1],
         white_pawns[0], white_pawns[1], white_pawns[2], white_pawns[3], white_pawns[4], white_pawns[5], white_pawns[6], white_pawns[7], 
         0, 0, 0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 0, 0, 
         black_pawns[0], black_pawns[1], black_pawns[2], black_pawns[3], black_pawns[4], black_pawns[5], black_pawns[6], black_pawns[7], 
-        black_rooks[0], black_knights[0], black_bishops[0], black_king, black_queen, black_bishops[1], black_knights[1], black_rooks[1]
+        black_rooks[0], black_knights[0], black_bishops[0], black_king, black_queens[0], black_bishops[1], black_knights[1], black_rooks[1]
     ];
     for(let i = 0; i < 16; i++){
         white_pieces[i] = board[i];
