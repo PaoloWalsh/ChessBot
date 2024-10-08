@@ -414,16 +414,12 @@ function promotionClick (event) {
     const tail = ".png";
     childImg.src = head+(newPiece.id).slice(0, -1)+tail;
 
-    // if(oldPieceColor == 'white'){
-    //     white_pawns = white_pawns.filter(obj => obj.id !== oldPiece.id);
-    //     // white_pieces = white_pieces.filter(obj => obj.id !== oldPiece.id);
-    //     // white_pieces.push(newPiece);
-    // }
-    // else{
-    //     black_pawns = black_pawns.filter(obj => obj.id !== oldPiece.id);
-    //     // black_pieces = black_pieces.filter(obj => obj.id !== oldPiece.id);
-    //     // black_pieces.push(newPiece);
-    // }
+    if(oldPieceColor == 'white'){
+        white_pieces.push(newPiece);
+    }
+    else{
+        black_pieces.push(newPiece);
+    }
     console.log(white_pawns);
     console.log(black_pawns);
     console.log(white_pieces);
@@ -1159,44 +1155,35 @@ function pieceOffSquare(row, col) {
  * @brief calculates every legal (not considering checks) move for every non-captured piece and stores it in an array
  */
 function allPossibleMoves() {
-    for(let index = 0; index < 16; index++){
+    for(let index = 0; index < white_pieces.length; index++){
         white_pieces[index].possibleMoves = [];
-        black_pieces[index].possibleMoves = [];
         for(let i = 0; i < 64; i++){
-            // console.log(white_pieces[index]);
-            // console.log(black_pieces[index]);
-            
             let square = document.getElementById(i+'');
-            let end_index = parseInt(square.getAttribute('id'));
-            let end_row = Math.floor(end_index/rows);
-            let end_col = end_index%rows;
             let r = white_pieces[index].row;
             let c = white_pieces[index].col;
             const makingMove = false;
-            const pawnCaptureOpportunity = false;
             if(!white_pieces[index].captured){
-                // if(white_pieces[index].id.includes("pawn"))
-                //     if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black"))
-                //         if(validate_move(square, r, c, white_pieces[index].id, makingMove, true))
-                //             white_pieces[index].possibleMoves.push(i);
                 if(validate_move(square, r, c, white_pieces[index].id, makingMove)){
                     white_pieces[index].possibleMoves.push(i);
                 }
             }
+        }
+    }
+
+    for(let index = 0; index < black_pieces.length; index++){
+        black_pieces[index].possibleMoves = [];
+        for(let i = 0; i < 64; i++){
+            let square = document.getElementById(i+'');
+            const makingMove = false;
             r = black_pieces[index].row;
             c = black_pieces[index].col;
             if(!black_pieces[index].captured){
-                // if(black_pieces[index].id.includes("pawn"))
-                //     if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("white"))
-                //         if(validate_move(square, r, c, black_pieces[index].id, makingMove, true))
-                //             black_pieces[index].possibleMoves.push(i);
                 if(validate_move(square, r, c, black_pieces[index].id, makingMove)){
                     black_pieces[index].possibleMoves.push(i);
                 }
             }   
         }
     }
-
 }
 
 
@@ -1229,7 +1216,7 @@ function checkCheck() {
     // if(element.id.includes("king"))
     //     king_position = parseInt(destinationSquare.getAttribute('id'));
    
-    for(let i = 0; i < 16; i++){
+    for(let i = 0; i < my_pieces.length; i++){
          // I'm verifing if the move I'm goint to make is putting the opponet in check
         for(let j = 0; j < my_pieces[i].possibleMoves.length; j++){
             if (op_king_position === my_pieces[i].possibleMoves[j]){
@@ -1242,7 +1229,10 @@ function checkCheck() {
                 break;
             }
         }
-         // I'm verifing if the move I'm going to make puts me out of check
+    }
+
+    // I'm verifing if the move I'm going to make puts me out of check
+    for(let i = 0; i < op_pieces.length; i++){
         for(let j = 0; j < op_pieces[i].possibleMoves.length; j++){
             if (my_king_position === op_pieces[i].possibleMoves[j]){
                 if(white_turn)

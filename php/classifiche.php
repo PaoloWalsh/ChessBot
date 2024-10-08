@@ -13,7 +13,7 @@
 <body>
   <header>
     <div>
-        <a href="index.php">
+        <a href="../index.php">
             <img src="../img/png/white_knight.png" alt="logo">
         </a>
     </div>
