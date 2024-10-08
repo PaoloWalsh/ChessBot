@@ -309,7 +309,7 @@ function makeMove(piece, square) {
     
 }
 
-function handleDialog() {
+async function handleDialog() {
     const dialog = document.getElementById('promotion-dialog');
     dialog.show();
     const overContainer = document.getElementById('over-container-flex');
@@ -328,6 +328,11 @@ function handleDialog() {
         img.addEventListener('click', promotionClick);
         container.appendChild(img);
     }
+    // const containers = overContainer.querySelectorAll('div');
+    // for(let container of containers){
+    //    const img = container.querySelector('img');
+    //     console.log(img);
+    // }
 }
 
 function promotionClick (event) {
@@ -1594,3 +1599,4 @@ function updateEnPassantAttribute(color){
         }
     }
 }
+//
