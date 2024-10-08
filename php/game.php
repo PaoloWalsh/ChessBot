@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="../css/header.css">
     <!-- <link rel="stylesheet" href="../css/main.css"> -->
     <link rel="stylesheet" href="../css/promotion.css">
-    <script src="../js/game/init.js"></script>
-    <!-- <script src="../js/game/script.js"></script> -->
-    <script src="../js/game/script.js"></script>
+    <script src="../js/game/game-setup.js"></script>
+    <script src="../js/game/game-main.js"></script>
+    <script src="../js/game/game-logic.js"></script>
+    <script src="../js/game/game-util.js"></script>
 </head>
 <body>
     <header>
