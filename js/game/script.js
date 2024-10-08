@@ -671,32 +671,40 @@ function updateMessages () {
     }
     let t = checkMate();
     if(t){
-        let vittoria;
-        let colore = localStorage.getItem('colore');
-        bpTurno.innerText = "";
-        wpTurno.innerText = "";
-        bpScacco.innerText = "";
-        wpScacco.innerText = "";
-        bpPunteggio.innerText = "";
-        wpPunteggio.innerText = "";
-        //black wins
-        if(white_in_check){
-            bpVittoria.innerText = scaccoMattoBene;
-            wpVittoria.innerText = scaccoMattoMale;
-            if(colore == "nero")
-                vittoria = true;
-            else 
-                vittoria = false;
-        }
-        //white wins
-        else if(black_in_check){
-            wpVittoria.innerText = scaccoMattoBene;
-            bpVittoria.innerText = scaccoMattoMale;
-            if(colore == "bianco")
-                vittoria = true;
-            else 
-                vittoria = false;
-        }
+
+        const checkDialog = document.getElementById('checkmate-dialog');
+        const whitePlayerName = document.getElementById('wp-nome').innerText;
+        const blackPlayerName = document.getElementById('bp-nome').innerText;
+        let winnerPlayer = (white_in_check) ? blackPlayerName : whitePlayerName;
+        const p = checkDialog.querySelector('h2');
+        p.innerText = `Complimenti ${winnerPlayer} hai vinto!`;
+        checkDialog.show();
+        // let vittoria;
+        // let colore = localStorage.getItem('colore');
+        // bpTurno.innerText = "";
+        // wpTurno.innerText = "";
+        // bpScacco.innerText = "";
+        // wpScacco.innerText = "";
+        // bpPunteggio.innerText = "";
+        // wpPunteggio.innerText = "";
+        // //black wins
+        // if(white_in_check){
+        //     bpVittoria.innerText = scaccoMattoBene;
+        //     wpVittoria.innerText = scaccoMattoMale;
+        //     if(colore == "nero")
+        //         vittoria = true;
+        //     else 
+        //         vittoria = false;
+        // }
+        // //white wins
+        // else if(black_in_check){
+        //     wpVittoria.innerText = scaccoMattoBene;
+        //     bpVittoria.innerText = scaccoMattoMale;
+        //     if(colore == "bianco")
+        //         vittoria = true;
+        //     else 
+        //         vittoria = false;
+        // }
         insertMatchDB(vittoria);
     }
     else{

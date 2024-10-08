@@ -8,7 +8,7 @@
 }
 
 
-#promotion-dialog {
+.dialog-style {
     z-index: 100;
     position: absolute;
     top: 30%;
@@ -49,4 +49,10 @@ dialog img {
     /* max-height: 40rem; */
     text-align: center;
     animation: fadeIn 1s ease-in-out;
-  }
+}
+
+#checkmate-dialog h2 {
+    margin: 2rem;
+    font-size: 2rem;
+    font-weight: 800;
+}

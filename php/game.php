@@ -42,24 +42,19 @@
         
         <div class="container relative">
 
-            <dialog id="promotion-dialog">
+            <dialog id="promotion-dialog" class="dialog-style">
                 <h2 class="special-h2">Promozione</h2>
                 <div id="over-container-flex">
-                    <!-- <div class="sub-container">
-                        <img id="scelto-bianco" src="../img/png/white_queen.png" alt="torre-bianca">
-                    </div>
-                    <div class="sub-container">
-                        <img id="scelto-nero" src="../img/png/white_rook.png" alt="torre-nera">
-                    </div>
-                    <div class="sub-container">
-                        <img id="scelto-bianco" src="../img/png/white_bishop.png" alt="torre-bianca">
-                    </div>
-                    <div class="sub-container">
-                        <img id="scelto-nero" src="../img/png/white_knight.png" alt="torre-nera">
-                    </div> -->
                 </div>
             </dialog>
 
+            <dialog id="checkmate-dialog" class="dialog-style">
+                <h2 class="special-h2"></h2>
+                <div id="buttons">
+                    <button class="btn" onclick="reset()">Rigioca</button>
+                </div>
+            </dialog>
+            
             <div class="title-container">
                 <h1 class="big-title">Chess</h1>
             </div>
