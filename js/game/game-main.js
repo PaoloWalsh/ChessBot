@@ -321,6 +321,8 @@ function promotionClick (event) {
     let oldPieceType = (draggedElement.id.split('_')[1]).slice(0, -1);
     let oldPieceIndex = draggedElement.id.slice(-1);
     let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
+    console.log(draggedElement);
+    console.log(oldPiece.id);
     let oldPieceDiv = pieceToDiv(oldPiece);
     let childImg = oldPieceDiv.firstElementChild;
     console.log(newPieceColor);
