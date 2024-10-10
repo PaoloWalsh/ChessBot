@@ -1,7 +1,8 @@
 function printBoard(){      //util
     for(let i = 0; i < rows; i++){
         for(let j = 0; j < cols; j++){
-            console.log(board[i*cols + j].id);
+            let pezzo = board[i*cols + j] ? board[i*cols + j].id : 'casella vuota';
+            console.log(`Riga: ${i+1}, Col: ${j+1}, Pezzo: ${pezzo}`);
         }
         console.log("\n");
     }
@@ -102,6 +103,7 @@ function boardIsConsistent () {     //util
                 console.log("col " + j + '');
                 if(piece == null){
                     console.log("square html vuoto");
+                    console.log("board element " + board[i*cols+j].id); 
                     return false;
                 }
                 console.log("html element " + piece.getAttribute('id'));

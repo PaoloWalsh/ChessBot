@@ -14,6 +14,8 @@ let black_in_check = false;
 // let blackCanEnpassant = false;
 let enPassantPlayed = false;
 
+let gPromoting = false;
+
 //let castlignRook = false;
 
 let white_pieces = [];

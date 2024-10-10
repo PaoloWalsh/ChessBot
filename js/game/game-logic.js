@@ -3,10 +3,9 @@
  * @brief it simulates a move and then it tells if the move will put my self in check 
  * @param {html element} destinationSquare rappresents the html square to which I want to move
  * @param {piece} piece object of class piece 
- * @param {*} pawnCaptureOpportunity 
  * @returns boolean indicating if the move that is being evaluated will violate Check Logic -> putting my self in check or moving a piece while in check that doesn't get me out of check
  */
-function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {     //game-logic
+function moveWithCheck (destinationSquare, piece) {     //game-logic
 
     let end_index = parseInt(destinationSquare.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
@@ -18,7 +17,7 @@ function moveWithCheck (destinationSquare, piece, pawnCaptureOpportunity) {     
     let support_rook_col;
 
     if(piece.captured) return false;
-    if(validate_move(destinationSquare, piece.row, piece.col, piece.id, false, false)){ //valido la mossa
+    if(validate_move(destinationSquare, piece, false)){ //valido la mossa
         let castlingRook = false;
         if(castling(destinationSquare, piece)){
             castlingMove = true;
@@ -180,17 +179,17 @@ function switchTurn(){  //game-logic
 
 /**
  * @param {html element} dest_element is the html square to which I want to move my piece
- * @param {int} start_row is the start row of the piece
- * @param {int} start_col is the start col of the piece
- * @param {string} id is the id of the piece I want to move
+ * @param {piece} piece is the js class object piece I want to move
  * @param {boolean} makingMove true if I want to actually make a move, false if I want to know if a move is legal (not considering checks)
- * @param {boolean} captureOpportunity true if I'm moving a pawn on a different color piece, false otherways
  * @param {piece} castlignRook the rook I'm trying to castle with
  * @returns It returns true if the move I'm trying to make follows the piece moving rules (it doesn't consider checks)
  */
-function validate_move (dest_element, start_row, start_col, id, makingMove, captureOpportunity) {       //game-logic
+function validate_move (dest_element, piece, makingMove) {       //game-logic
     //making move is a boolean that if true indicates that I actually want to make the move
     //if is false it meas I'm just verifing if the move would be legal
+    let start_row = piece.row;
+    let start_col = piece.col;
+    let id = piece.id;
     let end_index = parseInt(dest_element.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
@@ -205,6 +204,7 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
         let firstMoveBoost = (pawn.firstMove) ? ((pawnColor == 'white') ? 1 : -1) : 0;
         let diag = (board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes(opponentColor)) ? 1 : 0;
         firstMoveBoost = diag ? 0 : firstMoveBoost; //se mi posso muovere in diagonale allora posso fare solo 1 casella in avanti e non due
+        let captureOpportunity = diag;
         let enPassantPosition = (id.includes('white')) ? -1 : 1;
         let enPassantRow = (id.includes('white')) ? 5 : 2;  //riga su cui è possibile fare l'enPassant
         let possibleEnPassantPawn;
@@ -266,8 +266,9 @@ function validate_move (dest_element, start_row, start_col, id, makingMove, capt
             if(Math.abs(end_row-start_row) == 2){
                 draggedPiece.enPassantCapturable = true;
             }
-            if(promoting)
-                handleDialog();
+            if(promoting){
+                gPromoting = true;
+            }
         }
         return true;
     }
@@ -572,7 +573,7 @@ function allPossibleMoves() {       //game-logic
             let c = white_pieces[index].col;
             const makingMove = false;
             if(!white_pieces[index].captured){
-                if(validate_move(square, r, c, white_pieces[index].id, makingMove)){
+                if(validate_move(square, white_pieces[index], makingMove)){
                     white_pieces[index].possibleMoves.push(i);
                 }
             }
@@ -587,7 +588,7 @@ function allPossibleMoves() {       //game-logic
             r = black_pieces[index].row;
             c = black_pieces[index].col;
             if(!black_pieces[index].captured){
-                if(validate_move(square, r, c, black_pieces[index].id, makingMove)){
+                if(validate_move(square, black_pieces[index], makingMove)){
                     black_pieces[index].possibleMoves.push(i);
                 }
             }   
@@ -673,7 +674,7 @@ function checkCheck() {     //game-logic
  * @param castlignRook is the rook that I'm castling with, if undefined it means that the last move wasn't a castle
  */
 function updateBoard (castlignRook) {       //game-logic
-
+    console.log('updato');
     board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
     if(castlignRook){
         board[castlignRook.row*cols + (castlignRook.col)] = castlignRook;
