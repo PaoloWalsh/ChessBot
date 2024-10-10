@@ -161,7 +161,7 @@ function selectLandingSquares(piece) {
         let square = document.getElementById(i+'');
         let end_index = parseInt(square.getAttribute('id'));
         if(!piece.captured){
-            if(moveWithCheck(square, piece, false)){
+            if(moveWithCheck(square, piece)){
                 if(square.classList.contains("light"))
                     square.classList.add("selectedLight");
                 else

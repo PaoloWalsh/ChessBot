@@ -182,7 +182,7 @@ function dragDrop (e) {
  * @param {*} square the html destination element, could be a square or a piece
  * @returns returns true if the move was made, false otherways
  */
-async function makeMove(piece, square) {  //game logic
+function makeMove(piece, square) {  //game logic
     removeSelectedSquares();
     let start_row = piece.row;   
     let start_col = piece.col;
@@ -502,32 +502,28 @@ function updateMessages () {
         const p = checkDialog.querySelector('h2');
         p.innerText = `Complimenti ${winnerPlayer} hai vinto!`;
         checkDialog.show();
-        // let vittoria;
-        // let colore = localStorage.getItem('colore');
-        // bpTurno.innerText = "";
-        // wpTurno.innerText = "";
-        // bpScacco.innerText = "";
-        // wpScacco.innerText = "";
-        // bpPunteggio.innerText = "";
-        // wpPunteggio.innerText = "";
-        // //black wins
-        // if(white_in_check){
-        //     bpVittoria.innerText = scaccoMattoBene;
-        //     wpVittoria.innerText = scaccoMattoMale;
-        //     if(colore == "nero")
-        //         vittoria = true;
-        //     else 
-        //         vittoria = false;
-        // }
-        // //white wins
-        // else if(black_in_check){
-        //     wpVittoria.innerText = scaccoMattoBene;
-        //     bpVittoria.innerText = scaccoMattoMale;
-        //     if(colore == "bianco")
-        //         vittoria = true;
-        //     else 
-        //         vittoria = false;
-        // }
+        let vittoria;
+        let colore = localStorage.getItem('colore');
+        bpTurno.innerText = "";
+        wpTurno.innerText = "";
+        bpScacco.innerText = "";
+        wpScacco.innerText = "";
+        bpPunteggio.innerText = "";
+        wpPunteggio.innerText = "";
+        //black wins
+        if(white_in_check){
+            if(colore == "nero")
+                vittoria = true;
+            else 
+                vittoria = false;
+        }
+        //white wins
+        else if(black_in_check){
+            if(colore == "bianco")
+                vittoria = true;
+            else 
+                vittoria = false;
+        }
         insertMatchDB(vittoria);
     }
     else{

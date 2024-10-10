@@ -146,7 +146,7 @@ function checkMate () {     //game-logic
         for(let j = 0; j < 64; j++){
             let square = document.getElementById(j+'');
             
-            if(moveWithCheck(square, my_pieces[i], true)){
+            if(moveWithCheck(square, my_pieces[i])){
                 if((white_in_check != temp_white_check) || (black_in_check != temp_black_check))
                 {
                     white_in_check = temp_white_check;
@@ -267,7 +267,8 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
                 draggedPiece.enPassantCapturable = true;
             }
             if(promoting){
-                gPromoting = true;
+                // gPromoting = true;
+                handleDialog();
             }
         }
         return true;
