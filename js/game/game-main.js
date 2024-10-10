@@ -263,6 +263,7 @@ function makeMove(piece, square) {  //game logic
     }
     if(moveMade){
         // handleDialog();
+        console.log('ciao');
         if(((hostColor == 'bianco') && white_turn ) || ((hostColor == 'nero') && black_turn ))
             hostNumberMoves++;
         updateBoard(castlignRook);
@@ -296,7 +297,9 @@ function handleDialog() {
         img.src = head+promotionOptions[i]+tail;
         img.alt = promotionOptions[i];
         img.id = head.split('/')[3]+promotionOptions[i];
-        img.addEventListener('click', promotionClick);
+        // img.addEventListener('click', (event) => {      // è come se fosse un set timeout
+        //     promotionClick(event);
+        // });
         container.appendChild(img);
     }
     // const containers = overContainer.querySelectorAll('div');
@@ -304,7 +307,102 @@ function handleDialog() {
     //    const img = container.querySelector('img');
     //     console.log(img);
     // }
+    setImgEvent(overContainer);
 }
+
+function setImgEvent (overContainer) {       //get data
+    const containers = overContainer.querySelectorAll('div');
+    containers.forEach(container => {
+        const img = container.querySelector('img');
+        img.addEventListener('click', async (event) => {
+            const idImg = await promotionClick(event);
+            let newPieceColor = idImg.split('_')[0];
+            let newPieceType = idImg.split('_')[1];
+            let oldPieceColor = newPieceColor;
+            let oldPieceType = (draggedElement.id.split('_')[1]).slice(0, -1);
+            let oldPieceIndex = draggedElement.id.slice(-1);
+            let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
+            console.log(draggedElement);
+            console.log(oldPiece.id);
+            let oldPieceDiv = pieceToDiv(oldPiece);
+            let childImg = oldPieceDiv.firstElementChild;
+
+            let newPiece;
+            let numberPiece;
+            let colorHead = oldPieceColor+'_';
+            switch (newPieceType) {
+                case 'knight':
+                    numberPiece = (newPieceColor == 'white') ? numberWhiteKnights : numberBlackKnights;
+                    newPiece = new piece(colorHead+'knight', numberPiece);
+                    if(newPieceColor == 'white'){
+                        white_knights.push(newPiece);
+                        numberWhiteKnights++;
+                    } else {
+                        black_knights.push(newPiece);
+                        numberBlackKnights++;
+                    }
+                    break;
+                case 'bishop':
+                    numberPiece = (newPieceColor == 'white') ? numberWhiteBishops : numberBlackBishops;
+                    newPiece = new piece(colorHead+'bishop', numberPiece);
+                    if(newPieceColor == 'white'){
+                        white_bishops.push(newPiece);
+                        numberWhiteBishops++;
+                    } else {
+                        black_bishops.push(newPiece);
+                        numberBlackBishops++;
+                    }
+                    break;
+                case 'rook':
+                    numberPiece = (newPieceColor == 'white') ? numberWhiteRooks : numberBlackRooks;
+                    newPiece = new piece(colorHead+'rook', numberPiece);
+                    if(newPieceColor == 'white'){
+                        white_rooks.push(newPiece);
+                        numberWhiteRooks++;
+                    } else {
+                        black_rooks.push(newPiece);
+                        numberBlackRooks++;
+                    }
+                    break;
+                    case 'queen':
+                    numberPiece = (newPieceColor == 'white') ? numberWhiteQueens : numberBlackQueens;
+                    newPiece = new piece(colorHead+'queen', numberPiece);
+                    if(newPieceColor == 'white'){
+                        white_queens.push(newPiece);
+                        numberWhiteQueens++;
+                    } else {
+                        black_queens.push(newPiece);
+                        numberBlackQueens++;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            newPiece.color = newPieceColor;
+            newPiece.row = oldPiece.row;
+            newPiece.col = oldPiece.col;
+            oldPiece.captured = true;
+            board[oldPiece.row*cols + oldPiece.col] = newPiece;
+            oldPieceDiv.id = newPiece.id;
+            const head = "../img/png/";
+            const tail = ".png";
+            childImg.src = head+(newPiece.id).slice(0, -1)+tail;
+
+            if(oldPieceColor == 'white'){
+                white_pieces.push(newPiece);
+            }
+            else{
+                black_pieces.push(newPiece);
+            }
+            console.log(white_pawns);
+            console.log(black_pawns);
+            console.log(white_pieces);
+            console.log(black_pieces);
+        });
+    });
+}
+
 /**
  * @brief handles the logic of the promotion, 
  * is called when the user clicks on the img of the piece it wants to promote to
@@ -315,97 +413,10 @@ function promotionClick (event) {
     dialog.close();
     const overContainer = document.getElementById('over-container-flex');
     removeAllChildren(overContainer);
-    let newPieceColor = img.id.split('_')[0];
-    let newPieceType = img.id.split('_')[1];
-    let oldPieceColor = newPieceColor;
-    let oldPieceType = (draggedElement.id.split('_')[1]).slice(0, -1);
-    let oldPieceIndex = draggedElement.id.slice(-1);
-    let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
-    console.log(draggedElement);
-    console.log(oldPiece.id);
-    let oldPieceDiv = pieceToDiv(oldPiece);
-    let childImg = oldPieceDiv.firstElementChild;
-    console.log(newPieceColor);
-    console.log(newPieceType);
-    console.log(oldPieceColor);
-    console.log(oldPieceType);
-    console.log(oldPiece);
-    console.log(oldPieceDiv);
-    console.log(childImg);
-
-    let newPiece;
-    let numberPiece;
-    let colorHead = oldPieceColor+'_';
-    switch (newPieceType) {
-        case 'knight':
-            numberPiece = (newPieceColor == 'white') ? numberWhiteKnights : numberBlackKnights;
-            newPiece = new piece(colorHead+'knight', numberPiece);
-            if(newPieceColor == 'white'){
-                white_knights.push(newPiece);
-                numberWhiteKnights++;
-            } else {
-                black_knights.push(newPiece);
-                numberBlackKnights++;
-            }
-            break;
-        case 'bishop':
-            numberPiece = (newPieceColor == 'white') ? numberWhiteBishops : numberBlackBishops;
-            newPiece = new piece(colorHead+'bishop', numberPiece);
-            if(newPieceColor == 'white'){
-                white_bishops.push(newPiece);
-                numberWhiteBishops++;
-            } else {
-                black_bishops.push(newPiece);
-                numberBlackBishops++;
-            }
-            break;
-        case 'rook':
-            numberPiece = (newPieceColor == 'white') ? numberWhiteRooks : numberBlackRooks;
-            newPiece = new piece(colorHead+'rook', numberPiece);
-            if(newPieceColor == 'white'){
-                white_rooks.push(newPiece);
-                numberWhiteRooks++;
-            } else {
-                black_rooks.push(newPiece);
-                numberBlackRooks++;
-            }
-            break;
-            case 'queen':
-            numberPiece = (newPieceColor == 'white') ? numberWhiteQueens : numberBlackQueens;
-            newPiece = new piece(colorHead+'queen', numberPiece);
-            if(newPieceColor == 'white'){
-                white_queens.push(newPiece);
-                numberWhiteQueens++;
-            } else {
-                black_queens.push(newPiece);
-                numberBlackQueens++;
-            }
-            break;
-        default:
-            break;
-    }
-
-    newPiece.color = newPieceColor;
-    newPiece.row = oldPiece.row;
-    newPiece.col = oldPiece.col;
-    oldPiece.captured = true;
-    board[oldPiece.row*cols + oldPiece.col] = newPiece;
-    oldPieceDiv.id = newPiece.id;
-    const head = "../img/png/";
-    const tail = ".png";
-    childImg.src = head+(newPiece.id).slice(0, -1)+tail;
-
-    if(oldPieceColor == 'white'){
-        white_pieces.push(newPiece);
-    }
-    else{
-        black_pieces.push(newPiece);
-    }
-    console.log(white_pawns);
-    console.log(black_pawns);
-    console.log(white_pieces);
-    console.log(black_pieces);
+    return img.id;
 }
+
+    
 
 const tuoTurno = "È il tuo turno!";
 const punteggioBene = "Sei in vantaggio di: ";
