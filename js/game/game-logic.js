@@ -378,61 +378,36 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
     
     //rooks and queen straight movement
     if(id.includes("rook") || id.includes("queen")){        //parametrizzare?
-       if(end_col === start_col && end_row === start_row) return false;
+        if(end_col === start_col && end_row === start_row) return false;
+        let validMove = false;
+        if(id.includes("white")){
+            if(id.includes("rook"))
+                draggedPiece = white_rooks[i];
+            else
+                draggedPiece = white_queens[i];
+        }
+        else{
+            if(id.includes("rook"))
+                draggedPiece = black_rooks[i];
+            else
+                draggedPiece = black_queens[i];
+        }
         if(end_col === start_col){
             if((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))){
-                if(id.includes("white")){
-                    if(id.includes("rook"))
-                        draggedPiece = white_rooks[i];
-                    else
-                        draggedPiece = white_queens[i];
-                }
-                else{
-                    if(id.includes("rook"))
-                        draggedPiece = black_rooks[i];
-                    else
-                        draggedPiece = black_queens[i];
-                }
-                if(makingMove){
-                    // draggedPiece.old_row = start_row;
-                    // draggedPiece.old_col = start_col;
-                    // draggedPiece.row = end_row;
-                    // draggedPiece.col = end_col;
-                    // draggedPiece.firstMove = false;
-                    // draggedPiece.movesMade++;
-                    updateDraggedPieceInfo();
-                }
-                return true;
+                validMove =  true;
+            } else {
+                return false;
             }
-            return false;
-       }
-       if(end_row === start_row){
+        }
+        if(end_row === start_row){
             if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_col - maxDist(start_row, start_col, "r")))){
-                if(id.includes("white")){
-                    if(id.includes("rook"))
-                        draggedPiece = white_rooks[i];
-                    else
-                        draggedPiece = white_queens[i];
-                }
-                else{
-                    if(id.includes("rook"))
-                        draggedPiece = black_rooks[i];
-                    else
-                        draggedPiece = black_queens[i];
-                }
-                if(makingMove){
-                    // draggedPiece.old_row = start_row;
-                    // draggedPiece.old_col = start_col;
-                    // draggedPiece.row = end_row;
-                    // draggedPiece.col = end_col;
-                    // draggedPiece.firstMove = false;
-                    // draggedPiece.movesMade++;
-                    updateDraggedPieceInfo();
-                }
-                return true;
-            }
-            return false;
-       }
+                validMove = true;
+            } else{
+                return false;
+            } 
+        }
+        if(validMove && makingMove)
+            updateDraggedPieceInfo();
     }
 
     if(id.includes("bishop") || id.includes("queen")){
