@@ -5,7 +5,7 @@
  * @param {piece} piece object of class piece 
  * @returns boolean indicating if the move that is being evaluated will violate Check Logic -> putting my self in check or moving a piece while in check that doesn't get me out of check
  */
-function moveWithCheck (destinationSquare, piece) {     //game-logic
+function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sistemare
 
     let end_index = parseInt(destinationSquare.getAttribute('id'));
     let end_row = Math.floor(end_index/rows);
@@ -184,7 +184,7 @@ function switchTurn(){  //game-logic
  * @param {piece} castlignRook the rook I'm trying to castle with
  * @returns It returns true if the move I'm trying to make follows the piece moving rules (it doesn't consider checks)
  */
-function validate_move (dest_element, piece, makingMove) {       //game-logic
+function validate_move (dest_element, piece, makingMove) {       //game-logic   //da-aggiustare
     //making move is a boolean that if true indicates that I actually want to make the move
     //if is false it meas I'm just verifing if the move would be legal
     let start_row = piece.row;
@@ -257,12 +257,13 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
             return false;
         
         if(makingMove){
-            draggedPiece.firstMove = false;
-            draggedPiece.old_row = start_row;
-            draggedPiece.old_col = start_col;
-            draggedPiece.row = end_row;
-            draggedPiece.col = end_col;
-            draggedPiece.movesMade++;
+            // draggedPiece.firstMove = false;
+            // draggedPiece.old_row = start_row;
+            // draggedPiece.old_col = start_col;
+            // draggedPiece.row = end_row;
+            // draggedPiece.col = end_col;
+            // draggedPiece.movesMade++;
+            updateDraggedPieceInfo();
             if(Math.abs(end_row-start_row) == 2){
                 draggedPiece.enPassantCapturable = true;
             }
@@ -291,12 +292,13 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
                     draggedPiece = black_knights[i];
                 }
                 if(makingMove){
-                    draggedPiece.firstMove = false;
-                    draggedPiece.old_row = start_row;
-                    draggedPiece.old_col = start_col;
-                    draggedPiece.row = end_row;
-                    draggedPiece.col = end_col;
-                    draggedPiece.movesMade++;
+                    // draggedPiece.firstMove = false;
+                    // draggedPiece.old_row = start_row;
+                    // draggedPiece.old_col = start_col;
+                    // draggedPiece.row = end_row;
+                    // draggedPiece.col = end_col;
+                    // draggedPiece.movesMade++;
+                    updateDraggedPieceInfo();
                 }
                 return true;
             }
@@ -329,12 +331,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
                     if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black") ) return false;
                 }
                 if(makingMove){
-                    draggedPiece.old_row = start_row;
-                    draggedPiece.old_col = start_col;
-                    draggedPiece.row = end_row;
-                    draggedPiece.col = end_col;
-                    draggedPiece.firstMove = false;
-                    draggedPiece.movesMade++;
+                    updateDraggedPieceInfo();
                 }
                 return true;
         }
@@ -367,24 +364,20 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
                     castlignRook.firstMove = false;
                     draggedPiece.movesMade++;
                 }
-                // else
-                    // castlignRook = false;
                 return true;
             }
             else{
-                // castlignRook = false;
                 return false;
             } 
         } 
         else{
-            // castlignRook = false;
             return false;
         } 
     }
     
     
     //rooks and queen straight movement
-    if(id.includes("rook") || id.includes("queen")){
+    if(id.includes("rook") || id.includes("queen")){        //parametrizzare?
        if(end_col === start_col && end_row === start_row) return false;
         if(end_col === start_col){
             if((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))){
@@ -401,12 +394,13 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
                         draggedPiece = black_queens[i];
                 }
                 if(makingMove){
-                    draggedPiece.old_row = start_row;
-                    draggedPiece.old_col = start_col;
-                    draggedPiece.row = end_row;
-                    draggedPiece.col = end_col;
-                    draggedPiece.firstMove = false;
-                    draggedPiece.movesMade++;
+                    // draggedPiece.old_row = start_row;
+                    // draggedPiece.old_col = start_col;
+                    // draggedPiece.row = end_row;
+                    // draggedPiece.col = end_col;
+                    // draggedPiece.firstMove = false;
+                    // draggedPiece.movesMade++;
+                    updateDraggedPieceInfo();
                 }
                 return true;
             }
@@ -427,12 +421,13 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
                         draggedPiece = black_queens[i];
                 }
                 if(makingMove){
-                    draggedPiece.old_row = start_row;
-                    draggedPiece.old_col = start_col;
-                    draggedPiece.row = end_row;
-                    draggedPiece.col = end_col;
-                    draggedPiece.firstMove = false;
-                    draggedPiece.movesMade++;
+                    // draggedPiece.old_row = start_row;
+                    // draggedPiece.old_col = start_col;
+                    // draggedPiece.row = end_row;
+                    // draggedPiece.col = end_col;
+                    // draggedPiece.firstMove = false;
+                    // draggedPiece.movesMade++;
+                    updateDraggedPieceInfo();
                 }
                 return true;
             }
@@ -552,14 +547,30 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
             return false;
         }
         if(makingMove){
-            draggedPiece.old_row = start_row;
-            draggedPiece.old_col = start_col;
-            draggedPiece.row = end_row;
-            draggedPiece.col = end_col;
-            draggedPiece.movesMade++;
+            // draggedPiece.old_row = start_row;
+            // draggedPiece.old_col = start_col;
+            // draggedPiece.row = end_row;
+            // draggedPiece.col = end_col;
+            // draggedPiece.movesMade++;
+            updateDraggedPieceInfo();
         }
         return true;
     }
+}
+
+/**
+ * 
+ * @brief updates the info of the dragged piece after verifing that the move is valid and that I want to make it
+ * called by validate move
+ */
+function updateDraggedPieceInfo() {
+    draggedPiece.firstMove = false;
+    draggedPiece.old_row = start_row;
+    draggedPiece.old_col = start_col;
+    draggedPiece.row = end_row;
+    draggedPiece.col = end_col;
+    draggedPiece.movesMade++;
+    return;    
 }
 
 /**
@@ -675,7 +686,7 @@ function checkCheck() {     //game-logic
  * @param castlignRook is the rook that I'm castling with, if undefined it means that the last move wasn't a castle
  */
 function updateBoard (castlignRook) {       //game-logic
-    console.log('updato');
+    // console.log('updato');
     board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
     if(castlignRook){
         board[castlignRook.row*cols + (castlignRook.col)] = castlignRook;

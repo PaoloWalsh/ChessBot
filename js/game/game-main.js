@@ -42,7 +42,7 @@ function buildBoard() {
 /**
  * @brief reset the value of all global variable to prepare for a new game
  */
-function resetGlobalVariables() {
+function resetGlobalVariables() {   // da aggiustare
     white_turn = true;
     black_turn = false;
 
@@ -80,19 +80,8 @@ let startPositionId;
 let draggedElement;
 let draggedPiece;
 
-function click (e) {
+function click (e) {    //da aggiustare
     removeSelectedSquares();
-    // console.log(e.target.id);
-    // console.log(e.target.color);
-    // console.log(firstPieceClicked);
-
-    // 1. clicco su elemento
-    // 2. controllo l'ultimo elemente cliccato è un pezzo
-    // 3. se è un pezzo dello stesso colore (e controllo arrocco) -> resetto il click
-    // 4. altrimenti faccio la mossa
-
-    //supponiamo sia il primo click
-    
     let currentElement = e.target;
     let pieceElement;
     let pieceClicked = false;
@@ -155,21 +144,8 @@ function dragOver (e) {
 function dragDrop (e) {
     let piece; // is the piece that is being moved
     piece = divToPiece(draggedElement);
-    // makeMove(piece, e.target);
     let square = e.target;
-    // if(e.target.classList.contains("square")){
-    //     square = e.target;
-    // }
-    // else {
-    //     square = e.target.parentNode;
-    // }
 
-    let start_index = parseInt(startPositionId);
-    let start_row = Math.floor(start_index/rows);   
-    let start_col = start_index%rows;
-    let id = draggedElement.getAttribute('id');
-    let moveMade;
-    let castlignRook;
     e.stopPropagation();
     makeMove(piece, square);
     // moveMade = false;
@@ -182,7 +158,7 @@ function dragDrop (e) {
  * @param {*} square the html destination element, could be a square or a piece
  * @returns returns true if the move was made, false otherways
  */
-function makeMove(piece, square) {  //game logic
+function makeMove(piece, square) {  //game logic    //da aggiustare
     removeSelectedSquares();
     let start_row = piece.row;   
     let start_col = piece.col;

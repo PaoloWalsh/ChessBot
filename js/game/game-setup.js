@@ -238,12 +238,3 @@ function fill_Board() {
 
 
 
-
-// let pieces = [];
-
-// for(let i = 0; i < 64; i++){
-//     if(board[i] != 0)
-//         pieces[i] = board[i].div;
-//     else
-//         pieces[i] = "";
-// }

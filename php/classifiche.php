@@ -38,7 +38,7 @@
     <h1>Classifiche</h1>
     <div class="chess-info">
         <p>Qui puoi vedere i migliori giocatori della piattaforma.</p>       
-        <p>Abbiamo riportanto in questa classifica i giocatori con più vittorie!</p>
+        <p>Nella prima classifica sono elencati i giocatori con più vittorie della piattaforma, <br> nella seconda sono elencati i giocatori che hanno vinto una partita nel minor numero di mosse</p>
     </div>
     <div class="tables">
         <div class="most-wins">
@@ -78,11 +78,11 @@
             <h2>Giocatori Più Veloci</h2>
             <table>
                 <thead>
-                    <th>Utente</th><th>Mosse Per Vittoria</th>
+                    <th>Utente</th><th>Mosse</th>
                 </thead>
                 <?php 
                     // $utenti_classificati = [];
-                    require_once "dbaccess.php";
+                    // require_once "dbaccess.php";
                     $query = "SELECT Username, mosse
                                 from partita
                                 where vittoria = 1
@@ -91,7 +91,7 @@
                     $result = query($query);
                     while($row = mysqli_fetch_assoc($result)){
                         $user = $row["Username"];
-                        $count = $row["partite"];
+                        $count = $row["mosse"];
                         array_push($utenti_classificati, $user);
                         riga($user, $count);
                     }   

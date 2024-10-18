@@ -21,7 +21,7 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
     // Check connection
     $query = "insert into partita (Username, Vittoria, Mosse) values (?, ?, ?)";
     if($statement = mysqli_prepare($connection, $query)){
-        mysqli_stmt_bind_param($statement, 'sis', $username, $vittoria, $mosse);
+        mysqli_stmt_bind_param($statement, 'sii', $username, $vittoria, $mosse);
         mysqli_stmt_execute($statement);
     }
     else{
