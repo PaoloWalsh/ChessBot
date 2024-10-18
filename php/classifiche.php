@@ -75,19 +75,18 @@
             </table>
         </div>
         <div class="most-wins">
-            <h2>Migliori Giocatori</h2>
+            <h2>Giocatori Più Veloci</h2>
             <table>
                 <thead>
-                    <th>Utente</th><th>Vittorie</th>
+                    <th>Utente</th><th>Mosse Per Vittoria</th>
                 </thead>
                 <?php 
-                    $utenti_classificati = [];
+                    // $utenti_classificati = [];
                     require_once "dbaccess.php";
-                    $query = "SELECT Username, count(*) as partite
+                    $query = "SELECT Username, mosse
                                 from partita
                                 where vittoria = 1
-                                group by Username
-                                order by partite desc
+                                order by mosse asc 
                                 LIMIT 5";
                     $result = query($query);
                     while($row = mysqli_fetch_assoc($result)){

@@ -504,26 +504,19 @@ function updateMessages () {
         checkDialog.show();
         let vittoria;
         let colore = localStorage.getItem('colore');
-        bpTurno.innerText = "";
-        wpTurno.innerText = "";
-        bpScacco.innerText = "";
-        wpScacco.innerText = "";
-        bpPunteggio.innerText = "";
-        wpPunteggio.innerText = "";
-        //black wins
-        if(white_in_check){
-            if(colore == "nero")
+        if(colore == "nero"){
+            if(white_in_check)
                 vittoria = true;
-            else 
+            else
                 vittoria = false;
         }
-        //white wins
-        else if(black_in_check){
-            if(colore == "bianco")
+        else{
+            if(black_in_check)
                 vittoria = true;
-            else 
+            else
                 vittoria = false;
-        }
+        } 
+
         insertMatchDB(vittoria);
     }
     else{

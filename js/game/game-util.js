@@ -141,7 +141,7 @@ function insertMatchDB(vittoria){
     let http = new XMLHttpRequest();
     let url = 'inserisciPartita.php';
     // da aggiungere mosse per la classifica
-    let params =  "vittoria=" + vittoria;
+    let params =  "vittoria=" + vittoria + "&mosse=" + hostNumberMoves;
     http.open('POST', url, true);
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     http.send(params);
