@@ -39,7 +39,7 @@ if(isset($_POST['login'])&&isset($_POST['username'])&&isset($_POST['password']))
                 session_start();
                 $_SESSION["logged"] = true;
                 $_SESSION["username"] = $username;
-                header("Location: ../index.php");
+                header("Location: index.php");
            
             } else {
                 // se la pass è sbagliata, error message
@@ -69,13 +69,13 @@ if(isset($_POST['login'])&&isset($_POST['username'])&&isset($_POST['password']))
 <body>
   <header>
     <div>
-        <a href="../index.php">
+        <a href="index.php">
             <img src="../img/png/white_knight.png" alt="logo">
         </a>
     </div>
     <nav class="header-nav">
         <ul class="primary-navigation">
-          <li><a href="../index.php">Home</a></li>
+          <li><a href="index.php">Home</a></li>
           <li><a href="scegliColore.php">Gioco</a></li>
           <li><a href="classifiche.php">Classifiche</a></li>
           <?php

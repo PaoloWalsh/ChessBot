@@ -18,13 +18,13 @@
 <body>
     <header>
         <div>
-            <a href="../index.php">
+            <a href="index.php">
                 <img src="../img/png/white_knight.png" alt="logo">
             </a>
         </div>
         <nav class="header-nav">
             <ul class="primary-navigation">
-                <li><a href="../index.php">Home</a></li>
+                <li><a href="index.php">Home</a></li>
                 <li><a href="scegliColore.php">Gioco</a></li>
                 <li><a href="classifiche.php">Classifiche</a></li>
                 <?php

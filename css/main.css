@@ -86,7 +86,6 @@ h1 {
 
 p {
   font-size: 1.1rem;
-  margin-bottom: 2rem;
 }
 
 .login-form {
@@ -186,6 +185,11 @@ input[type="password"]:focus {
 
 .no-margin {
   margin: 0!important;
+}
+.chess-info > p {
+  text-align: center;
+  padding: 0.75rem 2rem;
+  margin: 0;
 }
 
 .chess-info-link {
