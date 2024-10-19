@@ -87,7 +87,7 @@ function click (e) {    //da aggiustare
     let pieceClicked = false;
     let squareCliecked = false;
     if(isPieceElement(currentElement)){
-        pieceElement = divToPiece(currentElement);
+        pieceElement = getPiece(currentElement.id);
         pieceClicked = true;
     } else 
         squareCliecked = true;
@@ -124,7 +124,7 @@ function click (e) {    //da aggiustare
 function dragStart (e) {
     startPositionId = e.target.parentNode.getAttribute('id');   //square id
     draggedElement = e.target;
-    let piece = divToPiece(draggedElement);
+    let piece = getPiece(draggedElement.id);
     selectLandingSquares(piece);     
 }
 
@@ -142,7 +142,7 @@ function dragOver (e) {
  */
 function dragDrop (e) {
     let piece; // is the piece that is being moved
-    piece = divToPiece(draggedElement);
+    piece = getPiece(draggedElement.id);
     let square = e.target;
     e.stopPropagation();
     makeMove(piece, square);
@@ -205,7 +205,7 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
             || (element.id.includes("black_king") && square.id.includes("black_rook"))
         )
         {   
-            castlignRook = divToPiece(square);
+            castlignRook = getPiece(square.id);
             destinationSquare = square.parentNode;
             if(!moveWithCheck(destinationSquare, piece)) return;
             moveMade = validate_move(destinationSquare, piece, true);
@@ -234,7 +234,6 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
     }
     if(moveMade){
         // await handleDialog();
-        console.log('ciao');
         if(((hostColor == 'bianco') && white_turn ) || ((hostColor == 'nero') && black_turn ))
             hostNumberMoves++;
         updateBoard(castlignRook);

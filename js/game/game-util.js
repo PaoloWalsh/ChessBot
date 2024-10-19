@@ -11,12 +11,12 @@ function printBoard(){      //util
 
 /**
  * 
- * @param {html element} element html div element that rappresents a piece
+ * @param {html element} id id of a piece
  * @returns returns the js object of the class piece associated with that piece
  */
-function divToPiece (element) {
+function getPiece (id) {
     let piece;
-    let id = element.getAttribute('id');
+    // let id = element.getAttribute('id');
     let index = parseInt(id.slice(-1)); //get the last character of the id and convert it to string; 
     switch (id) {
         case "white_king":

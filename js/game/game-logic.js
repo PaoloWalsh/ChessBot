@@ -22,7 +22,7 @@ function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sis
         if(castling(destinationSquare, piece)){
             castlingMove = true;
             let destinationPieceElement = destinationSquare.firstElementChild;
-            castlingRook = divToPiece(destinationPieceElement);
+            castlingRook = getPiece(destinationPieceElement.id);
             support_col = piece.old_col;
             support_rook_col = castlingRook.old_col;
             piece.old_col = piece.col;
@@ -114,7 +114,7 @@ function castling (destinationSquare, piece){   //game-logic
     if(!destinationSquare.hasChildNodes())
         return false;
     let destinationPieceElement = destinationSquare.firstElementChild;
-    let destinationPiece = divToPiece(destinationPieceElement);
+    let destinationPiece = getPiece(destinationPieceElement.id);
     if(piece.id.includes("king") && destinationPiece.id.includes("rook")){
         if(piece.color == destinationPiece.color)
             return true;
@@ -184,7 +184,7 @@ function switchTurn(){  //game-logic
  * @param {piece} castlignRook the rook I'm trying to castle with
  * @returns It returns true if the move I'm trying to make follows the piece moving rules (it doesn't consider checks)
  */
-function validate_move (dest_element, piece, makingMove) {       //game-logic   //da-aggiustare
+function validate_move (dest_element, piece, makingMove) {       //game-logic   
     //making move is a boolean that if true indicates that I actually want to make the move
     //if is false it meas I'm just verifing if the move would be legal
     let start_row = piece.row;
@@ -194,7 +194,6 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
     let end_row = Math.floor(end_index/rows);
     let end_col = end_index%rows;
     let i = parseInt(id.slice(-1)); //get the last character of the id and convert it to string
-    // boardIsConsistent();
 
     //pawns
     if(id.includes('pawn')){
@@ -214,14 +213,12 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
 
         if(Math.abs(end_col-start_col) >= 2) return false;
         
-        //verifico se c'è un pedone che potrebbe essere mangiato con l'enpassant
         if(end_row > 0 && end_row < (rows-1) && board[(end_row+enPassantPosition)*cols+end_col] != 0 && board[(end_row+enPassantPosition)*cols + end_col].id.includes(opponentColor+"_pawn")){
             possibleEnPassantPawn = board[(end_row+enPassantPosition)*cols + end_col];
         }
         else
             possibleEnPassantPawn = 0;
 
-        //verifico che non cerchi di mangiare un pezzo dello stesso colore
         if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes(pawnColor)){
             return false;
         } 
@@ -257,12 +254,6 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
             return false;
         
         if(makingMove){
-            // draggedPiece.firstMove = false;
-            // draggedPiece.old_row = start_row;
-            // draggedPiece.old_col = start_col;
-            // draggedPiece.row = end_row;
-            // draggedPiece.col = end_col;
-            // draggedPiece.movesMade++;
             updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
             if(Math.abs(end_row-start_row) == 2){
                 draggedPiece.enPassantCapturable = true;
@@ -292,12 +283,6 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                     draggedPiece = black_knights[i];
                 }
                 if(makingMove){
-                    // draggedPiece.firstMove = false;
-                    // draggedPiece.old_row = start_row;
-                    // draggedPiece.old_col = start_col;
-                    // draggedPiece.row = end_row;
-                    // draggedPiece.col = end_col;
-                    // draggedPiece.movesMade++;
                     updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
                 }
                 return true;
@@ -307,20 +292,10 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
 
     //kings
     if(id.includes("king")){
-        // let rook_index = parseInt(castle.getAttribute('id').slice(-1)); //get the last character of the id and convert it to string
-        //rook which with I want to castle
-        if(id.includes("white")){
-            draggedPiece = white_king;
-        }
-        else{
-            draggedPiece = black_king;
-        }
-
+        draggedPiece = piece;
         let castlignRook = false;
-        // console.log("sulla board c'è " + board[end_row*cols + end_col].id);
         if(board[end_row*cols + end_col] != 0 && board[end_row*cols + end_col].id.includes("rook") && board[end_row*cols + end_col].color == draggedPiece.color)
             castlignRook = board[end_row*cols + end_col];
-        // console.log("la castlig rook è: " + castlignRook.id);
 
         if(((end_row >= start_row - 1) && (end_row <= start_row + 1))
             && ((end_col >= start_col - 1) && (end_col <= start_col + 1))){
@@ -335,28 +310,20 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                 }
                 return true;
         }
-        
-        
         else if ((castlignRook != false && draggedPiece.firstMove == true && castlignRook.firstMove == true)) {
             if(((draggedPiece.col > castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "r")+1) === Math.abs(draggedPiece.col - castlignRook.col) )) //if the king is right of the rook
                 || ((draggedPiece.col < castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "l")+1) === Math.abs(castlignRook.col - draggedPiece.col))) //if the king is left of the rook
             ){
                 if(makingMove){
                     if(start_col > end_col){
-                        //draggedPiece.old_row = start_row;
                         draggedPiece.old_col = start_col;
-                        //draggedPiece.row = end_row;
                         draggedPiece.col = start_col-2;
-                        //castlignRook.old_row = end_row;
                         castlignRook.old_col = end_col;
                         castlignRook.col = end_col+2;
                     }
                     else {
-                        //draggedPiece.old_row = start_row;
                         draggedPiece.old_col = start_col;
-                        //draggedPiece.row = end_row;
                         draggedPiece.col = start_col+2;
-                        //castlignRook.old_row = end_row;
                         castlignRook.old_col = end_col;
                         castlignRook.col = end_col-3;
                     }
@@ -375,23 +342,11 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
         } 
     }
     
-    
     //rooks and queen straight movement
     if(id.includes("rook") || id.includes("queen")){
         if(end_col === start_col && end_row === start_row) return false;
         let validMove = false;
-        if(id.includes("white")){
-            if(id.includes("rook"))
-                draggedPiece = white_rooks[i];
-            else
-                draggedPiece = white_queens[i];
-        }
-        else {
-            if(id.includes("rook"))
-                draggedPiece = black_rooks[i];
-            else
-                draggedPiece = black_queens[i];
-        }
+        draggedPiece = piece;
         if(end_col === start_col){
             if((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))){
                 validMove =  true;
@@ -407,20 +362,19 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
             } 
         }
         if(validMove && makingMove){
-            console.log(draggedPiece);
             updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
             return true;
         }
         if(draggedPiece.type.includes('rook')) return validMove;
+        if(validMove) return validMove;
 
     }
 
     if(id.includes("bishop") || id.includes("queen")){
-        let index = i; //get the last character of the id and convert it to string
         let slope = Math.abs(end_row - start_row)/Math.abs(end_col - start_col);
         let distance = 0;
         let validMove = false;
-        
+        draggedPiece = piece;
 
         if(end_row > start_row && end_col > start_col && slope === 1){
             let i = start_row;
@@ -431,19 +385,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                 j++;
             }
             if(distance <= maxDistDiag(start_row, start_col, "nw") ){
-                possibleMove = true;
-                if(id.includes("white")){
-                    if(id.includes("bishop"))
-                        draggedPiece = white_bishops[index];
-                    else
-                        draggedPiece = white_queens[index];
-                }
-                else{
-                    if(id.includes("bishop"))
-                        draggedPiece = black_bishops[index];
-                    else
-                        draggedPiece = black_queens[index];
-                }
+                validMove = true;
             }
             else return false;
             
@@ -457,19 +399,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                 j--;
             }
             if(distance <= maxDistDiag(start_row, start_col, "ne") ){
-                possibleMove = true;
-                if(id.includes("white")){
-                    if(id.includes("bishop"))
-                        draggedPiece = white_bishops[index];
-                    else
-                        draggedPiece = white_queens[index];
-                }
-                else{
-                    if(id.includes("bishop"))
-                        draggedPiece = black_bishops[index];
-                    else
-                        draggedPiece = black_queens[index];
-                }
+                validMove = true;
             }
             else return false;
         }
@@ -482,19 +412,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                 j++;
             }
             if(distance <= maxDistDiag(start_row, start_col, "sw") ){
-                possibleMove = true;
-                if(id.includes("white")){
-                    if(id.includes("bishop"))
-                        draggedPiece = white_bishops[index];
-                    else
-                        draggedPiece = white_queens[index];
-                }
-                else{
-                    if(id.includes("bishop"))
-                        draggedPiece = black_bishops[index];
-                    else
-                        draggedPiece = black_queens[index];
-                }
+                validMove = true;
             }
             else return false;
         }
@@ -507,31 +425,14 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                 j--;
             }
             if(distance <= maxDistDiag(start_row, start_col, "se") ){
-                possibleMove = true;
-                if(id.includes("white")){
-                    if(id.includes("bishop"))
-                        draggedPiece = white_bishops[index];
-                    else
-                        draggedPiece = white_queens[index];
-                }
-                else{
-                    if(id.includes("bishop"))
-                        draggedPiece = black_bishops[index];
-                    else
-                        draggedPiece = black_queens[index];
-                }
+                validMove = true;
             }
             else return false;
         }
         else {
             return false;
         }
-        if(makingMove){
-            // draggedPiece.old_row = start_row;
-            // draggedPiece.old_col = start_col;
-            // draggedPiece.row = end_row;
-            // draggedPiece.col = end_col;
-            // draggedPiece.movesMade++;
+        if(validMove && makingMove){
             updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
         }
         return true;
