@@ -263,7 +263,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
             // draggedPiece.row = end_row;
             // draggedPiece.col = end_col;
             // draggedPiece.movesMade++;
-            updateDraggedPieceInfo();
+            updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
             if(Math.abs(end_row-start_row) == 2){
                 draggedPiece.enPassantCapturable = true;
             }
@@ -298,7 +298,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                     // draggedPiece.row = end_row;
                     // draggedPiece.col = end_col;
                     // draggedPiece.movesMade++;
-                    updateDraggedPieceInfo();
+                    updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
                 }
                 return true;
             }
@@ -331,7 +331,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
                     if(board[end_row*cols+end_col] != 0 && board[end_row*cols+end_col].id.includes("black") ) return false;
                 }
                 if(makingMove){
-                    updateDraggedPieceInfo();
+                    updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
                 }
                 return true;
         }
@@ -377,7 +377,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
     
     
     //rooks and queen straight movement
-    if(id.includes("rook") || id.includes("queen")){        //parametrizzare?
+    if(id.includes("rook") || id.includes("queen")){
         if(end_col === start_col && end_row === start_row) return false;
         let validMove = false;
         if(id.includes("white")){
@@ -386,7 +386,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
             else
                 draggedPiece = white_queens[i];
         }
-        else{
+        else {
             if(id.includes("rook"))
                 draggedPiece = black_rooks[i];
             else
@@ -402,19 +402,24 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
         if(end_row === start_row){
             if((end_col <= (start_col + maxDist(start_row, start_col, "l"))) && (end_col >= (start_col - maxDist(start_row, start_col, "r")))){
                 validMove = true;
-            } else{
+            } else {
                 return false;
             } 
         }
-        if(validMove && makingMove)
-            updateDraggedPieceInfo();
+        if(validMove && makingMove){
+            console.log(draggedPiece);
+            updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
+            return true;
+        }
+        if(draggedPiece.type.includes('rook')) return validMove;
+
     }
 
     if(id.includes("bishop") || id.includes("queen")){
         let index = i; //get the last character of the id and convert it to string
         let slope = Math.abs(end_row - start_row)/Math.abs(end_col - start_col);
         let distance = 0;
-        let possibleMove = false;
+        let validMove = false;
         
 
         if(end_row > start_row && end_col > start_col && slope === 1){
@@ -527,7 +532,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
             // draggedPiece.row = end_row;
             // draggedPiece.col = end_col;
             // draggedPiece.movesMade++;
-            updateDraggedPieceInfo();
+            updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
         }
         return true;
     }
@@ -538,7 +543,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic   
  * @brief updates the info of the dragged piece after verifing that the move is valid and that I want to make it
  * called by validate move
  */
-function updateDraggedPieceInfo() {
+function updateDraggedPieceInfo(start_row, start_col, end_row, end_col) {
     draggedPiece.firstMove = false;
     draggedPiece.old_row = start_row;
     draggedPiece.old_col = start_col;

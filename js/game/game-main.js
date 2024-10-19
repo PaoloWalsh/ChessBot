@@ -125,8 +125,7 @@ function dragStart (e) {
     startPositionId = e.target.parentNode.getAttribute('id');   //square id
     draggedElement = e.target;
     let piece = divToPiece(draggedElement);
-    // console.log(piece);     //debug
-    selectLandingSquares(piece);
+    selectLandingSquares(piece);     
 }
 
 function dragOver (e) {
@@ -145,7 +144,6 @@ function dragDrop (e) {
     let piece; // is the piece that is being moved
     piece = divToPiece(draggedElement);
     let square = e.target;
-
     e.stopPropagation();
     makeMove(piece, square);
     // moveMade = false;
@@ -159,7 +157,7 @@ function dragDrop (e) {
  * @returns returns true if the move was made, false otherways
  */
 function makeMove(piece, square) {  //game logic    //da aggiustare
-    removeSelectedSquares();
+    removeSelectedSquares();     
     let start_row = piece.row;   
     let start_col = piece.col;
     let id = piece.id;
@@ -175,9 +173,6 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
         {
             if(!moveWithCheck(square, piece)) return;
             moveMade = validate_move(square, piece, true);
-            // if(moveMade && ((piece.row == 7 && piece.color == "white") || (piece.row == 0 && piece.color == "black"))){
-            //     promotion(piece);
-            // }
             if(moveMade){
                 square.append(element);
                 if(enPassantPlayed){
@@ -197,7 +192,7 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
             // console.log("sono giusto");
             // console.log(square.firstElementChild.id);
             destinationSquare = square.parentNode;
-            if(!moveWithCheck(destinationSquare, piece)) return;
+            if(!moveWithCheck(destinationSquare, piece)) return;    
             moveMade = validate_move(destinationSquare, piece, true);
             if(moveMade) {
                 square.parentNode.append(element);
