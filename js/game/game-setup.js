@@ -67,6 +67,7 @@ class piece {
         div.id = this.type+this.numero;
         div.draggable = true;
         img.src = sorgente+this.type+'.png';
+        img.alt = div.id;
         // console.log(img);
         div.appendChild(img);
         return div;

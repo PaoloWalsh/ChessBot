@@ -24,7 +24,7 @@
             <li><a href="classifiche.php">Classifiche</a></li>
             <?php
                 session_start();
-                if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
+                if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){+
                     echo'<li><a href="logout.php">Log Out</a></li>';  
                 } else {
                     echo '<li><a href="login.php">Login</a></li>';
