@@ -43,19 +43,12 @@ a {
   margin-top: 1.5rem;
 }
 
-.over-container-flex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .sub-container {
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   margin: 2rem;
-  /* padding: 20px; */
-  /* max-height: 40rem; */
   text-align: center;
   animation: fadeIn 1s ease-in-out;
 }
