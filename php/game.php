@@ -50,8 +50,7 @@
             </dialog>
 
             <dialog id="checkmate-dialog" class="dialog-style">
-                <h2 class="special-h2"></h2>
-                <div id="buttons">
+                <div class="buttons">
                     <button class="btn" onclick="reset()">Rigioca</button>
                 </div>
             </dialog>
@@ -88,7 +87,7 @@
                         </p>
                     </div>
                 </div>
-                <div id="buttons">
+                <div class="buttons">
                     <button class="btn" onclick="reset()">Nuova Partita</button>
                 </div>
             </div>
