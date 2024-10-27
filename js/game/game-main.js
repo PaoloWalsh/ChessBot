@@ -252,7 +252,7 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
 /**
  * @brief handles the graphics of the promotion, is called when a pawn moves on the last rank
  */
-async function handleDialog() {
+async function handleDialog(oldPiece) {
     const dialog = document.getElementById('promotion-dialog');
     dialog.show();
     const overContainer = document.getElementById('over-container-flex');
@@ -277,7 +277,7 @@ async function handleDialog() {
     }
     let idImg = await setImgEvent(imgs);
     console.log(idImg);
-    createPromotionPiece(idImg);
+    createPromotionPiece(idImg, oldPiece);
 }
 
 function setImgEvent (imgs) {       //get data
@@ -294,7 +294,7 @@ function setImgEvent (imgs) {       //get data
     });
 }
 
-/**
+/*
  * @brief handles the logic of the promotion, 
  * is called when the user clicks on the img of the piece it wants to promote to
  */
@@ -303,14 +303,14 @@ function promotionClick (event) {
     return img.id;
 }
 
-function createPromotionPiece(idImg){
+function createPromotionPiece(idImg, oldPiece){
     // console.log('inizio Creato');
     let newPieceColor = idImg.split('_')[0];
     let newPieceType = idImg.split('_')[1];
     let oldPieceColor = newPieceColor;
-    let oldPieceIndex = draggedElement.id.slice(-1);
-    let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
-    console.log(draggedElement);
+    let oldPieceIndex = oldPiece.id.slice(-1);
+    // let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
+    console.log(draggedPiece);
     console.log(oldPiece.id);
     let oldPieceDiv = pieceToDiv(oldPiece);
     let childImg = oldPieceDiv.firstElementChild;

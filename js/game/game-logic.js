@@ -260,7 +260,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
             }
             if(promoting){
                 // gPromoting = true;
-                handleDialog();
+                handleDialog(pawn);
             }
         }
         return true;
