@@ -7,6 +7,7 @@
   <title>Gioco</title>
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/card.css">
 </head>
 <body>
   <header>
@@ -33,7 +34,7 @@
     </nav>
   </header>
     <div class="fake-body">
-        <div class="container">
+        <div class="container max-width-main">
             <h1>Scegli un colore</h1>
             <p>Sarai il bianco o il nero?</p>
             <div class="over-container-flex">

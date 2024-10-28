@@ -17,7 +17,6 @@
     border-radius: 12px;
     padding: 20px;
     margin: auto;
-    max-height: 42rem;
     text-align: center;
     animation: fadeIn 1s ease-in-out;
  }
@@ -28,4 +27,8 @@
 
 .max-width-main {
   max-width: min(50rem, 80%);
+}
+
+.max-height-main {
+    max-height: 42rem;
 }

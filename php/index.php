@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="img/png/white_knight.png">
+  <link rel="icon" type="image/png" href="../img/png/white_knight.png">
   <title>Home</title>
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/card.css">
   <script src="../js/front/chessBoard.js"></script>
 </head>
 <body>
@@ -33,7 +34,7 @@
         </ul>
     </nav>
   </header>
-  <div class="container">
+  <div class="container max-width-main">
     <h1>Benvenuto nel Mondo degli Scacchi</h1>
     <div class="chess-info">
       <h2>Introduzione agli Scacchi</h2>

@@ -85,6 +85,7 @@
   <title>Sign In</title>
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/card.css">
   <script src="../js/front/chessBoard.js"></script>
 </head>
 <body>
@@ -111,7 +112,7 @@
         </ul>
     </nav>
   </header>
-    <div class="container">
+    <div class="container max-width-main">
       <h1>Sign in</h1>
       <p>Crea un account e inizia ad esplorare il magico mondo degli scacchi!</p>
       

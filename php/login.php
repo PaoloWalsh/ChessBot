@@ -64,6 +64,7 @@ if(isset($_POST['login'])&&isset($_POST['username'])&&isset($_POST['password']))
   <title>Login</title>
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/card.css">
   <script src="../js/front/chessBoard.js"></script>
 </head>
 <body>
@@ -90,7 +91,7 @@ if(isset($_POST['login'])&&isset($_POST['username'])&&isset($_POST['password']))
         </ul>
     </nav>
   </header>
-    <div class="container">
+    <div class="container max-width-main">
       <h1>Login</h1>
       <p>Esegui il login ed Inizia a giocare!</p>
       

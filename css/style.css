@@ -22,17 +22,17 @@ a{
     text-decoration: none;
 }
 
-.container {
-    background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    padding: 20px;
-    max-width: min(65rem, 80%);
-    margin: auto;
-    max-height: 42rem;
-    text-align: center;
-    animation: fadeIn 1s ease-in-out;
- }
+/* .container { */
+/*     background: rgba(255, 255, 255, 0.9); */
+/*     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); */
+/*     border-radius: 12px; */
+/*     padding: 20px; */
+/*     max-width: min(65rem, 80%); */
+/*     margin: auto; */
+/*     max-height: 42rem; */
+/*     text-align: center; */
+/*     animation: fadeIn 1s ease-in-out; */
+/*  } */
 
 
 .centered-title {

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/header.css">
     <!-- <link rel="stylesheet" href="../css/main.css"> -->
     <link rel="stylesheet" href="../css/promotion.css">
+    <link rel="stylesheet" href="../css/card.css">
     <script src="../js/game/game-setup.js"></script>
     <script src="../js/game/game-main.js"></script>
     <script src="../js/game/game-logic.js"></script>
@@ -41,7 +42,7 @@
     </header>
     <main>
         
-        <div class="container relative">
+        <div class="container relative max-width-board">
 
             <dialog id="promotion-dialog" class="dialog-style">
                 <h2 class="special-h2">Promozione</h2>
