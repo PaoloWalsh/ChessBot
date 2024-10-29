@@ -55,8 +55,6 @@ function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sis
             board[end_row*cols+end_col] = piece;
         }
         
-        //is I'm castling I have to simulate a castle move which is more complicated
-        
         checkCheck();
         
         if(castlingMove){
@@ -85,19 +83,15 @@ function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sis
             board[support_row*cols+support_col] = piece;
         }
         
-
         if((white_turn && white_in_check) || (black_turn && black_in_check)) {
-            // console.log("questa mossa viola lo scacco logic");
-            // console.log(piece.id + " to row: " + end_row + " col: " + end_col);
+          // questa mossa sarebbe legale ma viola la scacco logic
+          // ovvero che o mi sto automettendo in scacco, oppure sono in scacco e non mi ci tolgo
             return false;
         }
-        //simulo la mossa e chiamo checkchek
-        //se sono ancora in scacco return
         return true;
     }
     else {
-        // console.log("questa mossa non è proprio legale");
-        // console.log(piece.id + " to row: " + end_row + " col: " + end_col);
+        //in questo caso la mossa non è proprio legale in quanto la validate move ha returnato false
         return false;
     }
 }
@@ -140,9 +134,9 @@ function checkMate () {     //game-logic
 
     let temp_white_check = white_in_check;
     let temp_black_check = black_in_check;
-    for(let i = 0; i < 16; i++){
+    for(let i = 0; i < my_pieces.length; i++){    // cambiato prima c'era 16 ?
         if(my_pieces[i].captured)
-            i++;
+            continue;
         for(let j = 0; j < 64; j++){
             let square = document.getElementById(j+'');
             
