@@ -23,26 +23,10 @@ a {
   font-weight: 600;
 }
 
-/* .container { */
-/*   background: rgba(255, 255, 255, 0.9); */
-/*   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); */
-/*   border-radius: 12px; */
-/*   padding: 20px; */
-/*   margin: auto; */
-/*   margin-bottom: 2rem; */
-/*   max-width: min(50rem, 80%); */
-/*   width: 100%; */
-/*   text-align: center; */
-/*   animation: fadeIn 1s ease-in-out; */
-/* } */
-
-
-
 .container a {
   display: block;
   margin-top: 1.5rem;
 }
-
 
 .sub-container {
   background: rgba(255, 255, 255, 0.9);

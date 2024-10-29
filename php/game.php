@@ -57,7 +57,7 @@
             </dialog>
             
             <div class="title-container">
-                <h1 class="big-title">Chess</h1>
+                <h1 class="big-title">Gioco</h1>
             </div>
             <div class="main-flex">
                 <div class="grid-layout">

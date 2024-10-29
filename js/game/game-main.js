@@ -104,15 +104,12 @@ function click (e) {    //da aggiustare
     if(pieceClicked){
         if(firstPieceClicked.color == pieceElement.color){
             if(!((firstPieceClicked.id.includes("king") && pieceElement.id.includes("rook")) || (firstPieceClicked.id.includes("rook") && pieceElement.id.includes("king")))){
-                // firstClick = true
-                // return;
                 if((pieceElement.color == "white" && black_turn) || (pieceElement.color == "black" && white_turn)) return;
                 firstPieceClicked = pieceElement;
                 selectLandingSquares(firstPieceClicked);
                 firstClick = false;
                 return;
             }
-            // return;
         }
     }
 
@@ -146,7 +143,6 @@ function dragDrop (e) {
     let square = e.target;
     e.stopPropagation();
     makeMove(piece, square);
-    // moveMade = false;
 }
 
 //function that makes the move
@@ -164,8 +160,6 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
     let moveMade = false;
     let castlignRook;
     let element = pieceToDiv(piece);
-    // console.log("primo");
-    // console.log(piece);
     if((white_turn && element.id.includes("white"))
         || (black_turn && element.id.includes("black"))){
         // if true -> the target square is empty
@@ -189,8 +183,6 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
             || (piece.id.includes("black") && square.id.includes("white")))
         {
             //if true -> the target square has a different color piece
-            // console.log("sono giusto");
-            // console.log(square.firstElementChild.id);
             destinationSquare = square.parentNode;
             if(!moveWithCheck(destinationSquare, piece)) return;    
             moveMade = validate_move(destinationSquare, piece, true);
@@ -241,7 +233,6 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
         switchTurn();
         updateMessages();   //qui controlliamo lo scacco matto
         boardIsConsistent();//used for debug
-        // printBoard();
         return true;
     }
     return false;
@@ -256,7 +247,6 @@ async function handleDialog(oldPiece) {
     const dialog = document.getElementById('promotion-dialog');
     dialog.show();
     const overContainer = document.getElementById('over-container-flex');
-    // console.log(overContainer);
     const head = (white_turn) ? "../img/png/white_" : "../img/png/black_";
     const tail = ".png";
     let promotionOptions = ['queen', 'rook', 'bishop', 'knight'];
@@ -390,10 +380,6 @@ function createPromotionPiece(idImg, oldPiece){
     console.log(draggedElement);
     console.log(draggedPiece);
 
-    // console.log(white_pawns);
-    // console.log(black_pawns);
-    // console.log(white_pieces);
-    // console.log(black_pieces);
 }
 
     
@@ -410,10 +396,6 @@ const scaccoMattoMale = "Scacco matto, hai perso! :(";
  * @brief updates the messages to the player such as who's turn it is, if someone in in check, or if the game is over
  */
 function updateMessages () {
-    // let turn = document.getElementById("turn");
-    // let check = document.getElementById("check");
-    // let score = document.getElementById("score");
-    // let checkmate = document.getElementById("checkMate");
     let bpTurno = document.getElementById('bp-turno');
     let bpPunteggio = document.getElementById('bp-punteggio');
     let bpScacco = document.getElementById('bp-scacco');
