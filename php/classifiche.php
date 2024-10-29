@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/table.css">
+  <link rel="stylesheet" href="../css/card.css">
   <script src="../js/front/chessBoard.js"></script>
 </head>
 <body>
@@ -24,7 +25,7 @@
             <li><a href="classifiche.php">Classifiche</a></li>
             <?php
                 session_start();
-                if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){+
+                if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
                     echo'<li><a href="logout.php">Log Out</a></li>';  
                 } else {
                     echo '<li><a href="login.php">Login</a></li>';
@@ -34,7 +35,7 @@
         </ul>
     </nav>
   </header>
-  <div class="container">
+  <div class="container max-width-main">
     <h1>Classifiche</h1>
     <div class="chess-info">
         <p>Qui puoi vedere i migliori giocatori della piattaforma.</p>       
