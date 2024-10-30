@@ -185,7 +185,13 @@ input[type="password"]:focus {
   justify-content: center;
 }
 
+.width-5 {
+  width: 5rem;
+}
 
+.centered {
+  margin: auto;
+}
 
 
 
