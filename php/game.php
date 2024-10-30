@@ -51,6 +51,7 @@
             </dialog>
 
             <dialog id="checkmate-dialog" class="dialog-style">
+                <h2 class="special-h2"></h2>
                 <div class="buttons">
                     <button class="btn" onclick="reset()">Rigioca</button>
                 </div>
