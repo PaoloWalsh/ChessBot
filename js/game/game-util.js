@@ -211,6 +211,156 @@ function isPieceElement(element){
 }
 
 /**
+ * 
+ * @param {int} s_row starting row of the piece
+ * @param {int} s_col starting col of the piece
+ * @param {char} c "u" for up, "r" for right, "d" for down, "l" for left
+ * @returns the max number of square between the cordinate of the piece and any other piece on a straight line in the specified direction
+ */
+function maxDist(s_row, s_col, c){      //game-logic-util
+    let k = 0;
+
+    switch (c) {
+        case "l":   //calculate the left distance on the same row
+            //row remains the same
+            for(let j = s_col+1; j < cols; j++){
+                if(board[s_row * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[s_row * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+            }
+            return k;
+        case "r":   //calculate the right distance on the same row
+            //row remains the same
+            for(let j = s_col-1; j >= 0; j--){
+                if(board[s_row * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[s_row * cols + j].color != board[s_row * cols + s_col].color)
+                        k++;
+                    break;
+                }       
+            }
+            return k;
+
+        case "u":   //calculate the up distance on the same col
+            //col remains the same
+            for(let i = s_row+1; i < rows; i++){
+                if(board[i * cols + s_col] == 0){
+                    k++;
+                }
+                else{
+                    if(board[i * cols + s_col].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+            }
+            return k;
+
+        case "d":   //calculate the down distance on the same col
+            //col remains the same
+            for(let i = s_row-1; i >= 0; i--){
+                if(board[i * cols + s_col] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + s_col].color != board[s_row * cols + s_col].color)
+                        k++;
+                    break;
+                }
+            }
+            return k;
+        
+    }
+}
+
+
+/**
+ * 
+ * @param {int} s_row starting row of the piece
+ * @param {int} s_col starting col of the piece
+ * @param {char} c "nw" for north-west (top left), "ne" for north-east (top right), "se" for south-east (bottom left), "sw" for south-west (bottom right)
+ * @returns the max number of square between the cordinate of the piece and any other piece, diagonally, in the specified direction
+ */
+function maxDistDiag(s_row, s_col, c){      //game-logic-util
+    let k = 0;
+    let i;
+    let j;
+    switch (c) {
+        case "nw":   //calculate the north west distance on the same diagonal
+            i = s_row+1;
+            j = s_col+1;
+            while(i < 8 && j < 8){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i++;
+                j++;
+            }
+            return k;
+        case "ne":   //calculate the north est distance on the same diagonal
+            i = s_row+1;
+            j = s_col-1;
+            while(i < 8 && j >= 0){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i++;
+                j--;
+            }
+            return k;
+
+        case "se":   //calculate the south est distance on the same diagonal
+            i = s_row-1;
+            j = s_col-1;
+            while(i >= 0 && j >= 0){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i--;
+                j--;
+            }
+            return k;
+
+        case "sw":   //calculate the south est distance on the same diagonal
+            i = s_row-1;
+            j = s_col+1;
+            while(i >= 0 && j < 8){
+                if(board[i * cols + j] == 0)
+                    k++;
+                else{
+                    if(board[i * cols + j].color != board[s_row * cols + s_col].color){
+                        k++;
+                    }
+                    break;
+                }
+                i--;
+                j++;
+            }
+            return k;
+    }
+}
+
+/**
  * @brief called by on the click of the new game button
  */
 function reset() {
@@ -225,3 +375,4 @@ function removeAllChildren(elem){
         elem.removeChild(elem.firstChild);
     }
 }
+
