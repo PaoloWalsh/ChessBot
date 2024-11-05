@@ -19,61 +19,49 @@
         if(preg_match($regexusr, $username)&&preg_match($regexppw, $password)&&($rpassword == $password)){
             
             // mi connetto al db
-             require_once "dbaccess.php";
-             $connection = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
-             if(mysqli_connect_errno())
-                 die(mysqli_connect_error());
+            require_once "dbaccess.php";
+            $connection = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME);
+            if(mysqli_connect_errno())
+                die(mysqli_connect_error());
  
-             
- 
-             //preparo lo statement e accedo al db
- 
-             $query = "select * from utente where Username=?;";
-             if($statement = mysqli_prepare($connection, $query)){
-                 mysqli_stmt_bind_param($statement, 's', $username);
-         
-                 mysqli_stmt_execute($statement);
-                 $result = mysqli_stmt_get_result($statement);
-                 if(mysqli_num_rows($result)!==0){
+            //preparo lo statement e accedo al db
+            $query = "select * from utente where Username=?;";
+            if($statement = mysqli_prepare($connection, $query)){
+                mysqli_stmt_bind_param($statement, 's', $username);
+                mysqli_stmt_execute($statement);
+                $result = mysqli_stmt_get_result($statement);
+                if(mysqli_num_rows($result)!==0){
                     $erroreEsistente = true;
                     //se esiste già un utente con quel nome, si verifica un errore
-                 }
-                     
-                 else{
+                }
+                else{
                     //creo l'utente e reindirizzo al login
                     $query = "insert into utente (Username, Password) values (?, ?)";
                     if($statement = mysqli_prepare($connection, $query)){
                         $password = password_hash($password, PASSWORD_BCRYPT);
-                        mysqli_stmt_bind_param($statement, 'ss',$username, $password);
-                
+                        mysqli_stmt_bind_param($statement, 'ss', $username, $password);    
                         mysqli_stmt_execute($statement);
                         header("location: login.php");
-                    }
-                 
+                    }    
                 }
-             
             }
-        else {
-           
-            die(mysqli_connect_error());
+            else {    
+                die(mysqli_connect_error());
+            }
         }
-            
+        else{
+            if(!preg_match($regexusr, $username)){
+                $erroreName = true;
+            }
+            if(!preg_match($regexppw, $password)){
+                $errorePass = true;
+            }
+            if($password != $rpassword){
+                $erroreRPass = true;
+            }
+            //echo "<script>window.alert('La richiesta è in un formato non corretto')</script>";
+        }
     }
-    else{
-        if(!preg_match($regexusr, $username)){
-            $erroreName = true;
-        }
-        if(!preg_match($regexppw, $password)){
-            $errorePass = true;
-        }
-        if($password != $rpassword){
-            $erroreRPass = true;
-        }
-        //echo "<script>window.alert('La richiesta è in un formato non corretto')</script>";
-    }
-
-}
-
 ?>
 
 <!DOCTYPE html>
