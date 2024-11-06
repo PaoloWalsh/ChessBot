@@ -82,8 +82,6 @@
                     <th>Utente</th><th>Mosse</th>
                 </thead>
                 <?php 
-                    // $utenti_classificati = [];
-                    // require_once "dbaccess.php";
                     $query = "SELECT Username, mosse
                                 from partita
                                 where vittoria = 1
@@ -122,9 +120,6 @@
       ?>
       
     </button>
-
-    
-
     <div class="chessboard">
     </div>
   </div>
