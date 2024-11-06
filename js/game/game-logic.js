@@ -1,9 +1,11 @@
-//it simulates a move and then it tells if the move will put my self in check
+//simula una mossa e poi dice se la mossa mi autometterà in scacco
 /**
- * @brief it simulates a move and then it tells if the move will put my self in check 
- * @param {html element} destinationSquare rappresents the html square to which I want to move
- * @param {piece} piece object of class piece 
- * @returns boolean indicating if the move that is being evaluated will violate Check Logic -> putting my self in check or moving a piece while in check that doesn't get me out of check
+ * @brief simula una mossa e poi dice se la mossa mi autometterà in scacco. Chiama la funzione simulateMove 
+ * e checkCheck per verificare lo stato degli scacchi
+ * @param {html element} destinationSquare rappresenta lo square html a cui voglio spostare il pezzo
+ * @param {piece} piece istanza della classe piece 
+ * @returns un valore booleano che indica se la mossa che sta venendo valutata viola la logica dello scacco
+ * ovvero se la mossa mi auto mette in scacco oppure se la mossa non mi toglie da un sacco in caso io sia già in scacco
  */
 function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sistemare
 
@@ -96,12 +98,93 @@ function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sis
     }
 }
 
+/**
+ * @brief simula una mossa, chiamata da moveWithCheck per controllare lo stato degli scacchi dopo una mossa simulata
+ * @param {*} start_row 
+ * @param {*} start_col 
+ * @param {*} end_row 
+ * @param {*} end_col 
+ * @param {} piece istanza della classe js del pezzo con cui vogliamo simulare la mossa
+ * @param {*} capture valore booleano che se vale true
+ */
+function simulateMove(start_row, start_col, end_row, end_col, piece, capture) { //da finire
+    let castlingMove = false;
+    let support_piece;
+    let support_row;
+    let support_col;
+    let support_rook_col;
+    let castlingRook = false;
+
+    if(castling(destinationSquare, piece)){
+        castlingMove = true;
+        let destinationPieceElement = destinationSquare.firstElementChild;
+        castlingRook = getPiece(destinationPieceElement.id);
+        support_col = piece.old_col;
+        support_rook_col = castlingRook.old_col;
+        piece.old_col = piece.col;
+        castlingRook.old_col = castlingRook.col;
+        if(end_col > piece.col){
+            piece.col = end_col-2;
+            castlingRook.col = end_col-3;
+        }
+        else {
+            piece.col = end_col+1;
+            castlingRook.col = end_col+2;
+        }
+        board[piece.row*cols+piece.col] = piece;
+        board[castlingRook.row*cols+castlingRook.col] = castlingRook;
+        board[piece.old_row*cols+piece.old_col] = 0;
+        board[castlingRook.old_row*cols+castlingRook.old_col] = 0;
+    }
+
+    else{
+        support_piece = board[end_row*cols+end_col];
+
+        if(support_piece != 0)
+            support_piece.captured = capture;
+        
+        //if nomaml move
+        support_row = piece.row;
+        support_col = piece.col;
+        piece.row = end_row;
+        piece.col = end_col;
+        board[support_row*cols+support_col] = 0;
+        board[end_row*cols+end_col] = piece;
+    }
+
+    if(castlingMove){
+        board[piece.row*cols+piece.col] = 0;
+        board[castlingRook.row*cols+castlingRook.col] = 0;
+        piece.old_col = support_col;
+        castlingRook.old_col = support_rook_col;
+        board[piece.old_row*cols+piece.old_col] = piece;
+        board[castlingRook.old_row*cols + castlingRook.old_col] = castlingRook;
+        if(end_col > piece.old_col){
+            piece.col = end_col-4;
+            castlingRook.col = end_col;
+        }
+        else {
+            piece.col = end_col+3;
+            castlingRook.col = end_col;
+        }
+    }
+
+    else {
+        if(support_piece != 0)
+            support_piece.captured = false;
+        board[end_row*cols+end_col] = support_piece;
+        piece.row = support_row;
+        piece.col = support_col;
+        board[support_row*cols+support_col] = piece;
+    }
+}
+
 
 /**
  * 
- * @param {html element} destinationSquare the square where I'm trying to move
- * @param {piece} piece the piece I'm trying to move
- * @returns returns true if the last legal move that's been valuted is a castling move, returns false otherways
+ * @param {html element} destinationSquare lo square di destinazione della mossa
+ * @param {piece} piece il pezzo che sto cercando di muovere, istanza della classe js
+ * @returns valore booleano, true se si sta cercando di fare una mossa di castling (arrocco), false altrimenti
  */
 
 function castling (destinationSquare, piece){   //game-logic
@@ -120,7 +203,7 @@ function castling (destinationSquare, piece){   //game-logic
 
 /**
  * 
- * @returns true if the player that is in check is in checkMate, false otherways
+ * @returns true se il giocatore che è in scacco è in scacco matto, false altrimenti
  */
 function checkMate () {     //game-logic
     let my_pieces;
@@ -156,7 +239,7 @@ function checkMate () {     //game-logic
 }
 
 /**
- * @brief switchs turn between white and black, and it dissables the possibility of an EnPassant move of the player that just moved
+ * @brief cambia turno tra bianco e nero e disabilità la possibilità di una mossa EnPassant del giocatore che ha appena mosso
  */
 function switchTurn(){  //game-logic
     if(white_turn){
@@ -172,11 +255,10 @@ function switchTurn(){  //game-logic
 }
 
 /**
- * @param {html element} dest_element is the html square to which I want to move my piece
- * @param {piece} piece is the js class object piece I want to move
- * @param {boolean} makingMove true if I want to actually make a move, false if I want to know if a move is legal (not considering checks)
- * @param {piece} castlignRook the rook I'm trying to castle with
- * @returns It returns true if the move I'm trying to make follows the piece moving rules (it doesn't consider checks)
+ * @param {html element} dest_element lo square di destinazione della mossa
+ * @param {piece} piece il pezzo che sto cercando di muovere, istanza della classe js
+ * @param {boolean} makingMove valore booleano, true se si vuole effettivamente fare una mossa, false se si vuole sapere se la mossa è legale
+ * @returns true, se la mossa che sto valudato è legale (senza considerare la scacco logic), false altrimenti
  */
 function validate_move (dest_element, piece, makingMove) {       //game-logic   
     //making move is a boolean that if true indicates that I actually want to make the move
@@ -435,8 +517,8 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
 
 /**
  * 
- * @brief updates the info of the dragged piece after verifing that the move is valid and that I want to make it
- * called by validate move
+ * @brief aggiorna le informazioni del dragged piece dopo aver verificato che la mossa sia valida,
+ *  chiamata da validate_move una volta verificato che la mossa è valida 
  */
 function updateDraggedPieceInfo(start_row, start_col, end_row, end_col) {
     draggedPiece.firstMove = false;
@@ -449,7 +531,7 @@ function updateDraggedPieceInfo(start_row, start_col, end_row, end_col) {
 }
 
 /**
- * @brief calculates every legal (not considering checks) move for every non-captured piece and stores it in an array
+ * @brief calcola ogni mossa legale (senza considerare lo scacco logic) per ogni pezzo che non è stato catturato e le memorizza in un array
  */
 function allPossibleMoves() {       //game-logic
     for(let index = 0; index < white_pieces.length; index++){
@@ -485,7 +567,7 @@ function allPossibleMoves() {       //game-logic
 
 
 /**
- * @brief is called before making the actual move but it verifies if that move would put someone in check
+ * @brief chiamata prima di fare la mossa effettiva e verifica se la mossa metterebbe qualcuno in scacco, chiamata da moveWithCheck
  * @returns 
  */
 function checkCheck() {     //game-logic
@@ -557,8 +639,8 @@ function checkCheck() {     //game-logic
 }
 
 /**
- * @brief updates the board considering the global variable draggedPiece as the piece that moved
- * @param castlignRook is the rook that I'm castling with, if undefined it means that the last move wasn't a castle
+ * @brief aggiorna il board considerando la variabile draggedPiece come pezzo mosso
+ * @param castlignRook indica la torre con cui si fa il castling, se undefined significa che l'ultima mossa non era di castling
  */
 function updateBoard (castlignRook) {       //game-logic
     // console.log('updato');
@@ -577,8 +659,9 @@ function updateBoard (castlignRook) {       //game-logic
 
 
 /**
- * @brief is called after a player plays a move, sets to false the opponent pawns enPassantCapturable attribute
- * @param {int} color 1 is white, 0 is black
+ * @brief chiamata dopo che un giocatore fa una mossa, setta a false l'attributo enPassantCapturable delle pawn
+ * is called after a player plays a move, sets to false the opponent pawns enPassantCapturable attribute
+ * @param {int} color 1 è white, 0 è black
  */
 function updateEnPassantAttribute(color){       //game-logic
     if(color){
