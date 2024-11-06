@@ -59,16 +59,13 @@
         }
       ?>        
     </div>
-    <!-- <button class="login-btn"> -->
     <?php
-        if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
-          echo "<a class='centered login-btn width-5' href='scegliColore.php'>Gioca</a>";  
-        } else {
-          echo "<a class='centered login-btn width-5' href='signUp.php'>Registrati</a>";
-        }
-      ?>
-      
-    <!-- </button> -->
+      if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
+        echo "<a class='centered login-btn width-5' href='scegliColore.php'>Gioca</a>";  
+      } else {
+        echo "<a class='centered login-btn width-5' href='signUp.php'>Registrati</a>";
+      }
+    ?>
     <div class="chessboard">
     </div>
   </div>
