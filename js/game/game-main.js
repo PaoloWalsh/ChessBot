@@ -3,7 +3,7 @@ let hostColor;
 let hostNumberMoves;
 
 /**
- * @brief is called after the DOM is loaded, calls the function to get the game started
+ * @brief viene chiamata dopo che il DOM è stato caricato e avvia la funzione per far partire il gioco
  */
 function build () {
     hostColor = localStorage.getItem('colore');
@@ -17,7 +17,7 @@ function build () {
 }
 
 /**
- * @brief builds the board html wise inserting all the pieces img in the starting position
+ * @brief costruisce la scacchiera in HTML inserendo tutte le immagini dei pezzi nella posizione iniziale
  */
 function buildBoard() {
     const scacchiera = document.getElementById("board");
@@ -40,7 +40,8 @@ function buildBoard() {
 
 
 /**
- * @brief reset the value of all global variable to prepare for a new game
+ * @brief reimposta il valore di tutte le variabili globali per prepararsi a una nuova partita
+ * reset the value of all global variable to prepare for a new game
  */
 function resetGlobalVariables() {   // da aggiustare
     white_turn = true;
@@ -133,8 +134,7 @@ function dragOver (e) {
 
 //makes the move
 /**
- * @brief if legal, makes the move html wise,  calls update board, and calls update messages and checkMate 
- * @param {*} e is the dragged element
+ * @param {*} e target dell'evento 
  * @returns 
  */
 function dragDrop (e) {
@@ -147,10 +147,10 @@ function dragDrop (e) {
 
 //function that makes the move
 /**
- * @brief function that makes the move
- * @param {js piece} piece the javascript class object piece I want to move
- * @param {*} square the html destination element, could be a square or a piece
- * @returns returns true if the move was made, false otherways
+ * @brief se la mossa è legale, la esegue in HTML, chiama updateBoard, chiama le funzioni per aggiornare i messaggi e verificare lo scacco matto
+ * @param {js piece} piece l'istanza della classe piece, è il pezzo che voglio muovere
+ * @param {*} square l'elemento di destinazione HTML può essere una casella o un pezzo
+ * @returns restituisce true se la mossa è stata effettuata, false altrimenti.
  */
 function makeMove(piece, square) {  //game logic    //da aggiustare
     removeSelectedSquares();     
@@ -393,7 +393,7 @@ const scaccoMattoBene = "Scacco matto, hai vinto! :)";
 const scaccoMattoMale = "Scacco matto, hai perso! :(";
 
 /**
- * @brief updates the messages to the player such as who's turn it is, if someone in in check, or if the game is over
+ * @brief aggiorna i messaggi per il giocatore, come chi è di turno, se qualcuno è sotto scacco o se la partita è terminata, controlla anche lo scacco matto chiamando checkMate
  */
 function updateMessages () {
     let bpTurno = document.getElementById('bp-turno');
@@ -446,7 +446,6 @@ function updateMessages () {
     }
     let t = checkMate();
     if(t){
-
         const checkDialog = document.getElementById('checkmate-dialog');
         const whitePlayerName = document.getElementById('wp-nome').innerText;
         const blackPlayerName = document.getElementById('bp-nome').innerText;
