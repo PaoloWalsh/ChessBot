@@ -11,8 +11,8 @@ function printBoard(){      //util
 
 /**
  * 
- * @param {html element} id id of a piece
- * @returns returns the js object of the class piece associated with that piece
+ * @param {html element} id id del pezzo html
+ * @returns l'istanza della classe piece associato con quel pezzo
  */
 function getPiece (id) {
     let piece;
@@ -78,8 +78,8 @@ function getPiece (id) {
 
 /**
  * 
- * @param {piece} piece piece of which I want the html element
- * @returns the html element of the piece
+ * @param {piece} piece istanza della classe piece
+ * @returns il pezzo html associato con il piece
  */
 
 function pieceToDiv (piece) {
@@ -89,7 +89,8 @@ function pieceToDiv (piece) {
 
 
 /**
- * @brief returns true if the piece board on which calculation are made is consistent with the html board if not it return false and prints the cordinates of the first square that is not consistent
+ * @returns true se il board si cui vengono calcolate le mosse è consistente con il board html che vede l'utente,
+ *  in caso contrario ritorna false e stempa informazioni sui pezzi discordanti
  */
 function boardIsConsistent () {     //util
     for(let i = 0; i < rows; i++)
@@ -118,8 +119,9 @@ function boardIsConsistent () {     //util
 
 
 /**
- * @brief prints the row and the col of the piece position on the board, it return true if it finds the piece, false otherways
- * @param {string} id is the Id of which I want to print the row and col
+ * @brief stampa riga e colonna della posizione di un pezzo sul board
+ * @param {string} id id del pezzo che voglio trovare
+ * @returns true se trova il pezzo, false altrimenti
  */
 function whereIsPiece(id){      //debug
     for(let i = 0; i < rows; i++)
@@ -134,7 +136,7 @@ function whereIsPiece(id){      //debug
 }
 
 /**
- * @brief inserts the match into the database
+ * @brief inserisce la partita nel database
  */
 function insertMatchDB(vittoria){
     //inserimento partita nel database
@@ -149,10 +151,10 @@ function insertMatchDB(vittoria){
 
 
 
-//highlights all the possible squares that the piece, that's being dragged, can move to
 /**
- * @brief highlights all the possible squares that the piece, that's being dragged, can move to accounting for checks
- * @param {piece} piece piece I've started moving
+ * @brief colora di verde tutti i possibili verso cui un pezzo può muoversi legamente
+ * la funzione è chiamata da dragStart e click
+ * @param {piece} piece pezzo che inizio a muovere
  * 
  */
 function selectLandingSquares(piece) {
@@ -173,7 +175,7 @@ function selectLandingSquares(piece) {
 
 
 /**
- * @brief it loops over every square and removes the selectedLight or selectedDark css class
+ * @brief rimuove le classi selectedLight o selectedDark sugli square evidenziati dalla selectLandingSquare
  */
 function removeSelectedSquares(){
     for(let i = 0; i < 64; i++){
@@ -187,7 +189,7 @@ function removeSelectedSquares(){
 
 // 
 /**
- * @brief deletes a piece from its square html wise
+ * @brief rimuove un pezzo dal suo square a livello html
  * @param {int} row 
  * @param {int} col 
  */
@@ -200,7 +202,7 @@ function pieceOffSquare(row, col) {
 
 /**
  * @param element html element
- * @returns true if html of a piece, false if html of a square
+ * @returns true se il l'elemento è un pezzo, false se è uno square
  */
 function isPieceElement(element){
     let rv = false;
@@ -215,7 +217,7 @@ function isPieceElement(element){
  * @param {int} s_row starting row of the piece
  * @param {int} s_col starting col of the piece
  * @param {char} c "u" for up, "r" for right, "d" for down, "l" for left
- * @returns the max number of square between the cordinate of the piece and any other piece on a straight line in the specified direction
+ * @returns il massimo numero di square tra le cordinate iniziali del pezzo e qualsiasi altro pezzo su una linea dritta nella direzione specificata
  */
 function maxDist(s_row, s_col, c){      //game-logic-util
     let k = 0;
@@ -284,7 +286,7 @@ function maxDist(s_row, s_col, c){      //game-logic-util
  * @param {int} s_row starting row of the piece
  * @param {int} s_col starting col of the piece
  * @param {char} c "nw" for north-west (top left), "ne" for north-east (top right), "se" for south-east (bottom left), "sw" for south-west (bottom right)
- * @returns the max number of square between the cordinate of the piece and any other piece, diagonally, in the specified direction
+ * @returns il massimo numero di square tra le cordinate iniziali del pezzo e qualsiasi altro pezzo su una linea obliqua con pendenza 1 nella direzione specificata
  */
 function maxDistDiag(s_row, s_col, c){      //game-logic-util
     let k = 0;
@@ -361,14 +363,15 @@ function maxDistDiag(s_row, s_col, c){      //game-logic-util
 }
 
 /**
- * @brief called by on the click of the new game button
+ * @brief ridireziona il giocatore alla pagina in cui deve scegliere il colore per una nuova partita.
+ * È chiamata quando un utente clicca su nuova partita
  */
 function reset() {
     window.location.href = "scegliColore.php";
 }
 
 /**
- * @brief remove all the children of an html element
+ * @brief rimuove tutti i figli di un elemento html
  */
 function removeAllChildren(elem){
     while(elem.firstChild){
