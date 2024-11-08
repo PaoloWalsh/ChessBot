@@ -96,12 +96,10 @@ let black_queens = [];
 
 
 /**
- * @brief it initializes every piece
+ * @brief inizializza tutti i pezzi
  */
 function init_Pieces(){
-//creating white pieces
-
-
+//creazione white pieces
     for(let i = 0; i < 8; i++){
         white_pawns[i] = new piece("white_pawn", i);
         white_pawns[i].row = white_pawns[i].old_row = 1;
@@ -213,10 +211,9 @@ function init_Pieces(){
 }
 
 let board;
-// console.log('ho creato il board');
 
 /**
- * @brief it fills the board with the starting position
+ * @brief riempe il board con i pezzi nella posizione iniziale
  */
 function fill_Board() {
     board = [
