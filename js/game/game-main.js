@@ -132,7 +132,6 @@ function dragOver (e) {
 
 
 
-//makes the move
 /**
  * @param {*} e target dell'evento 
  * @returns 
@@ -145,7 +144,6 @@ function dragDrop (e) {
     makeMove(piece, square);
 }
 
-//function that makes the move
 /**
  * @brief se la mossa è legale, la esegue in HTML, chiama updateBoard, chiama le funzioni per aggiornare i messaggi e verificare lo scacco matto
  * @param {js piece} piece l'istanza della classe piece, è il pezzo che voglio muovere

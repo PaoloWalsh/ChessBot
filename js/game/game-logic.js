@@ -1,4 +1,3 @@
-//simula una mossa e poi dice se la mossa mi autometterà in scacco
 /**
  * @brief simula una mossa e poi dice se la mossa mi autometterà in scacco. Chiama la funzione simulateMove 
  * e checkCheck per verificare lo stato degli scacchi
@@ -86,14 +85,14 @@ function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sis
         }
         
         if((white_turn && white_in_check) || (black_turn && black_in_check)) {
-          // questa mossa sarebbe legale ma viola la scacco logic
-          // ovvero che o mi sto automettendo in scacco, oppure sono in scacco e non mi ci tolgo
+            // questa mossa sarebbe legale ma viola la scacco logic
+            // ovvero che o mi sto automettendo in scacco, oppure sono in scacco e non mi ci tolgo
             return false;
         }
         return true;
     }
     else {
-        //in questo caso la mossa non è proprio legale in quanto la validate move ha returnato false
+        //in questo caso la mossa non è proprio legale in quanto la validate move ha restituito false
         return false;
     }
 }
@@ -109,74 +108,24 @@ function moveWithCheck (destinationSquare, piece) {     //game-logic    //da sis
  */
 function simulateMove(start_row, start_col, end_row, end_col, piece, capture) { //da finire
     let castlingMove = false;
-    let support_piece;
+    let destinationPiece;
+    let movingPiece;
     let support_row;
     let support_col;
     let support_rook_col;
     let castlingRook = false;
 
-    if(castling(destinationSquare, piece)){
-        castlingMove = true;
-        let destinationPieceElement = destinationSquare.firstElementChild;
-        castlingRook = getPiece(destinationPieceElement.id);
-        support_col = piece.old_col;
-        support_rook_col = castlingRook.old_col;
-        piece.old_col = piece.col;
-        castlingRook.old_col = castlingRook.col;
-        if(end_col > piece.col){
-            piece.col = end_col-2;
-            castlingRook.col = end_col-3;
-        }
-        else {
-            piece.col = end_col+1;
-            castlingRook.col = end_col+2;
-        }
-        board[piece.row*cols+piece.col] = piece;
-        board[castlingRook.row*cols+castlingRook.col] = castlingRook;
-        board[piece.old_row*cols+piece.old_col] = 0;
-        board[castlingRook.old_row*cols+castlingRook.old_col] = 0;
-    }
+    movingPiece = board[start_row*cols+start_col];
+    destinationPiece = board[end_row*cols+end_col];
 
-    else{
-        support_piece = board[end_row*cols+end_col];
+    if(destinationPiece != 0)
+        destinationPiece.captured = capture;
+    
+    movingPiece.row = end_row;
+    movingPiece.col = end_col;
+    board[start_row*cols+start_col] = 0;
+    board[end_row*cols+end_col] = piece;
 
-        if(support_piece != 0)
-            support_piece.captured = capture;
-        
-        //if nomaml move
-        support_row = piece.row;
-        support_col = piece.col;
-        piece.row = end_row;
-        piece.col = end_col;
-        board[support_row*cols+support_col] = 0;
-        board[end_row*cols+end_col] = piece;
-    }
-
-    if(castlingMove){
-        board[piece.row*cols+piece.col] = 0;
-        board[castlingRook.row*cols+castlingRook.col] = 0;
-        piece.old_col = support_col;
-        castlingRook.old_col = support_rook_col;
-        board[piece.old_row*cols+piece.old_col] = piece;
-        board[castlingRook.old_row*cols + castlingRook.old_col] = castlingRook;
-        if(end_col > piece.old_col){
-            piece.col = end_col-4;
-            castlingRook.col = end_col;
-        }
-        else {
-            piece.col = end_col+3;
-            castlingRook.col = end_col;
-        }
-    }
-
-    else {
-        if(support_piece != 0)
-            support_piece.captured = false;
-        board[end_row*cols+end_col] = support_piece;
-        piece.row = support_row;
-        piece.col = support_col;
-        board[support_row*cols+support_col] = piece;
-    }
 }
 
 
@@ -591,51 +540,55 @@ function checkCheck() {     //game-logic
         my_pieces = black_pieces;
         op_pieces = white_pieces;
     }
-    // if(element.id.includes("king"))
-    //     king_position = parseInt(destinationSquare.getAttribute('id'));
    
+    // verifico se il mio avversario è in scacco
     for(let i = 0; i < my_pieces.length; i++){
-         // I'm verifing if the move I'm goint to make is putting the opponet in check
         for(let j = 0; j < my_pieces[i].possibleMoves.length; j++){
             if (op_king_position === my_pieces[i].possibleMoves[j]){
-                if(white_turn)
-                    black_in_check = true;
-                else   
-                    white_in_check = true;
-                // console.log()
+                // if(white_turn)
+                //     black_in_check = true;
+                // else   
+                //     white_in_check = true;
                 opponent_in_check = true;
                 break;
             }
         }
     }
 
-    // I'm verifing if the move I'm going to make puts me out of check
+    // verifico se sono in scacco
     for(let i = 0; i < op_pieces.length; i++){
         for(let j = 0; j < op_pieces[i].possibleMoves.length; j++){
             if (my_king_position === op_pieces[i].possibleMoves[j]){
-                if(white_turn)
-                    white_in_check = true;
-                else   
-                    black_in_check = true;
+                // if(white_turn)
+                //     white_in_check = true;
+                // else   
+                //     black_in_check = true;
                 me_in_check = true;
                 break;
             }
         }
     }
-    if(white_turn){
-        if(!opponent_in_check)
-            black_in_check = false;
-        if(!me_in_check)
-            white_in_check = false;
-    }
-    else{
-        if(!opponent_in_check)
-            white_in_check = false;
-        if(!me_in_check)
-            black_in_check = false;
-    }
+
+    white_in_check = white_turn ? me_in_check : opponent_in_check;
+    black_in_check = white_turn ? opponent_in_check : me_in_check; 
+
+    // if(white_turn){
+    //     black_in_check = opponent_in_check;
+    //     white_in_check = me_in_check;
+    //     if(!opponent_in_check)
+    //         black_in_check = false;
+    //     if(!me_in_check)
+    //         white_in_check = false;
+    // }
+    // else{
+    //     white_in_check = opponent_in_check;
+    //     black_in_check = me_in_check;
+    //     if(!opponent_in_check)
+    //         white_in_check = false;
+    //     if(!me_in_check)
+    //         black_in_check = false;
+    // }
     return false;
-    
 }
 
 /**
