@@ -14,7 +14,7 @@ let black_in_check = false;
 // let blackCanEnpassant = false;
 let enPassantPlayed = false;
 
-let gPromoting = false;
+let promotingMove = false;
 
 //let castlignRook = false;
 
@@ -211,6 +211,34 @@ function init_Pieces(){
 }
 
 let board;
+
+/*
+Board iniziale
+
+board = [
+    white_rooks[0], white_knights[0], white_bishops[0], white_king, white_queens[0], white_bishops[1], white_knights[1], white_rooks[1],
+    white_pawns[0], white_pawns[1], white_pawns[2], white_pawns[3], white_pawns[4], white_pawns[5], white_pawns[6], white_pawns[7], 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    black_pawns[0], black_pawns[1], black_pawns[2], black_pawns[3], black_pawns[4], black_pawns[5], black_pawns[6], black_pawns[7], 
+    black_rooks[0], black_knights[0], black_bishops[0], black_king, black_queens[0], black_bishops[1], black_knights[1], black_rooks[1]
+];
+
+Promotion board
+
+board = [
+    white_rooks[0], white_knights[0], white_bishops[0], white_king, white_queens[0], white_bishops[1], white_knights[1], white_rooks[1],
+    white_pawns[0], 0, white_pawns[2], white_pawns[3], white_pawns[4], white_pawns[5], white_pawns[6], white_pawns[7], 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 
+    black_bishops[0], 0, black_knights[0], 0, 0, 0, 0, 0, 
+    black_pawns[0], white_pawns[1], black_pawns[2], black_pawns[3], black_pawns[4], black_pawns[5], black_pawns[6], black_pawns[7], 
+    black_rooks[0], 0, 0, black_king, black_queens[0], black_bishops[1], black_knights[1], black_rooks[1]
+];
+*/
 
 /**
  * @brief riempe il board con i pezzi nella posizione iniziale

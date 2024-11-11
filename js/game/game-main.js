@@ -150,11 +150,8 @@ function dragDrop (e) {
  * @param {*} square l'elemento di destinazione HTML può essere una casella o un pezzo
  * @returns restituisce true se la mossa è stata effettuata, false altrimenti.
  */
-function makeMove(piece, square) {  //game logic    //da aggiustare
+ async function makeMove(piece, square) {  //game logic    //da aggiustare
     removeSelectedSquares();     
-    let start_row = piece.row;   
-    let start_col = piece.col;
-    let id = piece.id;
     let moveMade = false;
     let castlignRook;
     let element = pieceToDiv(piece);
@@ -223,14 +220,17 @@ function makeMove(piece, square) {  //game logic    //da aggiustare
         }
     }
     if(moveMade){
-        // await handleDialog();
-        if(((hostColor == 'bianco') && white_turn ) || ((hostColor == 'nero') && black_turn ))
+        if(promotingMove){
+            await handleDialog(piece);
+        }
+        promotingMove = false;
+        if(((hostColor === 'bianco') && white_turn ) || ((hostColor === 'nero') && black_turn ))
             hostNumberMoves++;
         updateBoard(castlignRook);
         checkCheck();    
         switchTurn();
-        updateMessages();   //qui controlliamo lo scacco matto
-        boardIsConsistent();//used for debug
+        updateMessages();       //qui controlliamo lo scacco matto
+        boardIsConsistent();    //used for debug
         return true;
     }
     return false;
@@ -257,9 +257,6 @@ async function handleDialog(oldPiece) {
         img.src = head+promotionOptions[i]+tail;
         img.alt = promotionOptions[i];
         img.id = head.split('/')[3]+promotionOptions[i];
-        // img.addEventListener('click', (event) => {      // è come se fosse un set timeout
-        //     promotionClick(event);
-        // });
         imgs.push(img);
         container.appendChild(img);
     }
@@ -277,7 +274,7 @@ function setImgEvent (imgs) {       //get data
                 const overContainer = document.getElementById('over-container-flex');
                 removeAllChildren(overContainer);
                 resolve(event.target.id); // Risolve con il bottone che è stato cliccato
-            }); // `{ once: true }` fa sì che l'evento sia gestito una sola volta
+            }); 
         });
     });
 }
@@ -292,12 +289,10 @@ function promotionClick (event) {
 }
 
 function createPromotionPiece(idImg, oldPiece){
-    // console.log('inizio Creato');
     let newPieceColor = idImg.split('_')[0];
     let newPieceType = idImg.split('_')[1];
     let oldPieceColor = newPieceColor;
     let oldPieceIndex = oldPiece.id.slice(-1);
-    // let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
     // console.log(draggedPiece);
     // console.log(oldPiece.id);
     let oldPieceDiv = pieceToDiv(oldPiece);
@@ -356,12 +351,11 @@ function createPromotionPiece(idImg, oldPiece){
     }
 
     newPiece.color = newPieceColor;
+    newPiece.old_row = oldPiece.old_row;
+    newPiece.old_col = oldPiece.old_col;
     newPiece.row = oldPiece.row;
     newPiece.col = oldPiece.col;
     oldPiece.captured = true;
-    //update the board
-    board[oldPiece.old_row*cols + oldPiece.old_col] = 0;
-    board[oldPiece.row*cols + oldPiece.col] = newPiece;
     oldPieceDiv.id = newPiece.id;
     const head = "../img/png/";
     const tail = ".png";
@@ -374,10 +368,9 @@ function createPromotionPiece(idImg, oldPiece){
         black_pieces.push(newPiece);
     }
     draggedPiece = newPiece;
-    // console.log(newPiece);
-    // console.log(draggedElement);
-    // console.log(draggedPiece);
-
+    console.log(newPiece);
+    console.log(draggedElement);
+    console.log(draggedPiece);
 }
 
     

@@ -250,7 +250,7 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
 
         let maxMovement = (pawnColor == 'white') ? (firstMoveBoost + 1) : (firstMoveBoost - 1);
 
-        if( (((pawnColor == 'white') && (end_row >= start_row) && (end_row <= start_row + maxMovement)) 
+        if( (((pawnColor == 'white') && (end_row >= start_row) && (end_row <= start_row + maxMovement))
             || ((pawnColor == 'black') && (end_row <= start_row) && (end_row >= start_row + maxMovement)))
          && (end_col >= (start_col - diag)) && (end_col <= (start_col + diag)))
         {
@@ -284,8 +284,8 @@ function validate_move (dest_element, piece, makingMove) {       //game-logic
                 draggedPiece.enPassantCapturable = true;
             }
             if(promoting){
-                // gPromoting = true;
-                handleDialog(pawn);
+                promotingMove = true;
+                enPassantPlayed = false;
             }
         }
         return true;
@@ -485,31 +485,27 @@ function updateDraggedPieceInfo(start_row, start_col, end_row, end_col) {
 function allPossibleMoves() {       //game-logic
     for(let index = 0; index < white_pieces.length; index++){
         white_pieces[index].possibleMoves = [];
+        if(white_pieces[index].capture)
+            continue;
         for(let i = 0; i < 64; i++){
             let square = document.getElementById(i+'');
-            let r = white_pieces[index].row;
-            let c = white_pieces[index].col;
             const makingMove = false;
-            if(!white_pieces[index].captured){
-                if(validate_move(square, white_pieces[index], makingMove)){
-                    white_pieces[index].possibleMoves.push(i);
-                }
+            if(validate_move(square, white_pieces[index], makingMove)){
+                white_pieces[index].possibleMoves.push(i);
             }
         }
     }
 
     for(let index = 0; index < black_pieces.length; index++){
         black_pieces[index].possibleMoves = [];
+        if(black_pieces[index].capture)
+            continue;
         for(let i = 0; i < 64; i++){
             let square = document.getElementById(i+'');
             const makingMove = false;
-            r = black_pieces[index].row;
-            c = black_pieces[index].col;
-            if(!black_pieces[index].captured){
-                if(validate_move(square, black_pieces[index], makingMove)){
-                    black_pieces[index].possibleMoves.push(i);
-                }
-            }   
+            if(validate_move(square, black_pieces[index], makingMove)){
+                black_pieces[index].possibleMoves.push(i);
+            }
         }
     }
 }
