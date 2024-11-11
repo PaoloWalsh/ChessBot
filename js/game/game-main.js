@@ -298,8 +298,8 @@ function createPromotionPiece(idImg, oldPiece){
     let oldPieceColor = newPieceColor;
     let oldPieceIndex = oldPiece.id.slice(-1);
     // let oldPiece = (oldPieceColor == 'white') ? white_pawns[oldPieceIndex] : black_pawns[oldPieceIndex];
-    console.log(draggedPiece);
-    console.log(oldPiece.id);
+    // console.log(draggedPiece);
+    // console.log(oldPiece.id);
     let oldPieceDiv = pieceToDiv(oldPiece);
     let childImg = oldPieceDiv.firstElementChild;
 
@@ -374,9 +374,9 @@ function createPromotionPiece(idImg, oldPiece){
         black_pieces.push(newPiece);
     }
     draggedPiece = newPiece;
-    console.log(newPiece);
-    console.log(draggedElement);
-    console.log(draggedPiece);
+    // console.log(newPiece);
+    // console.log(draggedElement);
+    // console.log(draggedPiece);
 
 }
 
