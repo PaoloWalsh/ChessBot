@@ -166,7 +166,7 @@ function checkMate() {     //game-logic
 
     let temp_white_check = white_in_check;
     let temp_black_check = black_in_check;
-    for (let i = 0; i < my_pieces.length; i++) {    // cambiato prima c'era 16 ?
+    for (let i = 0; i < my_pieces.length; i++) {   
         if (my_pieces[i].captured)
             continue;
         for (let j = 0; j < 64; j++) {
@@ -481,9 +481,10 @@ function updateDraggedPieceInfo(start_row, start_col, end_row, end_col) {
  */
 function allPossibleMoves() {       //game-logic
     for (let index = 0; index < white_pieces.length; index++) {
-        white_pieces[index].possibleMoves = [];
-        if (white_pieces[index].capture)
+        white_pieces[index].possibleMoves.length = 0;
+        if (white_pieces[index].captured){
             continue;
+        }
         for (let i = 0; i < 64; i++) {
             let square = document.getElementById(i + '');
             const makingMove = false;
@@ -494,9 +495,10 @@ function allPossibleMoves() {       //game-logic
     }
 
     for (let index = 0; index < black_pieces.length; index++) {
-        black_pieces[index].possibleMoves = [];
-        if (black_pieces[index].capture)
+        black_pieces[index].possibleMoves.length = 0;
+        if (black_pieces[index].captured){
             continue;
+        }
         for (let i = 0; i < 64; i++) {
             let square = document.getElementById(i + '');
             const makingMove = false;
