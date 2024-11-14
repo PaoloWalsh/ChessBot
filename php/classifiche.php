@@ -26,7 +26,7 @@
             <?php
                 session_start();
                 if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
-                    echo'<li><a href="logout.php">Log Out</a></li>';  
+                    echo '<li><a href="logout.php">Log Out</a></li>';  
                 } else {
                     echo '<li><a href="login.php">Login</a></li>';
                     echo '<li><a href="signUp.php">Sign in</a></li>';
@@ -117,8 +117,7 @@
             
             echo "<a class='no-margin' href='signUp.php'>Registrati</a>";
         }
-      ?>
-      
+    ?>
     </button>
     <div class="chessboard">
     </div>
