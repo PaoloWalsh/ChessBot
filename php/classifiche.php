@@ -7,7 +7,7 @@
   <title>Classifiche</title>
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/table.css">
+  <link rel="stylesheet" href="../css/classifiche.css">
   <link rel="stylesheet" href="../css/card.css">
   <script src="../js/front/chessBoard.js"></script>
 </head>

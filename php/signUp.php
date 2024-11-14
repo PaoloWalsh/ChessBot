@@ -1,9 +1,9 @@
 
 <?php
-   //lo username deve avere tra 4 e 10 caratteri, e contenere solo caratteri alfanumerici
-    $regexusr = "/[A-Za-z0-9_]{4,10}/";
-    //la password deve avere tra 4 e 16 caratteri, e parmette alcuni caratteri speciali 
-    $regexppw = "/[A-Za-z0-9'$'+'@]{4,16}/";
+    //l'username deve avere tra 4 e 10 caratteri, e contenere solo caratteri alfanumerici
+    $regexusr = "/^[A-Za-z0-9_]{4,10}$/";
+    //la password deve avere tra 4 e 16 caratteri, e permette alcuni caratteri speciali 
+    $regexppw = "/^[A-Za-z0-9'$'+'@]{4,16}$/";
 
     $erroreName = false;
     $erroreEsistente = false;
@@ -106,22 +106,25 @@
       
       <form class="login-form" action="signUp.php" method="post">
         <input type="text" id="username" name="username" placeholder="Username" required>
+        <span>L'<b>username</b> deve avere tra 4 e 10 caratteri, e contenere solo caratteri alfanumerici</span>
         <input type="password" id="password" name="password" placeholder="Password" required>
+        <span>La <b>password</b> deve avere tra 4 e 16 caratteri, e permette alcuni caratteri speciali come '$', '+', '@' </span>
         <input type="password" id="rpassword" name="rpassword" placeholder="Conferma Password" required>
         <button type="submit" name="register" class="login-btn">Sign in</button>
         <?php
         if($erroreName){
-            echo "<span id = \"erroreReg\"> username sbagliato!</span>";
+            echo "<span>Lo username non rispetta il formato richiesto</span>";
         }
         if($errorePass){
-            echo "<span id = \"erroreReg\"> Pass sbagliato!</span>";
+            echo "<span>La password non rispetta il formato richiesto</span>";
         }
         if($erroreRPass){
-            echo "<span id = \"erroreReg\"> le pass non coincidono!</span>";
+            echo "<span>Le due password fornite non coincidono</span>";
         }
         if($erroreEsistente){
-            echo "<span id = \"erroreReg\"> Esiste già un utente</span>";
-        }?>
+            echo "<span> Esiste già un utente con questo username</span>";
+        }
+        ?>
       </form>
 
       <a href="login.php">Hai già un account?</a>

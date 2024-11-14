@@ -82,7 +82,7 @@
   </header>
     <div class="container max-width-main">
       <h1>Login</h1>
-      <p>Esegui il login ed Inizia a giocare!</p>
+      <p>Esegui il login ed inizia a giocare!</p>
       
       <form class="login-form" action="login.php" method="post">
         <input type="text" id="username" name="username" placeholder="Username" required>
