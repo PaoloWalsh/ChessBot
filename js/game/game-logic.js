@@ -98,38 +98,6 @@ function moveWithCheck(destinationSquare, piece) {     //game-logic    //da sist
 }
 
 /**
- * @brief simula una mossa, chiamata da moveWithCheck per controllare lo stato degli scacchi dopo una mossa simulata
- * @param {*} start_row 
- * @param {*} start_col 
- * @param {*} end_row 
- * @param {*} end_col 
- * @param {} piece istanza della classe js del pezzo con cui vogliamo simulare la mossa
- * @param {*} capture valore booleano che se vale true
- */
-function simulateMove(start_row, start_col, end_row, end_col, piece, capture) { //da finire
-    let castlingMove = false;
-    let destinationPiece;
-    let movingPiece;
-    let support_row;
-    let support_col;
-    let support_rook_col;
-    let castlingRook = false;
-
-    movingPiece = board[start_row * cols + start_col];
-    destinationPiece = board[end_row * cols + end_col];
-
-    if (destinationPiece != 0)
-        destinationPiece.captured = capture;
-
-    movingPiece.row = end_row;
-    movingPiece.col = end_col;
-    board[start_row * cols + start_col] = 0;
-    board[end_row * cols + end_col] = piece;
-
-}
-
-
-/**
  * 
  * @param {html element} destinationSquare lo square di destinazione della mossa
  * @param {piece} piece il pezzo che sto cercando di muovere, istanza della classe js
