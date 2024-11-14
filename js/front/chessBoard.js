@@ -1,3 +1,4 @@
+//genera la piccola scacchiera decorativa delle varie pagine
 document.addEventListener('DOMContentLoaded', () => {
     const board = document.querySelector('.chessboard');
     for (let row = 0; row < 8; row++) {
@@ -13,4 +14,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-
