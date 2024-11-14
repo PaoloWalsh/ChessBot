@@ -109,16 +109,15 @@
             echo "<p class='bold'>Registrati e inizia a giocare!</p>";
         }
     ?>
-    <button class="login-btn">
+    <!-- <button class="login-btn"> -->
     <?php
         if(isset($_SESSION['logged']) && $_SESSION['logged'] == true){
-            echo "<a class='no-margin' href='scegliColore.php'>Gioca</a>";  
+            echo "<a class='centered login-btn width-5' href='scegliColore.php'>Gioca</a>";  
         } else {
-            
-            echo "<a class='no-margin' href='signUp.php'>Registrati</a>";
+            echo "<a class='centered login-btn width-5' href='signUp.php'>Registrati</a>";  
         }
     ?>
-    </button>
+    <!-- </button> -->
     <div class="chessboard">
     </div>
   </div>
