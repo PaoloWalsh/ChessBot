@@ -106,9 +106,9 @@
       
       <form class="login-form" action="signUp.php" method="post">
         <input type="text" id="username" name="username" placeholder="Username" required>
-        <span>L'<b>username</b> deve avere tra 4 e 10 caratteri, e contenere solo caratteri alfanumerici</span>
+        <span>L'<b>username</b> deve avere tra 4 e 10 caratteri, e contenere solo caratteri alfanumerici ed il carattere '_'</span>
         <input type="password" id="password" name="password" placeholder="Password" required>
-        <span>La <b>password</b> deve avere tra 4 e 16 caratteri, e permette alcuni caratteri speciali come '$', '+', '@' </span>
+        <span>La <b>password</b> deve avere tra 4 e 16 caratteri, e contenere solo caratteri alfanumerici e alcuni caratteri speciali come '$', '+', '@' </span>
         <input type="password" id="rpassword" name="rpassword" placeholder="Conferma Password" required>
         <button type="submit" name="register" class="login-btn">Sign in</button>
         <?php
