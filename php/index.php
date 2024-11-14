@@ -38,9 +38,14 @@
     <h1>Benvenuto nel Mondo degli Scacchi</h1>
     <div class="chess-info">
       <h2>Introduzione agli Scacchi</h2>
-      <p>Gli scacchi sono un gioco di strategia giocato su una scacchiera con 64 caselle, alternando colori chiari e scuri. Ogni giocatore ha 16 pezzi: un re, una regina, due torri, due cavalli, due alfieri e otto pedoni.</p>
-      <p>Obiettivo del gioco: mettere sotto scacco il re avversario, ovvero intrappolarlo e fare in modo che non abbia mosse legali disponibili.</p>
-      <p>Per vincere, devi pianificare le tue mosse con attenzione, proteggere i tuoi pezzi e cercare di sfruttare gli errori del tuo avversario.</p>
+      <p>Gli scacchi sono un gioco di strategia che si svolge su una tavola quadrata detta scacchiera,
+          formata da 64 caselle (o "case") di due colori alternati, sulla quale ogni giocatore dispone di 16 pezzi
+          (bianchi o neri; per traslato, "il Bianco" e "il Nero" designano i due sfidanti): un re, una donna (o "regina"),
+          due alfieri, due cavalli, due torri e otto pedoni. </p>
+      <p>Ogni casella può essere occupata da un solo pezzo, che può 
+          catturare o "mangiare" il pezzo avversario andando a occuparne la casella.</p>
+      <p>Obiettivo del gioco è dare scacco matto,
+          ovvero minacciare la cattura del re avversario in modo tale che l'altro giocatore non possa eseguire mosse legali.</p>
       <h2>Funzionamento dell'applicazione</h2>
       
       
