@@ -95,7 +95,7 @@
           } 
 
           if($passwordErr){
-            echo "<span class = \"errore\">Password Sbagliata</span>";
+            echo "<span class = \"errore\">Password sbagliata</span>";
           }
         ?>
       </form>
