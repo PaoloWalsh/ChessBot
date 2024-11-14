@@ -151,22 +151,24 @@ function castling(destinationSquare, piece) {   //game-logic
 }
 
 /**
- * 
+ * @brief chiamata da updateMessage controlla se c'è una mossa che toglie dallo stato di scacco
+ * il giocatore che si trova in scacco. Se questa mossa non esiste allora il giocatore in scacco 
+ * è anche in scacco matto
  * @returns true se il giocatore che è in scacco è in scacco matto, false altrimenti
  */
 function checkMate() {     //game-logic
     let my_pieces;
-    if (white_in_check) {  //is there a move that gets me out of check?
+    if (white_in_check) {
         my_pieces = white_pieces;
     }
-    else if (black_in_check) {    //is there a move that gets me out of check?
+    else if (black_in_check) {
         my_pieces = black_pieces;
     }
     else return false;
 
     let temp_white_check = white_in_check;
     let temp_black_check = black_in_check;
-    for (let i = 0; i < my_pieces.length; i++) {   
+    for (let i = 0; i < my_pieces.length; i++) {
         if (my_pieces[i].captured)
             continue;
         for (let j = 0; j < 64; j++) {
@@ -209,8 +211,6 @@ function switchTurn() {  //game-logic
  * @returns true, se la mossa che sto valudato è legale (senza considerare la scacco logic), false altrimenti
  */
 function validate_move(dest_element, piece, makingMove) {       //game-logic   
-    //making move is a boolean that if true indicates that I actually want to make the move
-    //if is false it meas I'm just verifing if the move would be legal
     let start_row = piece.row;
     let start_col = piece.col;
     let id = piece.id;
@@ -482,7 +482,7 @@ function updateDraggedPieceInfo(start_row, start_col, end_row, end_col) {
 function allPossibleMoves() {       //game-logic
     for (let index = 0; index < white_pieces.length; index++) {
         white_pieces[index].possibleMoves.length = 0;
-        if (white_pieces[index].captured){
+        if (white_pieces[index].captured) {
             continue;
         }
         for (let i = 0; i < 64; i++) {
@@ -496,7 +496,7 @@ function allPossibleMoves() {       //game-logic
 
     for (let index = 0; index < black_pieces.length; index++) {
         black_pieces[index].possibleMoves.length = 0;
-        if (black_pieces[index].captured){
+        if (black_pieces[index].captured) {
             continue;
         }
         for (let i = 0; i < 64; i++) {
@@ -567,7 +567,6 @@ function checkCheck() {     //game-logic
  * @param castlignRook indica la torre con cui si fa il castling, se undefined significa che l'ultima mossa non era di castling
  */
 function updateBoard(castlignRook) {       //game-logic
-    // console.log('updato');
     board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
     if (castlignRook) {
         board[castlignRook.row * cols + (castlignRook.col)] = castlignRook;
@@ -584,7 +583,6 @@ function updateBoard(castlignRook) {       //game-logic
 
 /**
  * @brief chiamata dopo che un giocatore fa una mossa, setta a false l'attributo enPassantCapturable delle pawn
- * is called after a player plays a move, sets to false the opponent pawns enPassantCapturable attribute
  * @param {int} color 1 è white, 0 è black
  */
 function updateEnPassantAttribute(color) {       //game-logic
