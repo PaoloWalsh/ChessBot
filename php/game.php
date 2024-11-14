@@ -102,6 +102,8 @@
         }
     ?>
     <script>
+        // imposta il nome delle game card all'username se il giocatore è loggato
+        // altrimenti indichera giocatore host in base al colore scelto nella pagina precedente
         const userName = <?php echo json_encode($_username); ?>;
         let giocatoreHost;
         let giocatoreGuest;
