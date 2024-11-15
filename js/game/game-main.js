@@ -251,7 +251,6 @@ async function handleDialog(oldPiece) {
         container.appendChild(img);
     }
     let idImg = await setImgEvent(imgs);
-    console.log(idImg);
     createPromotionPiece(idImg, oldPiece);
 }
 
@@ -358,7 +357,7 @@ function createPromotionPiece(idImg, oldPiece) {
 }
 
 
-
+/* Messaggi mostrati all'utente */
 const tuoTurno = "È il tuo turno!";
 const punteggioBene = "Sei in vantaggio di: ";
 const punteggioMale = "Sei in svantaggio di: ";
