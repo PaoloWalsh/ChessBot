@@ -148,11 +148,12 @@ function dragDrop(e) {
 async function makeMove(piece, square) {  //game logic    //da aggiustare
     removeSelectedSquares();
     let moveMade = false;
-    let castlignRook;
+    let castlingRook;
     let element = pieceToDiv(piece);
     let captureMove = isPieceElement(square);   // vale true se il destination element è un pezzo e non uno square
     let destinationSquare = (captureMove) ? square.parentNode : square;
     let sameColorCapture = false;           // vale true se provo a catturare un pezzo del mio stesso colore
+    let castlingMove = false;
 
     if ((white_turn && element.id.includes("white"))
         || (black_turn && element.id.includes("black"))) {
@@ -161,51 +162,49 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
             || (piece.id.includes("black") && square.id.includes("black"))))
             sameColorCapture = true;
 
+        if ((element.id.includes("white_king") && square.id.includes("white_rook"))
+            || (element.id.includes("black_king") && square.id.includes("black_rook"))) {
+            sameColorCapture = false;
+            castlingMove = true;
+        }
+
         if (!sameColorCapture) {
             if (!moveWithCheck(destinationSquare, piece)) return;
             moveMade = validate_move(destinationSquare, piece, true);
             if (moveMade) {
-                destinationSquare.append(element);
-                if (captureMove) {
+                if (castlingMove) {
+                    castlingRook = getPiece(square.id);
+                    let rookStartSquare = square.parentNode;
+                    let kingStartSquare = element.parentNode;
+                    let rookEndSquare;
+                    let kingEndSquare;
+                    let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
+                    let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
+                    element.remove();
                     square.remove();
-                    capture_sound.play();
-                } else if (enPassantPlayed) {
-                    capture_sound.play();
-                    enPassantPlayed = false;
+                    if (kingIndex > rookIndex) {  // Arrocco a destra 
+                        rookEndSquare = document.getElementById((kingIndex - 1) + '');
+                        kingEndSquare = document.getElementById((rookIndex + 1) + '');
+                    }
+                    else {  // Arrocco a sinistra
+                        rookEndSquare = document.getElementById((kingIndex + 1) + '');
+                        kingEndSquare = document.getElementById((rookIndex - 2) + '');
+                    }
+                    rookEndSquare.append(square);
+                    kingEndSquare.append(element);
+                } else {
+                    destinationSquare.append(element);
+                    if (captureMove) {
+                        square.remove();
+                        capture_sound.play();
+                    } else if (enPassantPlayed) {
+                        capture_sound.play();
+                        enPassantPlayed = false;
+                    }
+                    else {
+                        move_sound.play();
+                    }
                 }
-                else {
-                    move_sound.play();
-                }
-            }
-        }
-
-        else if ((element.id.includes("white_king") && square.id.includes("white_rook"))
-            || (element.id.includes("black_king") && square.id.includes("black_rook"))
-        ) {
-            castlignRook = getPiece(square.id);
-            // destinationSquare = square.parentNode;
-            if (!moveWithCheck(destinationSquare, piece)) return;
-            moveMade = validate_move(destinationSquare, piece, true);
-            if (moveMade) {
-                let rookStartSquare = square.parentNode;
-                let kingStartSquare = element.parentNode;
-                let rookEndSquare;
-                let kingEndSquare;
-                let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
-                let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
-                element.remove();
-                square.remove();
-                if (kingIndex > rookIndex) {  // Arrocco a destra 
-                    rookEndSquare = document.getElementById((kingIndex - 1) + '');
-                    kingEndSquare = document.getElementById((rookIndex + 1) + '');
-                }
-                else {
-                    rookEndSquare = document.getElementById((kingIndex + 1) + '');
-                    kingEndSquare = document.getElementById((rookIndex - 2) + '');
-                }
-                rookEndSquare.append(square);
-                kingEndSquare.append(element);
-                move_sound.play();
             }
         }
     }
@@ -217,7 +216,7 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
         promotingMove = false;
         if (((hostColor === 'bianco') && white_turn) || ((hostColor === 'nero') && black_turn))
             hostNumberMoves++;
-        updateBoard(piece, castlignRook);
+        updateBoard(piece, castlingRook);
         checkCheck();
         checkMate();
         switchTurn();
@@ -226,7 +225,6 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
         return true;
     }
     return false;
-
 }
 
 
