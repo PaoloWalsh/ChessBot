@@ -152,8 +152,8 @@ function checkMate() {     //game-logic
 
         }
     }
-    return true;
-
+    isCheckMate = true;
+    return isCheckMate;
 }
 
 /**

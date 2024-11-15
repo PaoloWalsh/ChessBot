@@ -8,6 +8,8 @@ let black_turn = false;
 let white_in_check = false;
 let black_in_check = false;
 
+let isCheckMate = false;
+
 let enPassantPlayed = false;
 
 let promotingMove = false;

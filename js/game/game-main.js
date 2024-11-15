@@ -73,7 +73,7 @@ function init_drag() {
 //global variables
 let firstClick = true;
 let firstPieceClicked;
-let destinationSquare;
+// let destinationSquare;
 let startPositionId;
 let draggedElement;
 let draggedPiece;
@@ -152,42 +152,40 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
     let moveMade = false;
     let castlignRook;
     let element = pieceToDiv(piece);
+    let captureMove = isPieceElement(square);   // vale true se il destination element è un pezzo e non uno square
+    let destinationSquare = (captureMove) ? square.parentNode : square;
+    let sameColorCapture = false;           // vale true se provo a catturare un pezzo del mio stesso colore
+
     if ((white_turn && element.id.includes("white"))
         || (black_turn && element.id.includes("black"))) {
-        // if true -> the target square is empty
-        if (!square.hasChildNodes()) {
-            if (!moveWithCheck(square, piece)) return;
-            moveMade = validate_move(square, piece, true);
-            if (moveMade) {
-                square.append(element);
-                if (enPassantPlayed) {
-                    capture_sound.play();
-                    enPassantPlayed = false;
-                }
-                else
-                    move_sound.play();
-            }
 
-        }
-        //check if the target square has a same colored piece
-        else if ((piece.id.includes("white") && square.id.includes("black"))
-            || (piece.id.includes("black") && square.id.includes("white"))) {
-            //if true -> the target square has a different color piece
-            destinationSquare = square.parentNode;
+        if (captureMove && ((piece.id.includes("white") && square.id.includes("white"))
+            || (piece.id.includes("black") && square.id.includes("black"))))
+            sameColorCapture = true;
+
+        if (!sameColorCapture) {
             if (!moveWithCheck(destinationSquare, piece)) return;
             moveMade = validate_move(destinationSquare, piece, true);
             if (moveMade) {
-                square.parentNode.append(element);
-                square.remove();
-                capture_sound.play();
-
+                destinationSquare.append(element);
+                if (captureMove) {
+                    square.remove();
+                    capture_sound.play();
+                } else if (enPassantPlayed) {
+                    capture_sound.play();
+                    enPassantPlayed = false;
+                }
+                else {
+                    move_sound.play();
+                }
             }
         }
+
         else if ((element.id.includes("white_king") && square.id.includes("white_rook"))
             || (element.id.includes("black_king") && square.id.includes("black_rook"))
         ) {
             castlignRook = getPiece(square.id);
-            destinationSquare = square.parentNode;
+            // destinationSquare = square.parentNode;
             if (!moveWithCheck(destinationSquare, piece)) return;
             moveMade = validate_move(destinationSquare, piece, true);
             if (moveMade) {
@@ -199,7 +197,7 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
                 let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
                 element.remove();
                 square.remove();
-                if (kingIndex > rookIndex) {  //I'm castling to the right
+                if (kingIndex > rookIndex) {  // Arrocco a destra 
                     rookEndSquare = document.getElementById((kingIndex - 1) + '');
                     kingEndSquare = document.getElementById((rookIndex + 1) + '');
                 }
@@ -222,6 +220,7 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
             hostNumberMoves++;
         updateBoard(castlignRook);
         checkCheck();
+        checkMate();
         switchTurn();
         updateMessages();       //qui controlliamo lo scacco matto
         boardIsConsistent();    //debug info 
@@ -429,8 +428,8 @@ function updateMessages() {
         bpPunteggio.innerText = "";
         wpPunteggio.innerText = "";
     }
-    let t = checkMate();
-    if (t) {
+    // let t = checkMate();
+    if (isCheckMate) {
         const checkDialog = document.getElementById('checkmate-dialog');
         const whitePlayerName = document.getElementById('wp-nome').innerText;
         const blackPlayerName = document.getElementById('bp-nome').innerText;
