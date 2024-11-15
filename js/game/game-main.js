@@ -142,28 +142,28 @@ function dragDrop(e) {
 /**
  * @brief se la mossa è legale, la esegue in HTML, chiama updateBoard, chiama le funzioni per aggiornare i messaggi e verificare lo scacco matto
  * @param {js piece} piece l'istanza della classe piece, è il pezzo che voglio muovere
- * @param {*} square l'elemento di destinazione HTML può essere una casella o un pezzo
+ * @param {*} destination l'elemento di destinazione HTML può essere una casella o un pezzo
  * @returns restituisce true se la mossa è stata effettuata, false altrimenti.
  */
-async function makeMove(piece, square) {  //game logic    //da aggiustare
+async function makeMove(piece, destination) {  //game logic    //da aggiustare
     removeSelectedSquares();
     let moveMade = false;
     let castlingRook;
     let element = pieceToDiv(piece);
-    let captureMove = isPieceElement(square);   // vale true se il destination element è un pezzo e non uno square
-    let destinationSquare = (captureMove) ? square.parentNode : square;
+    let captureMove = isPieceElement(destination);   // vale true se il destination element è un pezzo e non uno square
+    let destinationSquare = (captureMove) ? destination.parentNode : destination;
     let sameColorCapture = false;           // vale true se provo a catturare un pezzo del mio stesso colore
     let castlingMove = false;
 
     if ((white_turn && element.id.includes("white"))
         || (black_turn && element.id.includes("black"))) {
 
-        if (captureMove && ((piece.id.includes("white") && square.id.includes("white"))
-            || (piece.id.includes("black") && square.id.includes("black"))))
+        if (captureMove && ((piece.id.includes("white") && destination.id.includes("white"))
+            || (piece.id.includes("black") && destination.id.includes("black"))))
             sameColorCapture = true;
 
-        if ((element.id.includes("white_king") && square.id.includes("white_rook"))
-            || (element.id.includes("black_king") && square.id.includes("black_rook"))) {
+        if ((element.id.includes("white_king") && destination.id.includes("white_rook"))
+            || (element.id.includes("black_king") && destination.id.includes("black_rook"))) {
             sameColorCapture = false;
             castlingMove = true;
         }
@@ -173,15 +173,15 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
             moveMade = validate_move(destinationSquare, piece, true);
             if (moveMade) {
                 if (castlingMove) {
-                    castlingRook = getPiece(square.id);
-                    let rookStartSquare = square.parentNode;
+                    castlingRook = getPiece(destination.id);
+                    let rookStartSquare = destination.parentNode;
                     let kingStartSquare = element.parentNode;
                     let rookEndSquare;
                     let kingEndSquare;
                     let kingIndex = parseInt(kingStartSquare.getAttribute("id"));
                     let rookIndex = parseInt(rookStartSquare.getAttribute("id"));
                     element.remove();
-                    square.remove();
+                    destination.remove();
                     if (kingIndex > rookIndex) {  // Arrocco a destra 
                         rookEndSquare = document.getElementById((kingIndex - 1) + '');
                         kingEndSquare = document.getElementById((rookIndex + 1) + '');
@@ -190,12 +190,12 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
                         rookEndSquare = document.getElementById((kingIndex + 1) + '');
                         kingEndSquare = document.getElementById((rookIndex - 2) + '');
                     }
-                    rookEndSquare.append(square);
+                    rookEndSquare.append(destination);
                     kingEndSquare.append(element);
                 } else {
                     destinationSquare.append(element);
                     if (captureMove) {
-                        square.remove();
+                        destination.remove();
                         capture_sound.play();
                     } else if (enPassantPlayed) {
                         capture_sound.play();
