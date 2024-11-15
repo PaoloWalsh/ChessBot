@@ -214,11 +214,12 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
     if (moveMade) {
         if (promotingMove) {
             await handleDialog(piece);
+            piece = promotionCreated;
         }
         promotingMove = false;
         if (((hostColor === 'bianco') && white_turn) || ((hostColor === 'nero') && black_turn))
             hostNumberMoves++;
-        updateBoard(castlignRook);
+        updateBoard(piece, castlignRook);
         checkCheck();
         checkMate();
         switchTurn();
@@ -272,6 +273,11 @@ function setImgEvent(imgs) {       //get data
     });
 }
 
+/**
+ * @param idImg id dell'immagine su cui l'utente ha cliccato nel dialog
+ * @param oldPiece la pedina che è arrivata sulla prima o ultima riga e che deve essere promossa
+ * @brief crea il nuovo pezzo in baso al pezzo scelto dall'utente
+ */
 function createPromotionPiece(idImg, oldPiece) {
     let newPieceColor = idImg.split('_')[0];
     let newPieceType = idImg.split('_')[1];
@@ -351,10 +357,10 @@ function createPromotionPiece(idImg, oldPiece) {
     else {
         black_pieces.push(newPiece);
     }
-    draggedPiece = newPiece;
-    console.log(newPiece);
-    console.log(draggedElement);
-    console.log(draggedPiece);
+    promotionCreated = newPiece;
+    //console.log(newPiece);
+    //console.log(promotionCreated);
+    //console.log(draggedPiece);
 }
 
 

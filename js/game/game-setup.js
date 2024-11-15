@@ -13,6 +13,7 @@ let isCheckMate = false;
 let enPassantPlayed = false;
 
 let promotingMove = false;
+let promotionCreated = 0;
 
 let white_pieces = [];
 let black_pieces = [];

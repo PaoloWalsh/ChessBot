@@ -532,19 +532,20 @@ function checkCheck() {     //game-logic
 
 /**
  * @brief aggiorna il board considerando la variabile draggedPiece come pezzo mosso
+ * @param piece è il pezzo che è stato mosso
  * @param castlignRook indica la torre con cui si fa il castling, se undefined significa che l'ultima mossa non era di castling
  */
-function updateBoard(castlignRook) {       //game-logic
-    board[draggedPiece.old_row * cols + draggedPiece.old_col] = 0;
+function updateBoard(piece, castlignRook) {       //game-logic
+    board[piece.old_row * cols + piece.old_col] = 0;
     if (castlignRook) {
         board[castlignRook.row * cols + (castlignRook.col)] = castlignRook;
         board[castlignRook.old_row * cols + (castlignRook.old_col)] = 0;
     }
     else {
-        if (board[draggedPiece.row * cols + draggedPiece.col] != 0)
-            board[draggedPiece.row * cols + draggedPiece.col].captured = true;
+        if (board[piece.row * cols + piece.col] != 0)
+            board[piece.row * cols + piece.col].captured = true;
     }
-    board[draggedPiece.row * cols + draggedPiece.col] = draggedPiece;
+    board[piece.row * cols + piece.col] = piece;
 }
 
 
