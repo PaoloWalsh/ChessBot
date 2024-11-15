@@ -232,7 +232,7 @@ async function makeMove(piece, square) {  //game logic    //da aggiustare
 
 
 /**
- * @brief handles the graphics of the promotion, is called when a pawn moves on the last rank
+ * @brief gestisce il dialog per la promozione 
  */
 async function handleDialog(oldPiece) {
     const dialog = document.getElementById('promotion-dialog');
@@ -272,20 +272,11 @@ function setImgEvent(imgs) {       //get data
     });
 }
 
-/*
- * @brief handles the logic of the promotion, 
- * is called when the user clicks on the img of the piece it wants to promote to
- */
-function promotionClick(event) {
-    const img = event.target;
-    return img.id;
-}
-
 function createPromotionPiece(idImg, oldPiece) {
     let newPieceColor = idImg.split('_')[0];
     let newPieceType = idImg.split('_')[1];
     let oldPieceColor = newPieceColor;
-    let oldPieceIndex = oldPiece.id.slice(-1);
+    // let oldPieceIndex = oldPiece.id.slice(-1);
     // console.log(draggedPiece);
     // console.log(oldPiece.id);
     let oldPieceDiv = pieceToDiv(oldPiece);
@@ -428,7 +419,7 @@ function updateMessages() {
         bpPunteggio.innerText = "";
         wpPunteggio.innerText = "";
     }
-    // let t = checkMate();
+
     if (isCheckMate) {
         const checkDialog = document.getElementById('checkmate-dialog');
         const whitePlayerName = document.getElementById('wp-nome').innerText;
