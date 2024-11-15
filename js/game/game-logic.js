@@ -229,11 +229,9 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
                 return false;
             if (end_row === promotionRow)
                 promoting = true;
-            draggedPiece = pawn;
         }
         else if (!captureOpportunity && possibleEnPassantPawn != 0 && possibleEnPassantPawn.enPassantCapturable && possibleEnPassantPawn.id.includes(opponentColor + "_pawn") &&
             possibleEnPassantPawn.movesMade === 1 && end_row === enPassantRow && Math.abs(end_row - start_row) === 1) {
-            draggedPiece = pawn;
             if (makingMove) {
                 possibleEnPassantPawn.captured = true;
                 board[(end_row + enPassantPosition) * cols + end_col] = 0;
@@ -247,7 +245,7 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
         if (makingMove) {
             updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
             if (Math.abs(end_row - start_row) == 2) {
-                draggedPiece.enPassantCapturable = true;
+                piece.enPassantCapturable = true;
             }
             if (promoting) {
                 promotingMove = true;
@@ -265,12 +263,10 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
             || ((end_row === start_row - 1) && ((end_col === start_col + 2) || (end_col === start_col - 2)))) {
             if (id.includes("white")) {
                 if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("white")) return false;
-                draggedPiece = white_knights[i];
 
             }
             if (id.includes("black")) {
                 if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("black")) return false;
-                draggedPiece = black_knights[i];
             }
             if (makingMove) {
                 updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
@@ -282,17 +278,16 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
 
     //kings
     if (id.includes("king")) {
-        draggedPiece = piece;
         let castlignRook = false;
-        if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("rook") && board[end_row * cols + end_col].color == draggedPiece.color)
+        if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("rook") && board[end_row * cols + end_col].color == piece.color)
             castlignRook = board[end_row * cols + end_col];
 
         if (((end_row >= start_row - 1) && (end_row <= start_row + 1))
             && ((end_col >= start_col - 1) && (end_col <= start_col + 1))) {
-            if (draggedPiece.id === white_king.id) {
+            if (piece.id === white_king.id) {
                 if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("white")) return false;
             }
-            else if (draggedPiece.id === black_king.id) {
+            else if (piece.id === black_king.id) {
                 if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("black")) return false;
             }
             if (makingMove) {
@@ -300,26 +295,26 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
             }
             return true;
         }
-        else if ((castlignRook != false && draggedPiece.firstMove == true && castlignRook.firstMove == true)) {
-            if (((draggedPiece.col > castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "r") + 1) === Math.abs(draggedPiece.col - castlignRook.col))) //if the king is right of the rook
-                || ((draggedPiece.col < castlignRook.col) && ((maxDist(draggedPiece.row, draggedPiece.col, "l") + 1) === Math.abs(castlignRook.col - draggedPiece.col))) //if the king is left of the rook
+        else if ((castlignRook != false && piece.firstMove == true && castlignRook.firstMove == true)) {
+            if (((piece.col > castlignRook.col) && ((maxDist(piece.row, piece.col, "r") + 1) === Math.abs(piece.col - castlignRook.col))) //if the king is right of the rook
+                || ((piece.col < castlignRook.col) && ((maxDist(piece.row, piece.col, "l") + 1) === Math.abs(castlignRook.col - piece.col))) //if the king is left of the rook
             ) {
                 if (makingMove) {
                     if (start_col > end_col) {
-                        draggedPiece.old_col = start_col;
-                        draggedPiece.col = start_col - 2;
+                        piece.old_col = start_col;
+                        piece.col = start_col - 2;
                         castlignRook.old_col = end_col;
                         castlignRook.col = end_col + 2;
                     }
                     else {
-                        draggedPiece.old_col = start_col;
-                        draggedPiece.col = start_col + 2;
+                        piece.old_col = start_col;
+                        piece.col = start_col + 2;
                         castlignRook.old_col = end_col;
                         castlignRook.col = end_col - 3;
                     }
-                    draggedPiece.firstMove = false;
+                    piece.firstMove = false;
                     castlignRook.firstMove = false;
-                    draggedPiece.movesMade++;
+                    piece.movesMade++;
                 }
                 return true;
             }
@@ -336,7 +331,6 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
     if (id.includes("rook") || id.includes("queen")) {
         if (end_col === start_col && end_row === start_row) return false;
         let validMove = false;
-        draggedPiece = piece;
         if (end_col === start_col) {
             if ((end_row <= (start_row + maxDist(start_row, start_col, "u"))) && (end_row >= (start_row - maxDist(start_row, start_col, "d")))) {
                 validMove = true;
@@ -355,7 +349,7 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
             updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
             return true;
         }
-        if (draggedPiece.type.includes('rook')) return validMove;
+        if (piece.type.includes('rook')) return validMove;
         if (validMove) return validMove;
 
     }
@@ -364,7 +358,6 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
         let slope = Math.abs(end_row - start_row) / Math.abs(end_col - start_col);
         let distance = 0;
         let validMove = false;
-        draggedPiece = piece;
 
         if (end_row > start_row && end_col > start_col && slope === 1) {
             let i = start_row;
@@ -531,7 +524,7 @@ function checkCheck() {     //game-logic
 }
 
 /**
- * @brief aggiorna il board considerando la variabile draggedPiece come pezzo mosso
+ * @brief aggiorna il board 
  * @param piece è il pezzo che è stato mosso
  * @param castlignRook indica la torre con cui si fa il castling, se undefined significa che l'ultima mossa non era di castling
  */

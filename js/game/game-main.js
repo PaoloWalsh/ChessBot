@@ -73,10 +73,8 @@ function init_drag() {
 //global variables
 let firstClick = true;
 let firstPieceClicked;
-// let destinationSquare;
 let startPositionId;
 let draggedElement;
-let draggedPiece;
 
 function click(e) {    //da aggiustare
     removeSelectedSquares();
@@ -283,7 +281,6 @@ function createPromotionPiece(idImg, oldPiece) {
     let newPieceType = idImg.split('_')[1];
     let oldPieceColor = newPieceColor;
     // let oldPieceIndex = oldPiece.id.slice(-1);
-    // console.log(draggedPiece);
     // console.log(oldPiece.id);
     let oldPieceDiv = pieceToDiv(oldPiece);
     let childImg = oldPieceDiv.firstElementChild;
@@ -360,7 +357,6 @@ function createPromotionPiece(idImg, oldPiece) {
     promotionCreated = newPiece;
     //console.log(newPiece);
     //console.log(promotionCreated);
-    //console.log(draggedPiece);
 }
 
 
