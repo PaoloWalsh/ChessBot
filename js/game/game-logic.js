@@ -245,7 +245,7 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
             return false;
 
         if (makingMove) {
-            updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
+            updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
             if (Math.abs(end_row - start_row) == 2) {
                 draggedPiece.enPassantCapturable = true;
             }
@@ -273,7 +273,7 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
                 draggedPiece = black_knights[i];
             }
             if (makingMove) {
-                updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
+                updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
             }
             return true;
         }
@@ -296,7 +296,7 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
                 if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("black")) return false;
             }
             if (makingMove) {
-                updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
+                updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
             }
             return true;
         }
@@ -352,7 +352,7 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
             }
         }
         if (validMove && makingMove) {
-            updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
+            updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
             return true;
         }
         if (draggedPiece.type.includes('rook')) return validMove;
@@ -423,7 +423,7 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
             return false;
         }
         if (validMove && makingMove) {
-            updateDraggedPieceInfo(start_row, start_col, end_row, end_col);
+            updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
         }
         return true;
     }
@@ -434,13 +434,13 @@ function validate_move(dest_element, piece, makingMove) {       //game-logic
  * @brief aggiorna le informazioni del dragged piece dopo aver verificato che la mossa sia valida,
  *  chiamata da validate_move una volta verificato che la mossa è valida 
  */
-function updateDraggedPieceInfo(start_row, start_col, end_row, end_col) {
-    draggedPiece.firstMove = false;
-    draggedPiece.old_row = start_row;
-    draggedPiece.old_col = start_col;
-    draggedPiece.row = end_row;
-    draggedPiece.col = end_col;
-    draggedPiece.movesMade++;
+function updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col) {
+    piece.firstMove = false;
+    piece.old_row = start_row;
+    piece.old_col = start_col;
+    piece.row = end_row;
+    piece.col = end_col;
+    piece.movesMade++;
     return;
 }
 
