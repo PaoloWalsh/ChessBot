@@ -218,7 +218,7 @@ async function makeMove(piece, destination) {
     }
     if (moveMade) {
         if (promotingMove) {
-            await handleDialog(piece);
+            await handlePromotionDialog(piece);
             piece = promotionCreated;
         }
         promotingMove = false;
@@ -228,7 +228,7 @@ async function makeMove(piece, destination) {
         checkCheck();
         checkMate();
         switchTurn();
-        updateMessages();       //qui controlliamo lo scacco matto
+        updateMessages();
         boardIsConsistent();    //debug info 
         return true;
     }
@@ -239,7 +239,7 @@ async function makeMove(piece, destination) {
 /**
  * @brief gestisce il dialog per la promozione 
  */
-async function handleDialog(oldPiece) {
+async function handlePromotionDialog(oldPiece) {
     const dialog = document.getElementById('promotion-dialog');
     dialog.show();
     const overContainer = document.getElementById('over-container-flex');
@@ -258,11 +258,13 @@ async function handleDialog(oldPiece) {
         imgs.push(img);
         container.appendChild(img);
     }
-    let idImg = await setImgEvent(imgs);
+    let idImg = await setClickHandlerPromotion(imgs);
     createPromotionPiece(idImg, oldPiece);
 }
-
-function setImgEvent(imgs) {       //get data
+/**
+ * @param imgs sono le immagini html che compaiono nel dialog della promozione
+ */
+function setClickHandlerPromotion(imgs) {
     return new Promise((resolve) => {
         imgs.forEach(img => {
             img.addEventListener("click", (event) => {

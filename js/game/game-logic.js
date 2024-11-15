@@ -12,6 +12,7 @@ function moveWithCheck(destinationSquare, piece) {
     let end_row = Math.floor(end_index / rows);
     let end_col = end_index % rows;
     let castlingMove = false;
+    let castlingRook = false;
     let support_piece;
     let support_row;
     let support_col;
@@ -20,7 +21,6 @@ function moveWithCheck(destinationSquare, piece) {
     if (piece.captured) return false;
 
     if (validate_move(destinationSquare, piece, false)) { //valido la mossa
-        let castlingRook = false;
         if (castling(destinationSquare, piece)) {
             castlingMove = true;
             let destinationPieceElement = destinationSquare.firstElementChild;
@@ -29,6 +29,8 @@ function moveWithCheck(destinationSquare, piece) {
             support_rook_col = castlingRook.old_col;
             piece.old_col = piece.col;
             castlingRook.old_col = castlingRook.col;
+            // end_col è la colonna in cui vado a posizionare il re 
+            // e non la colonna dove dovrà essere inserito il re dopo l'arrocco
             if (end_col > piece.col) {
                 piece.col = end_col - 2;
                 castlingRook.col = end_col - 3;
@@ -44,11 +46,8 @@ function moveWithCheck(destinationSquare, piece) {
         }
         else {
             support_piece = board[end_row * cols + end_col];
-
             if (support_piece != 0)
                 support_piece.captured = true;
-
-            //if nomaml move
             support_row = piece.row;
             support_col = piece.col;
             piece.row = end_row;
@@ -93,7 +92,7 @@ function moveWithCheck(destinationSquare, piece) {
         return true;
     }
     else {
-        //in questo caso la mossa non è proprio legale in quanto la validate move ha restituito false
+        //in questo caso la mossa non è proprio legale, anche non considerando la scacco logic, in quanto la validate move ha restituito false
         return false;
     }
 }
@@ -116,7 +115,6 @@ function castling(destinationSquare, piece) {
         else return false;
     }
     return false;
-
 }
 
 /**
@@ -244,7 +242,7 @@ function validate_move(dest_element, piece, makingMove) {
             return false;
 
         if (makingMove) {
-            updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
+            updatePieceInfo(piece, start_row, start_col, end_row, end_col);
             if (Math.abs(end_row - start_row) == 2) {
                 piece.enPassantCapturable = true;
             }
@@ -270,7 +268,7 @@ function validate_move(dest_element, piece, makingMove) {
                 if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("black")) return false;
             }
             if (makingMove) {
-                updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
+                updatePieceInfo(piece, start_row, start_col, end_row, end_col);
             }
             return true;
         }
@@ -292,7 +290,7 @@ function validate_move(dest_element, piece, makingMove) {
                 if (board[end_row * cols + end_col] != 0 && board[end_row * cols + end_col].id.includes("black")) return false;
             }
             if (makingMove) {
-                updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
+                updatePieceInfo(piece, start_row, start_col, end_row, end_col);
             }
             return true;
         }
@@ -347,7 +345,7 @@ function validate_move(dest_element, piece, makingMove) {
             }
         }
         if (validMove && makingMove) {
-            updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
+            updatePieceInfo(piece, start_row, start_col, end_row, end_col);
             return true;
         }
         if (piece.type.includes('rook')) return validMove;
@@ -417,7 +415,7 @@ function validate_move(dest_element, piece, makingMove) {
             return false;
         }
         if (validMove && makingMove) {
-            updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col);
+            updatePieceInfo(piece, start_row, start_col, end_row, end_col);
         }
         return true;
     }
@@ -425,10 +423,10 @@ function validate_move(dest_element, piece, makingMove) {
 
 /**
  * 
- * @brief aggiorna le informazioni del dragged piece dopo aver verificato che la mossa sia valida,
+ * @brief aggiorna le informazioni del piece dopo aver verificato che la mossa sia valida,
  *  chiamata da validate_move una volta verificato che la mossa è valida 
  */
-function updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col) {
+function updatePieceInfo(piece, start_row, start_col, end_row, end_col) {
     piece.firstMove = false;
     piece.old_row = start_row;
     piece.old_col = start_col;
