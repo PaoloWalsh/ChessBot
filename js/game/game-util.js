@@ -13,7 +13,6 @@ function printBoard() {
 
 
 /**
- * 
  * @param {html element} id id del pezzo html
  * @returns l'istanza della classe piece associato con quel pezzo
  */

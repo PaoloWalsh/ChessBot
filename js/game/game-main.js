@@ -76,10 +76,10 @@ let firstPieceClicked;
 let startPositionId;
 let draggedElement;
 
-function click(e) {    //da aggiustare
+function click(e) {
     removeSelectedSquares();
     let currentElement = e.target;
-    let pieceElement;
+    let pieceElement;                   // prende instanza classe pezzo 
     let pieceClicked = false;
     let squareCliecked = false;
     if (isPieceElement(currentElement)) {
@@ -89,7 +89,9 @@ function click(e) {    //da aggiustare
         squareCliecked = true;
 
     if (firstClick) {
+        // se il primo click è su uno square return
         if (squareCliecked) return;
+        // se il primo click è su un pezzo del colore opposto return
         if ((pieceElement.color == "white" && black_turn) || (pieceElement.color == "black" && white_turn)) return;
         firstPieceClicked = pieceElement;
         selectLandingSquares(firstPieceClicked);
@@ -97,8 +99,12 @@ function click(e) {    //da aggiustare
         return;
     }
 
+    // sicuramente ho già fatto un first click
     if (pieceClicked) {
+        // se il secondo click è fatto su un pezzo di colore diverso semplicemente faccio la mossa
         if (firstPieceClicked.color == pieceElement.color) {
+            // devo fare la mossa anche se faccio un arroco, altrimenti devo resettare le informazioni sul primo click
+            // perché significa che l'utente a cambiato idea sul pezzo che vuole muovere
             if (!((firstPieceClicked.id.includes("king") && pieceElement.id.includes("rook")) || (firstPieceClicked.id.includes("rook") && pieceElement.id.includes("king")))) {
                 if ((pieceElement.color == "white" && black_turn) || (pieceElement.color == "black" && white_turn)) return;
                 firstPieceClicked = pieceElement;
@@ -109,12 +115,14 @@ function click(e) {    //da aggiustare
         }
     }
 
-    if (makeMove(firstPieceClicked, currentElement))
+    if (makeMove(firstPieceClicked, currentElement)) {
+        //fatta la mossa resetto il first click
         firstClick = true;
-
+    }
 }
 
 function dragStart(e) {
+    removeSelectedSquares();
     startPositionId = e.target.parentNode.getAttribute('id');   //square id
     draggedElement = e.target;
     let piece = getPiece(draggedElement.id);
