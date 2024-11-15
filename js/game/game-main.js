@@ -145,7 +145,7 @@ function dragDrop(e) {
  * @param {*} destination l'elemento di destinazione HTML può essere una casella o un pezzo
  * @returns restituisce true se la mossa è stata effettuata, false altrimenti.
  */
-async function makeMove(piece, destination) {  //game logic    //da aggiustare
+async function makeMove(piece, destination) {
     removeSelectedSquares();
     let moveMade = false;
     let castlingRook;
@@ -277,8 +277,6 @@ function createPromotionPiece(idImg, oldPiece) {
     let newPieceColor = idImg.split('_')[0];
     let newPieceType = idImg.split('_')[1];
     let oldPieceColor = newPieceColor;
-    // let oldPieceIndex = oldPiece.id.slice(-1);
-    // console.log(oldPiece.id);
     let oldPieceDiv = pieceToDiv(oldPiece);
     let childImg = oldPieceDiv.firstElementChild;
 
@@ -352,8 +350,6 @@ function createPromotionPiece(idImg, oldPiece) {
         black_pieces.push(newPiece);
     }
     promotionCreated = newPiece;
-    //console.log(newPiece);
-    //console.log(promotionCreated);
 }
 
 

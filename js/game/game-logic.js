@@ -6,7 +6,7 @@
  * @returns un valore booleano che indica se la mossa che sta venendo valutata viola la logica dello scacco
  * ovvero se la mossa mi auto mette in scacco oppure se la mossa non mi toglie da un sacco in caso io sia già in scacco
  */
-function moveWithCheck(destinationSquare, piece) {     //game-logic    //da sistemare
+function moveWithCheck(destinationSquare, piece) {
 
     let end_index = parseInt(destinationSquare.getAttribute('id'));
     let end_row = Math.floor(end_index / rows);
@@ -18,6 +18,7 @@ function moveWithCheck(destinationSquare, piece) {     //game-logic    //da sist
     let support_rook_col;
 
     if (piece.captured) return false;
+
     if (validate_move(destinationSquare, piece, false)) { //valido la mossa
         let castlingRook = false;
         if (castling(destinationSquare, piece)) {
@@ -104,7 +105,7 @@ function moveWithCheck(destinationSquare, piece) {     //game-logic    //da sist
  * @returns valore booleano, true se si sta cercando di fare una mossa di castling (arrocco), false altrimenti
  */
 
-function castling(destinationSquare, piece) {   //game-logic
+function castling(destinationSquare, piece) {
     if (!destinationSquare.hasChildNodes())
         return false;
     let destinationPieceElement = destinationSquare.firstElementChild;
@@ -124,7 +125,7 @@ function castling(destinationSquare, piece) {   //game-logic
  * è anche in scacco matto
  * @returns true se il giocatore che è in scacco è in scacco matto, false altrimenti
  */
-function checkMate() {     //game-logic
+function checkMate() {
     let my_pieces;
     if (white_in_check) {
         my_pieces = white_pieces;
@@ -159,7 +160,7 @@ function checkMate() {     //game-logic
 /**
  * @brief cambia turno tra bianco e nero e disabilità la possibilità di una mossa EnPassant del giocatore che ha appena mosso
  */
-function switchTurn() {  //game-logic
+function switchTurn() {
     if (white_turn) {
         updateEnPassantAttribute(0);
         white_turn = false;
@@ -178,7 +179,7 @@ function switchTurn() {  //game-logic
  * @param {boolean} makingMove valore booleano, true se si vuole effettivamente fare una mossa, false se si vuole sapere se la mossa è legale
  * @returns true, se la mossa che sto valudato è legale (senza considerare la scacco logic), false altrimenti
  */
-function validate_move(dest_element, piece, makingMove) {       //game-logic   
+function validate_move(dest_element, piece, makingMove) {
     let start_row = piece.row;
     let start_col = piece.col;
     let id = piece.id;
@@ -440,7 +441,7 @@ function updateDraggedPieceInfo(piece, start_row, start_col, end_row, end_col) {
 /**
  * @brief calcola ogni mossa legale (senza considerare lo scacco logic) per ogni pezzo che non è stato catturato e le memorizza in un array
  */
-function allPossibleMoves() {       //game-logic
+function allPossibleMoves() {
     for (let index = 0; index < white_pieces.length; index++) {
         white_pieces[index].possibleMoves.length = 0;
         if (white_pieces[index].captured) {
@@ -475,7 +476,7 @@ function allPossibleMoves() {       //game-logic
  * @brief chiamata prima di fare la mossa effettiva e verifica se la mossa metterebbe qualcuno in scacco, chiamata da moveWithCheck
  * @returns 
  */
-function checkCheck() {     //game-logic
+function checkCheck() {
     allPossibleMoves();
 
     let my_king_position;
@@ -528,7 +529,7 @@ function checkCheck() {     //game-logic
  * @param piece è il pezzo che è stato mosso
  * @param castlignRook indica la torre con cui si fa il castling, se undefined significa che l'ultima mossa non era di castling
  */
-function updateBoard(piece, castlignRook) {       //game-logic
+function updateBoard(piece, castlignRook) {
     board[piece.old_row * cols + piece.old_col] = 0;
     if (castlignRook) {
         board[castlignRook.row * cols + (castlignRook.col)] = castlignRook;
@@ -547,7 +548,7 @@ function updateBoard(piece, castlignRook) {       //game-logic
  * @brief chiamata dopo che un giocatore fa una mossa, setta a false l'attributo enPassantCapturable delle pawn
  * @param {int} color 1 è white, 0 è black
  */
-function updateEnPassantAttribute(color) {       //game-logic
+function updateEnPassantAttribute(color) {
     if (color) {
         for (let i = 0; i < 16; i++) {
             if (white_pieces[i].captured)
