@@ -11,7 +11,6 @@
 .dialog-style {
     z-index: 100;
     position: absolute;
-    top: 30%;
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     border: none;
@@ -21,16 +20,40 @@
     text-align: center;
 }
 
-dialog * {
-    z-index: inherit;
-    color: var(--primary-color);
+.dialog-style.open {
+    display: flex;
 }
 
-dialog img {
+.dialog-style.closed {
+    display: none;
+}
+
+.dialog-style * {
+    z-index: inherit;
+}
+
+.dialog-style img {
     aspect-ratio: 1;
     width: 4rem;
     cursor: pointer;
-    padding: 0.1rem;
+    padding: 0.2rem;
+}
+
+.dialog-style h2 {
+    font-size: 1.75rem;
+    padding-inline: 0.2rem;
+    color: var(--primary-color);
+}
+
+.dialog-style.promotion-position {
+    top: 30%;
+    left: 35%;
+}
+
+
+.dialog-style.checkmate-position {
+    top: 30%;
+    left: 27%;
 }
 
 #over-container-flex {

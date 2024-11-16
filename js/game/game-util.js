@@ -377,3 +377,16 @@ function removeAllChildren(elem) {
     }
 }
 
+function openDialog(targetDialog) {
+    document.getElementById(targetDialog).classList.remove("closed");
+}
+
+function closeCheckmateDialog() {
+    targetDialog = 'checkmate-dialog';
+    closeDialog(targetDialog);
+}
+
+function closeDialog(targetDialog) {
+    const dialog = document.getElementById(targetDialog);
+    dialog.classList.add("closed");
+}

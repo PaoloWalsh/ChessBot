@@ -43,19 +43,19 @@
     <main>
         
         <div class="container relative max-width-board">
-
-            <dialog id="promotion-dialog" class="dialog-style">
+            <div id="promotion-dialog" class="dialog-style closed promotion-position">
                 <h2 class="special-h2">Promozione</h2>
                 <div id="over-container-flex">
                 </div>
-            </dialog>
+            </div>
 
-            <dialog id="checkmate-dialog" class="dialog-style">
+            <div id="checkmate-dialog" class="dialog-style closed checkmate-position">
                 <h2 class="special-h2"></h2>
                 <div class="buttons">
                     <button class="btn" onclick="reset()">Rigioca</button>
+                    <button onclick="closeCheckmateDialog()" id="close-checkmate-dialog" class="btn">Chiudi</button>
                 </div>
-            </dialog>
+            </div>
             
             <div class="title-container">
                 <h1 class="big-title">Gioco</h1>
