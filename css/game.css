@@ -1,9 +1,9 @@
-:root{
+:root {
     --dark-square: rgb(182, 135, 99);
     --light-square: rgb(240, 218, 181);
     --medium-brown: #e3c7a2;
     --dark-square-selected: #657d65;
-    --light-square-selected: #81a581;   
+    --light-square-selected: #81a581;
     --primary-color: #333;
     --accent-color: #f0a500;
     --text-light: #fff;
@@ -18,7 +18,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
@@ -26,7 +26,8 @@ a{
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    height: 100vh; /* Set the height to 100% of the viewport height */
+    height: 100vh;
+    /* Set the height to 100% of the viewport height */
 }
 
 #board {
@@ -35,7 +36,8 @@ a{
     display: flex;
     flex-wrap: wrap;
     border-collapse: collapse;
-    border: 2px solid #333; /* Board border */
+    border: 2px solid #333;
+    /* Board border */
 }
 
 .square {
@@ -50,7 +52,8 @@ a{
     margin: 0.1875rem;
     position: relative;
     z-index: -9;
-    pointer-events: none; /* This makes the child ignore pointer events */
+    pointer-events: none;
+    /* This makes the child ignore pointer events */
     /* position: absolute;
     z-index: 10; */
 }
@@ -70,7 +73,7 @@ a{
     background-color: var(--light-square);
 }
 
-.selectedLight{
+.selectedLight {
     background-color: var(--light-square-selected);
 }
 
@@ -125,6 +128,7 @@ a{
     .sub-container-player {
         display: none;
     }
+
     .grid-layout {
         display: block;
     }
@@ -136,7 +140,7 @@ a{
     }
 }
 
-.sub-container-player > * {
+.sub-container-player>* {
     margin: 1rem;
 }
 
@@ -170,7 +174,7 @@ a{
 }
 
 .title-container {
-  text-align: center;
+    text-align: center;
 }
 
 .big-title {
@@ -198,17 +202,17 @@ a{
     font-size: 1.2rem;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
-  }
-  
-  .btn:hover {
+}
+
+.btn:hover {
     background: var(--light-square);
     color: var(--primary-color);
     transform: scale(1.03);
-  }
-  
-  .btn:active {
+}
+
+.btn:active {
     transform: scale(0.98);
-  }
+}
 
 .relative {
     position: relative;
@@ -216,12 +220,12 @@ a{
 
 @keyframes fadeIn {
     from {
-      opacity: 0;
-      transform: translateY(30px);
+        opacity: 0;
+        transform: translateY(30px);
     }
+
     to {
-      opacity: 1;
-      transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
     }
 }
-
