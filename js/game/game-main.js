@@ -241,7 +241,6 @@ async function makeMove(piece, destination) {
  */
 async function handlePromotionDialog(oldPiece) {
     const dialog = document.getElementById('promotion-dialog');
-    //dialog.show();
     openDialog(dialog.id);
     const overContainer = document.getElementById('over-container-flex');
     const head = (white_turn) ? "../img/png/white_" : "../img/png/black_";
@@ -270,7 +269,6 @@ function setClickHandlerPromotion(imgs) {
         imgs.forEach(img => {
             img.addEventListener("click", (event) => {
                 const dialog = document.getElementById('promotion-dialog');
-                //dialog.close();
                 closeDialog(dialog.id)
                 const overContainer = document.getElementById('over-container-flex');
                 removeAllChildren(overContainer);
@@ -434,7 +432,6 @@ function updateMessages() {
         let winnerPlayer = (white_in_check) ? blackPlayerName : whitePlayerName;
         const p = checkDialog.querySelector('h2');
         p.innerText = `Complimenti ${winnerPlayer} hai vinto!`;
-        //checkDialog.show();
         openDialog(checkDialog.id);
         let vittoria;
         let colore = localStorage.getItem('colore');
