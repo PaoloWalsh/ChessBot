@@ -200,6 +200,7 @@ async function makeMove(piece, destination) {
                     }
                     rookEndSquare.append(destination);
                     kingEndSquare.append(element);
+                    move_sound.play();
                 } else {
                     destinationSquare.append(element);
                     if (captureMove) {
