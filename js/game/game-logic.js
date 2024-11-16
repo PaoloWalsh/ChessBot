@@ -519,7 +519,6 @@ function checkCheck() {
     white_in_check = white_turn ? me_in_check : opponent_in_check;
     black_in_check = white_turn ? opponent_in_check : me_in_check;
 
-    return false;
 }
 
 /**
