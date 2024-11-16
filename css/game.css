@@ -210,6 +210,10 @@ a{
     transform: scale(0.98);
   }
 
+.relative {
+    position: relative;
+}
+
 @keyframes fadeIn {
     from {
       opacity: 0;

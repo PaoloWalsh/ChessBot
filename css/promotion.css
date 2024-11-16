@@ -11,7 +11,7 @@
 .dialog-style {
     z-index: 100;
     position: absolute;
-    top: 30%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(255, 255, 255, 0.9);
