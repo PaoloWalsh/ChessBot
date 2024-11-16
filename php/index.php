@@ -44,7 +44,7 @@
           due alfieri, due cavalli, due torri e otto pedoni. </p>
       <p>Ogni casella può essere occupata da un solo pezzo, che può 
           catturare o "mangiare" il pezzo avversario andando a occuparne la casella.</p>
-      <p>Obiettivo del gioco è dare scacco matto,
+      <p>L'obiettivo del gioco è dare scacco matto,
           ovvero minacciare la cattura del re avversario in modo tale che l'altro giocatore non possa eseguire mosse legali.</p>
       <h2>Funzionamento dell'applicazione</h2>
       
