@@ -43,13 +43,13 @@
     <main>
         
         <div class="container relative max-width-board">
-            <div id="promotion-dialog" class="dialog-style closed promotion-position">
+            <div id="promotion-dialog" class="dialog-style closed">
                 <h2 class="special-h2">Promozione</h2>
                 <div id="over-container-flex">
                 </div>
             </div>
 
-            <div id="checkmate-dialog" class="dialog-style closed checkmate-position">
+            <div id="checkmate-dialog" class="dialog-style closed">
                 <h2 class="special-h2"></h2>
                 <div class="buttons">
                     <button class="btn" onclick="reset()">Rigioca</button>
