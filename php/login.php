@@ -26,19 +26,19 @@
         $row = mysqli_fetch_assoc($result); 
         $hashedPassword = $row["Password"];
         if (password_verify($password, $hashedPassword)) {
-          // se la pass è corretta, redirect alla home page
+          // se la password è corretta, redirect alla home page
           session_start();
           $_SESSION["logged"] = true;
           $_SESSION["username"] = $username;
           header("Location: index.php");
         } else {
-          // se la pass è sbagliata, error message
+          // se la password è sbagliata, error message
           $passwordErr = true;
         }
       }
     }
     else{
-      // Close the database connection
+      // chiudo la connessione al db
       die(mysqli_connect_error());
     }
   }
@@ -76,7 +76,7 @@
                 echo '<li><a href="login.php">Login</a></li>';
                 echo '<li><a href="signUp.php">Sign in</a></li>';
               }
-              ?>
+            ?>
         </ul>
     </nav>
   </header>

@@ -59,7 +59,6 @@
             if($password != $rpassword){
                 $erroreRPass = true;
             }
-            //echo "<script>window.alert('La richiesta è in un formato non corretto')</script>";
         }
     }
 ?>
