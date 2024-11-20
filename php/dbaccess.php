@@ -1,6 +1,6 @@
 <?php
     define('DBHOST', 'localhost');
-    define('DBNAME', 'walsh_655371');
+    define('DBNAME', 'chess_db');
     define('DBUSER', 'root');
     define('DBPASS', '');
 ?>

@@ -1,4 +1,7 @@
 # ChessBot
-This is an attempt at creating a chess bot using HTML, CSS, and JavaScript 
 
-ciao
+Non è un chessbot. 
+
+Progetto svolto per il corso di Progettazione Web del corso di Ingegneria Informatica, dell'Università di Pisa A.A. 2023/2024.
+
+Il progetto è stato valutato con 30L.

@@ -1,10 +1,10 @@
 -- Progettazione Web 
-DROP DATABASE if exists walsh_655371; 
-CREATE DATABASE walsh_655371; 
-USE walsh_655371; 
+DROP DATABASE if exists chess_db; 
+CREATE DATABASE chess_db; 
+USE chess_db; 
 -- MySQL dump 10.13  Distrib 5.7.28, for Win64 (x86_64)
 --
--- Host: localhost    Database: walsh_655371
+-- Host: localhost    Database: chess_db
 -- ------------------------------------------------------
 -- Server version	5.7.28
 
